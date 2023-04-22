@@ -40,6 +40,8 @@ int vsf_linux_create_fhs(void)
     // 2. fs
 
     // 3. install executables
+    extern int mount_main(int argc, char *argv[]);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/mount", mount_main);
     extern int dynloader_main(int argc, char *argv[]);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/load", dynloader_main);
 
