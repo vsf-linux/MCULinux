@@ -32,9 +32,6 @@
     <ClInclude Include="..\..\application\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\board\win\vsf_board.h" />
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h" />
-    <ClInclude Include="..\..\config\3rd-party\mbedtls\config.h" />
-    <ClInclude Include="..\..\config\target\vsf_usr_cfg_win.h" />
-    <ClInclude Include="..\..\config\vsf_usr_cfg.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\decoder\wav\vsf_wav.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\driver\winsound\vsf_winsound.h" />
     <ClInclude Include="..\..\vsf\source\component\av\audio\vsf_audio.h" />
@@ -202,8 +199,19 @@
     <ClInclude Include="..\..\vsf\source\hal\driver\common\usart\fifo2req_usart.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\common\usart\usart_template.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\driver.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\driver.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbd\vsf_hal_distbus_usbd.h" />
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\vsf\driver.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\driver.h" />
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\device.h" />
@@ -877,7 +885,18 @@
     <ClCompile Include="..\..\vsf\source\hal\driver\common\timer\timer_common.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\usart\fifo2req_usart.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\common\usart\usart_common.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbd\vsf_hal_distbus_usbd.c" />
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\vsf_hal_distbus.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\driver.c" />
     <ClCompile Include="..\..\vsf\source\hal\driver\x86\win\rng\rng.c" />
@@ -1096,7 +1115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__OOC_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -1124,7 +1143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__OOC_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -1155,7 +1174,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__OOC_RELEASE__;__OOC_CPP__;NDEBUG;_CONSOLE;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AssemblerListingLocation>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</AssemblerListingLocation>
@@ -1183,7 +1202,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__OOC_RELEASE__;__OOC_CPP__;NDEBUG;_CONSOLE;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AssemblerListingLocation>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</AssemblerListingLocation>

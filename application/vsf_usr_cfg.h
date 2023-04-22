@@ -65,9 +65,11 @@
 #define VSF_USE_TCPIP                                   ENABLED
 #define VSF_USE_UI                                      ENABLED
 #define VSF_USE_AUDIO                                   ENABLED
+#   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
 
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_USE_POSIX                                ENABLED
+#   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
 #   define VSF_LINUX_USE_BUSYBOX                        DISABLED
 #   define VSF_LINUX_USE_SOCKET                         ENABLED
 #       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED

@@ -577,26 +577,14 @@
     <Filter Include="vsf\service\simple_stream\queue_stream">
       <UniqueIdentifier>{0c37687f-ffae-4fbe-9d1f-ffe4b61847f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="config">
-      <UniqueIdentifier>{6b9636e5-4193-4bc4-91b9-1b5c7b8e7976}</UniqueIdentifier>
-    </Filter>
     <Filter Include="application">
       <UniqueIdentifier>{498c9fc9-5f6c-435b-889e-761dda41ec44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="config\target">
-      <UniqueIdentifier>{265ebe6a-dc37-4d1f-9201-e5eda32b57ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="application\linux_demo">
       <UniqueIdentifier>{6513e7a6-e11a-4355-918f-bb18f7826795}</UniqueIdentifier>
     </Filter>
     <Filter Include="application\3rd-party">
       <UniqueIdentifier>{bff067ae-7ad6-42c8-8d4f-be9441b9c908}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="config\3rd-party">
-      <UniqueIdentifier>{1fc49c1d-d61c-49e1-aad2-b3fe36abd23f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="config\3rd-party\mbedtls">
-      <UniqueIdentifier>{baa7dcf2-cbf6-4e65-83e2-b9d03681bef5}</UniqueIdentifier>
     </Filter>
     <Filter Include="vsf\hal\driver\x86\win\rtc">
       <UniqueIdentifier>{e1d6f9b3-7b4b-4969-a4ea-90e22317b2b5}</UniqueIdentifier>
@@ -795,6 +783,39 @@
     </Filter>
     <Filter Include="board">
       <UniqueIdentifier>{2b465bb0-8121-488d-b3ba-3fb8c40485ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\adc">
+      <UniqueIdentifier>{c846ca80-9f96-4ce5-81d3-7e7b99b18ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\dac">
+      <UniqueIdentifier>{ba8b3e53-3f4c-4e55-b256-6b6c7158f977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\gpio">
+      <UniqueIdentifier>{58cc2279-51c8-4400-9433-92e516139a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\i2c">
+      <UniqueIdentifier>{b5772544-0d69-48f6-bff6-3e5df5638a8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\i2s">
+      <UniqueIdentifier>{2fd22e18-e26e-4e12-b065-7a6d574825f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\io">
+      <UniqueIdentifier>{e1c677f6-f6cc-46aa-b753-d97d7b2fd43f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\mmc">
+      <UniqueIdentifier>{98068e57-fb74-4961-8d83-4cb9397a3646}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\pwm">
+      <UniqueIdentifier>{4a5e1cad-ae6a-4efe-bebb-a55167ed792c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\spi">
+      <UniqueIdentifier>{dc5e8747-2434-4792-b9f4-438021b9cd17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\usart">
+      <UniqueIdentifier>{2eb22d90-9d93-4610-8545-921ceed07fbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\hal\driver\vsf\distbus\usbh">
+      <UniqueIdentifier>{8a79c5bb-95b5-435d-8553-da3b3aa77571}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1749,15 +1770,6 @@
     <ClInclude Include="..\..\vsf\source\service\simple_stream\queue_stream\vsf_queue_stream.h">
       <Filter>vsf\service\simple_stream\queue_stream</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\config\vsf_usr_cfg.h">
-      <Filter>config</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\config\target\vsf_usr_cfg_win.h">
-      <Filter>config\target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\config\3rd-party\mbedtls\config.h">
-      <Filter>config\3rd-party\mbedtls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\x86\win\rtc\rtc.h">
       <Filter>vsf\hal\driver\x86\win\rtc</Filter>
     </ClInclude>
@@ -2147,6 +2159,39 @@
     </ClInclude>
     <ClInclude Include="..\..\board\win\vsf_board_cfg.h">
       <Filter>board</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.h">
+      <Filter>vsf\hal\driver\vsf\distbus\adc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.h">
+      <Filter>vsf\hal\driver\vsf\distbus\dac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.h">
+      <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.h">
+      <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.h">
+      <Filter>vsf\hal\driver\vsf\distbus\i2s</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.h">
+      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.h">
+      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.h">
+      <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.h">
+      <Filter>vsf\hal\driver\vsf\distbus\spi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.h">
+      <Filter>vsf\hal\driver\vsf\distbus\usart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.h">
+      <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3673,6 +3718,39 @@
     </ClCompile>
     <ClCompile Include="..\..\board\win\vsf_board.c">
       <Filter>board</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\adc\vsf_hal_distbus_adc.c">
+      <Filter>vsf\hal\driver\vsf\distbus\adc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\dac\vsf_hal_distbus_dac.c">
+      <Filter>vsf\hal\driver\vsf\distbus\dac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\gpio\vsf_hal_distbus_gpio.c">
+      <Filter>vsf\hal\driver\vsf\distbus\gpio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2c\vsf_hal_distbus_i2c.c">
+      <Filter>vsf\hal\driver\vsf\distbus\i2c</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\i2s\vsf_hal_distbus_i2s.c">
+      <Filter>vsf\hal\driver\vsf\distbus\i2s</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\io\vsf_hal_distbus_io.c">
+      <Filter>vsf\hal\driver\vsf\distbus\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\mmc\vsf_hal_distbus_mmc.c">
+      <Filter>vsf\hal\driver\vsf\distbus\mmc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\pwm\vsf_hal_distbus_pwm.c">
+      <Filter>vsf\hal\driver\vsf\distbus\pwm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\spi\vsf_hal_distbus_spi.c">
+      <Filter>vsf\hal\driver\vsf\distbus\spi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usart\vsf_hal_distbus_usart.c">
+      <Filter>vsf\hal\driver\vsf\distbus\usart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\vsf\distbus\usbh\vsf_hal_distbus_usbh.c">
+      <Filter>vsf\hal\driver\vsf\distbus\usbh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

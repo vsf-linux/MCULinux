@@ -43,7 +43,7 @@ int vsf_linux_create_fhs(void)
     extern int dynloader_main(int argc, char *argv[]);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/load", dynloader_main);
 
-#if defined(__WIN__) || defined(__LINUX__)
+#ifdef VSF_LINUX_HOSTFS_TYPE
     int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
                 const posix_spawn_file_actions_t *actions,
                 const posix_spawnattr_t *attr,
