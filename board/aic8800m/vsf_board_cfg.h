@@ -129,6 +129,10 @@
 
 #define VSF_AUDIO_USE_AIC1000A                          ENABLED
 #define VSF_DISP_USE_MIPI_SPI_LCD                       ENABLED
+#define VSF_USE_LWIP                                    ENABLED
+
+#define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *

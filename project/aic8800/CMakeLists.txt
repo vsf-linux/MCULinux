@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0076 NEW)
 
 if(NOT DEFINED ENV{VSF_PATH})
-    get_filename_component(__VSF_PATH ../../../vsf ABSOLUTE)
+    get_filename_component(__VSF_PATH ../../vsf ABSOLUTE)
     set(ENV{VSF_PATH} ${__VSF_PATH})
 endif()
 message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
@@ -65,8 +65,9 @@ set(APP_USE_LINUX_BUSYBOX_DEMO 1)
 
 # include vsf cmake script
 set(VSF_CONFIG_PATH ${APPLICATION_PATH})
+get_filename_component(ABS_BOARD_PATH ${BOARD_PATH} ABSOLUTE)
 list(APPEND VSF_TARGET_INCLUDE_DIRECTORIES
-    ${BOARD_PATH}
+    ${ABS_BOARD_PATH}
 )
 get_filename_component(VSF_LVGL_CONFIG_PATH ${VSF_CONFIG_PATH}/3rd-party/lvgl ABSOLUTE)
 get_filename_component(VSF_BTSTACK_CONFIG_PATH ${VSF_CONFIG_PATH}/3rd-party/btstack ABSOLUTE)
