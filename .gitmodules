@@ -1,0 +1,6 @@
+[submodule "vsf"]
+	path = vsf
+	url = ../../vsfteam/vsf
+[submodule "application/3rd-party/busybox/raw"]
+	path = application/3rd-party/busybox/raw
+	url = ../busybox
