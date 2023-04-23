@@ -1,5 +1,8 @@
-target_sources(${CMAKE_PROJECT_NAME} PUBLIC
+vsf_add_sources(
     vsf_main.c
+)
+vsf_add_include_directories(
+    .
 )
 
 if(APP_USE_LINUX_BUSYBOX_DEMO)

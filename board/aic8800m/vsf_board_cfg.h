@@ -29,11 +29,6 @@
 
 /*============================ MACROS ========================================*/
 
-#define VSF_SYSTIMER_FREQ                               (240UL * 1000 * 1000)
-// enable VSF_EDA_QUEUE_CFG_REGION and VSF_EDA_QUEUE_CFG_SUPPORT_ISR required by AIC8800 RTOS_AL
-#define VSF_EDA_QUEUE_CFG_REGION                        ENABLED
-#define VSF_EDA_QUEUE_CFG_SUPPORT_ISR                   ENABLED
-
 /*----------------------------------------------------------------------------*
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/
@@ -106,9 +101,7 @@
  * Components Configurations                                                  *
  *----------------------------------------------------------------------------*/
 
-#ifndef VSF_USE_HEAP
-#   define VSF_USE_HEAP                                 ENABLED
-#endif
+#define VSF_USE_HEAP                                    ENABLED
 #   define VSF_HEAP_CFG_MCB_MAGIC_EN                    ENABLED
 #   define VSF_HEAP_CFG_MCB_ALIGN_BIT                   4
 #   define VSF_HEAP_ADDR                                0x00100000

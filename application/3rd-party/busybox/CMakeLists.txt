@@ -328,17 +328,15 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/libbb/xrealloc_vector.c
     raw/libbb/xregcomp.c
 )
-add_library(libbusybox STATIC
-    ${BUSYBOX_SOURCES}
-)
-target_compile_definitions(libbusybox PRIVATE
+vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
-    "main=lbb_main"
-    "BB_VER=\"1.37.0.git\""
-    "ENABLE_USE_BB_CRYPT=1"
+    main=lbb_main
+    BB_VER=\"1.37.0.git\"
+    ENABLE_USE_BB_CRYPT=1
+    APP_USE_LINUX_BUSYBOX_DEMO=ENABLED
     __VSF__
 )
-target_include_directories(libbusybox PRIVATE
+vsf_add_include_directories(
     port
     port/vsf_porting
     raw/include
@@ -347,27 +345,7 @@ target_include_directories(libbusybox PRIVATE
     $ENV{VSF_PATH}/source/shell/sys/linux/include
 )
 if(VSF_LINUX_USE_SIMPLE_LIBC)
-target_include_directories(libbusybox PRIVATE
-    $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc
-)
+    vsf_add_include_directories(
+        $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc
+    )
 endif()
-if(VSF_TARGET_WRAPPER_LIST)
-    foreach(api ${VSF_TARGET_WRAPPER_LIST})
-        target_compile_definitions(libbusybox PRIVATE
-            "${api}=__wrap_${api}"
-        )
-    endforeach()
-endif()
-
-
-target_include_directories(${VSF_LIB_NAME} INTERFACE
-    raw/include
-    ${VSF_MBEDTLS_PATH}/include
-)
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/libbusybox_bin)
-target_link_libraries(${VSF_LIB_NAME} INTERFACE
-    libbusybox
-)
-target_compile_definitions(${VSF_LIB_NAME} INTERFACE
-    APP_USE_LINUX_BUSYBOX_DEMO=ENABLED
-)
