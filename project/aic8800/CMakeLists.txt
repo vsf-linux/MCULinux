@@ -75,7 +75,7 @@ get_filename_component(VSF_MBEDTLS_CONFIG_PATH ${VSF_CONFIG_PATH}/3rd-party ABSO
 include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 
 # application configurations
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
+vsf_add_compile_definitions(
     __VSF__
     __OOC_CPP__
 )
@@ -89,10 +89,10 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
 # add user application source code/include directories
 add_subdirectory(${BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/board_bin)
 add_subdirectory(${APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/application_bin)
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC
+vsf_add_compile_definitions(
     APP_USE_LINUX_DYNLOADER_DEMO=ENABLED
 )
-target_sources(${CMAKE_PROJECT_NAME} PUBLIC
+vsf_add_sources(
     $ENV{VSF_PATH}/example/template/demo/linux_demo/tty_demo.c
     $ENV{VSF_PATH}/example/template/demo/linux_demo/libusb_demo.c
     $ENV{VSF_PATH}/example/template/demo/linux_demo/mount_demo.c

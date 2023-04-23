@@ -330,7 +330,6 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
 )
 vsf_add_compile_definitions(
     ${VSF_TARGET_DEFINITIONS}
-    main=lbb_main
     BB_VER=\"1.37.0.git\"
     ENABLE_USE_BB_CRYPT=1
     APP_USE_LINUX_BUSYBOX_DEMO=ENABLED
@@ -343,6 +342,9 @@ vsf_add_include_directories(
 
     ${VSF_COMMON_INCLUDE_DIRECTORIES}
     $ENV{VSF_PATH}/source/shell/sys/linux/include
+)
+vsf_add_sources(
+    ${BUSYBOX_SOURCES}
 )
 if(VSF_LINUX_USE_SIMPLE_LIBC)
     vsf_add_include_directories(
