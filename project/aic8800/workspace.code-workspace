@@ -9,6 +9,10 @@
 			"path": "../../application"
 		},
 		{
+			"name": "board",
+			"path": "../../board"
+		},
+		{
 			"name": "vsf",
 //			it's good to support environment variable here, but vscode doesn't
 //			"path": "${env:VSF_PATH}/source"
