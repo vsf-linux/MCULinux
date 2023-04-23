@@ -70,8 +70,18 @@ static void __VSF_DEBUG_STREAM_TX_WRITE_BLOCKED(uint8_t *buf, uint_fast32_t size
     }
 }
 
+#define VSF_HAL_USE_DEBUG_STREAM        ENABLED
 #include "hal/driver/common/debug_stream/debug_stream_tx_blocked.inc"
 
+void vsf_arch_shutdown(void)
+{
+
+}
+
+void vsf_arch_reset(void)
+{
+    
+}
 
 void vsf_board_init(void)
 {

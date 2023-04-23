@@ -62,7 +62,6 @@
 #   define VSF_USBH_USE_DL1X5                           ENABLED
 #   define VSF_USBH_USE_UAC                             ENABLED
 
-#define VSF_USE_TCPIP                                   ENABLED
 #define VSF_USE_UI                                      ENABLED
 #define VSF_USE_AUDIO                                   ENABLED
 #   define VSF_AUDIO_USE_PLAYBACK                       ENABLED

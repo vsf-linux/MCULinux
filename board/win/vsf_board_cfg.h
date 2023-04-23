@@ -83,6 +83,7 @@
 #define VSF_USE_DISTBUS                                 ENABLED
 // acutally VSF_DISTBUS_TRANSPORT_USE_STREAM is not in vsf, but in application/app/distbus
 #   define VSF_DISTBUS_TRANSPORT_USE_STREAM             ENABLED
+#define VSF_USE_TCPIP                                   ENABLED
 
 #define VSF_USBH_USE_HCD_WINUSB                         ENABLED
 #   define VSF_WINUSB_HCD_CFG_DEV_NUM                   1
