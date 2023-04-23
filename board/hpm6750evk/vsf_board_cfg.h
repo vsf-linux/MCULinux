@@ -65,12 +65,6 @@
  * Kernel Configurations                                                      *
  *----------------------------------------------------------------------------*/
 
-#if __IS_COMPILER_GCC__ || __IS_COMPILER_LLVM__
-// strtoxxx in newlib has dependency issues, use implementation in simple_stdlib.
-//  useful only if VSF_USE_LINUX/VSF_LINUX_USE_SIMPLE_LIBC/VSF_LINUX_USE_SIMPLE_STDLIB are enabled
-#   define VSF_LINUX_SIMPLE_STDLIB_USE_STRTOXX          ENABLED
-#endif
-
 // configure pool and heap to avoid heap allocating in interrupt
 #define VSF_OS_CFG_EVTQ_POOL_SIZE                       128
 #define VSF_OS_CFG_DEFAULT_TASK_FRAME_POOL_SIZE         32
