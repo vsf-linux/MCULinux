@@ -35,7 +35,6 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver related demo
-    vsf_board_init();
 
     // 2. fs
 
@@ -107,8 +106,7 @@ int vsf_linux_create_fhs(void)
 // TODO: SDL require that main need argc and argv
 int VSF_APP_ENTRY(int argc, char *argv[])
 {
-    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_RX);
-    VSF_STREAM_INIT(&VSF_DEBUG_STREAM_TX);
+    vsf_board_init();
 
 #if VSF_USE_TRACE == ENABLED
     vsf_start_trace();
