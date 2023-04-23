@@ -95,6 +95,8 @@
 
 #define VSF_LINUX_CFG_STACKSIZE                         (8 * 1024)
 #define VSF_LINUX_USE_SIMPLE_LIBC                       ENABLED
+// HPM environment does not support long double APIs
+#define VSF_LINUX_APPLET_LIBC_MATH_LONG_DOULBE          DISABLED
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
