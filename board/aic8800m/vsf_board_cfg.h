@@ -29,6 +29,11 @@
 
 /*============================ MACROS ========================================*/
 
+#define VSF_SYSTIMER_FREQ                               (240UL * 1000 * 1000)
+// enable VSF_EDA_QUEUE_CFG_REGION and VSF_EDA_QUEUE_CFG_SUPPORT_ISR required by AIC8800 RTOS_AL
+#define VSF_EDA_QUEUE_CFG_REGION                        ENABLED
+#define VSF_EDA_QUEUE_CFG_SUPPORT_ISR                   ENABLED
+
 /*----------------------------------------------------------------------------*
  * Architecture Configurations                                                *
  *----------------------------------------------------------------------------*/
@@ -130,7 +135,10 @@
 #define VSF_AUDIO_USE_AIC1000A                          ENABLED
 #define VSF_DISP_USE_MIPI_SPI_LCD                       ENABLED
 #define VSF_USE_LWIP                                    ENABLED
+#define VSF_USE_WIFI                                    ENABLED
 
+#define VSF_LINUX_CFG_STACKSIZE                         (8 * 1024)
+#define VSF_LINUX_USE_SIMPLE_LIBC                       ENABLED
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
