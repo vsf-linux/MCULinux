@@ -1,5 +1,3 @@
-#define __VSF_EDA_CLASS_INHERIT__
-#define __VSF_DISP_CLASS_INHERIT__
 #include <unistd.h>
 #include <spawn.h>
 #include <sys/wait.h>
