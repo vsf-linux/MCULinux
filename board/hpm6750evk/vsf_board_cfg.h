@@ -60,9 +60,6 @@
 #ifndef VSF_HAL_USE_USART
 #   define VSF_HAL_USE_USART                            ENABLED
 #endif
-#ifndef VSF_HAL_USE_DEBUG_STREAM
-#   define VSF_HAL_USE_DEBUG_STREAM                     ENABLED
-#endif
 
 /*----------------------------------------------------------------------------*
  * Kernel Configurations                                                      *
@@ -88,10 +85,8 @@
 #   define VSF_HEAP_SIZE                                (128 * 1024)
 
 // debug stream is implemented in vsf_board.c
-#if VSF_HAL_USE_DEBUG_STREAM == DISABLED
-#   define VSF_CFG_DEBUG_STREAM_TX_T                    vsf_stream_t
-#   define VSF_CFG_DEBUG_STREAM_RX_T                    vsf_mem_stream_t
-#endif
+#define VSF_CFG_DEBUG_STREAM_TX_T                       vsf_stream_t
+#define VSF_CFG_DEBUG_STREAM_RX_T                       vsf_mem_stream_t
 
 #define VSF_LINUX_CFG_STACKSIZE                         (8 * 1024)
 #define VSF_LINUX_USE_SIMPLE_LIBC                       ENABLED

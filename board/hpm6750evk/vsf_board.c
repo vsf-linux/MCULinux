@@ -20,6 +20,8 @@
 #define __VSF_HEAP_CLASS_INHERIT__
 #include "./vsf_board.h"
 
+#include "board.h"
+
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -43,7 +45,7 @@ vsf_mem_stream_t VSF_DEBUG_STREAM_RX = {
 };
 static void __uart_isr(void)
 {
-    uint8_t buff[UART_SOC_FIFO_SIZE], buff_index = 0;
+    uint8_t buff[uart_get_fifo_size(BOARD_APP_UART_BASE)], buff_index = 0;
 
     while (uart_get_irq_id(BOARD_APP_UART_BASE) & uart_intr_id_rx_data_avail) {
         if (status_success != uart_receive_byte(BOARD_APP_UART_BASE, &buff[buff_index++])) {
