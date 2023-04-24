@@ -2,9 +2,9 @@
  coreutils/test.c                 |   4 +
  coreutils/test_ptr_hack.c        |   2 +
  editors/awk.c                    |   4 +-
- include/libbb.h                  | 173 ++++++++++++++++++++++++++++++++++++++-
- include/platform.h               |  10 ++-
- init/init.c                      | 112 +++++++++++++++++++++++++
+ include/libbb.h                  | 183 ++++++++++++++++++++++++++++++++++++++-
+ include/platform.h               |  18 +++-
+ init/init.c                      | 112 ++++++++++++++++++++++++
  libbb/appletlib.c                |  22 +++++
  libbb/auto_string.c              |   5 ++
  libbb/bbunit.c                   |   6 ++
@@ -35,8 +35,8 @@
  networking/netstat.c             |   4 +-
  networking/tls.c                 |   2 +-
  shell/ash.c                      |   2 +-
- shell/hush.c                     | 111 +++++++++++++++++++++++++
- 38 files changed, 537 insertions(+), 35 deletions(-)
+ shell/hush.c                     | 111 ++++++++++++++++++++++++
+ 38 files changed, 553 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -120,17 +120,27 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..46ebde07c 100644
+index cca33a177..d320358b4 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,21 @@
+@@ -55,6 +55,31 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
 +
 +#ifdef __VSF__
++# include <vsf.h>
 +# include <getopt.h>
 +# include "vsf_porting/libbb_dynlib.h"
++
++# ifdef VSF_ARCH_SETJMP
++#  undef setjmp
++#  define setjmp VSF_ARCH_SETJMP
++# endif
++# ifdef VSF_ARCH_LONGJMP
++#  undef longjmp
++#  define longjmp VSF_ARCH_LONGJMP
++# endif
 +
 +// remove __reserved in sal.h from M$
 +# ifdef __reserved
@@ -145,7 +155,7 @@ index cca33a177..46ebde07c 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +197,9 @@
+@@ -182,7 +207,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -155,7 +165,7 @@ index cca33a177..46ebde07c 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -311,7 +328,21 @@ typedef unsigned long long uoff_t;
+@@ -311,7 +338,21 @@ typedef unsigned long long uoff_t;
   * Even if sizeof(off_t) == sizeof(int), off_t is typedef'ed to long anyway.
   * gcc will throw warnings on printf("%d", off_t)... Have to use %ld etc.
   */
@@ -178,7 +188,7 @@ index cca33a177..46ebde07c 100644
  typedef unsigned long uoff_t;
  #  define XATOOFF(a) xatoi_positive(a)
  #  define BB_STRTOOFF bb_strtou
-@@ -383,10 +414,107 @@ struct BUG_off_t_size_is_misdetected {
+@@ -383,10 +424,107 @@ struct BUG_off_t_size_is_misdetected {
  # define BB_GLOBAL_CONST const
  #endif
  
@@ -286,7 +296,7 @@ index cca33a177..46ebde07c 100644
  # undef errno
  # define errno (*bb_errno)
  # define bb_cached_errno_ptr 1
-@@ -637,7 +765,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
+@@ -637,7 +775,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
  /* Return old set in the same set: */
  int sigprocmask2(int how, sigset_t *set) FAST_FUNC;
  /* Standard handler which just records signo */
@@ -298,7 +308,7 @@ index cca33a177..46ebde07c 100644
  void record_signo(int signo); /* not FAST_FUNC! */
  
  
-@@ -1085,7 +1217,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1227,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -307,7 +317,7 @@ index cca33a177..46ebde07c 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -1318,7 +1450,11 @@ enum {
+@@ -1318,7 +1460,11 @@ enum {
  # define bb_daemonize_or_rexec(flags, argv) bb_daemonize_or_rexec(flags)
  # define bb_daemonize(flags)                bb_daemonize_or_rexec(flags, bogus)
  #else
@@ -319,7 +329,7 @@ index cca33a177..46ebde07c 100644
    /* Note: re_exec() and fork_or_rexec() do argv[0][0] |= 0x80 on NOMMU!
     * _Parent_ needs to undo it if it doesn't want to have argv[0] mangled.
     */
-@@ -1343,7 +1479,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
+@@ -1343,7 +1489,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
  void make_all_argv_opts(char **argv) FAST_FUNC;
  char* single_argv(char **argv) FAST_FUNC;
  extern const char *const bb_argv_dash[]; /* { "-", NULL } */
@@ -331,7 +341,7 @@ index cca33a177..46ebde07c 100644
  uint32_t getopt32(char **argv, const char *applet_opts, ...) FAST_FUNC;
  # define No_argument "\0"
  # define Required_argument "\001"
-@@ -1380,10 +1520,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
+@@ -1380,10 +1530,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
   * of "llist-compatible" structs, and using llist_FOO functions
   * on them.
   */
@@ -344,7 +354,7 @@ index cca33a177..46ebde07c 100644
  void llist_add_to(llist_t **old_head, void *data) FAST_FUNC;
  void llist_add_to_end(llist_t **list_head, void *data) FAST_FUNC;
  void *llist_pop(llist_t **elm) FAST_FUNC;
-@@ -1399,7 +1541,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1399,7 +1551,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
   * to create pidfiles regardless of FEATURE_PIDFILE */
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
@@ -356,7 +366,7 @@ index cca33a177..46ebde07c 100644
  void write_pidfile(const char *path) FAST_FUNC;
  void write_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
  void remove_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
-@@ -1418,10 +1564,17 @@ enum {
+@@ -1418,10 +1574,17 @@ enum {
  	LOGMODE_SYSLOG = (1 << 1) * ENABLE_FEATURE_SYSLOG,
  	LOGMODE_BOTH = LOGMODE_SYSLOG + LOGMODE_STDIO,
  };
@@ -374,7 +384,7 @@ index cca33a177..46ebde07c 100644
  void xfunc_die(void) NORETURN FAST_FUNC;
  void bb_show_usage(void) NORETURN FAST_FUNC;
  void bb_error_msg(const char *s, ...) __attribute__ ((format (printf, 1, 2))) FAST_FUNC;
-@@ -2189,7 +2342,11 @@ enum {
+@@ -2189,7 +2352,11 @@ enum {
  	SHA3_OUTSIZE   = 28,
  };
  
@@ -386,7 +396,7 @@ index cca33a177..46ebde07c 100644
  uint32_t *crc32_filltable(uint32_t *tbl256, int endian) FAST_FUNC;
  uint32_t *crc32_new_table_le(void) FAST_FUNC;
  uint32_t *global_crc32_new_table_le(void) FAST_FUNC;
-@@ -2228,7 +2385,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
+@@ -2228,7 +2395,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
  int ubi_get_volid_by_name(unsigned ubi_devnum, const char *vol_name) FAST_FUNC;
  
  
@@ -398,7 +408,7 @@ index cca33a177..46ebde07c 100644
  
  /* Some older linkers don't perform string merging, we used to have common strings
   * as global arrays to do it by hand. But:
-@@ -2294,7 +2455,11 @@ struct globals;
+@@ -2294,7 +2465,11 @@ struct globals;
  /* '*const' ptr makes gcc optimize code much better.
   * Magic prevents ptr_to_globals from going into rodata.
   * If you want to assign a value, use SET_PTR_TO_GLOBALS(x) */
@@ -410,7 +420,7 @@ index cca33a177..46ebde07c 100644
  
  #define barrier() asm volatile ("":::"memory")
  
-@@ -2414,7 +2579,9 @@ do { \
+@@ -2414,7 +2589,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -422,7 +432,7 @@ index cca33a177..46ebde07c 100644
  
  
 diff --git a/include/platform.h b/include/platform.h
-index ea0512f36..3eeeaf85d 100644
+index ea0512f36..a592eecb4 100644
 --- a/include/platform.h
 +++ b/include/platform.h
 @@ -7,6 +7,10 @@
@@ -445,7 +455,29 @@ index ea0512f36..3eeeaf85d 100644
  # ifndef __attribute__
  #  define __attribute__(x)
  # endif
-@@ -318,7 +322,9 @@ typedef unsigned smalluint;
+@@ -65,7 +69,9 @@
+  * to the new pointer) after the function returns a non-NULL value."
+  */
+ #define RETURNS_MALLOC __attribute__ ((malloc))
+-#define PACKED __attribute__ ((__packed__))
++#ifndef PACKED
++# define PACKED __attribute__ ((__packed__))
++#endif
+ #define ALIGNED(m) __attribute__ ((__aligned__(m)))
+ 
+ /* __NO_INLINE__: some gcc's do not honor inlining! :( */
+@@ -81,7 +87,9 @@
+ #  define UNUSED_PARAM_RESULT
+ # endif
+ #else
+-# define ALWAYS_INLINE inline
++# ifndef ALWAYS_INLINE
++#  define ALWAYS_INLINE inline
++# endif
+ # define NOINLINE
+ # define DEPRECATED
+ # define UNUSED_PARAM_RESULT
+@@ -318,7 +326,9 @@ typedef unsigned smalluint;
   || defined __dietlibc__ \
   || defined __BIONIC__ \
   || defined _NEWLIB_VERSION
