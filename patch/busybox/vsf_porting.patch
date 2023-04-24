@@ -1,17 +1,17 @@
- coreutils/sort.c                 |  11 +++
+ coreutils/sort.c                 |  11 ++
  coreutils/test.c                 |   4 +
  coreutils/test_ptr_hack.c        |   2 +
  editors/awk.c                    |   4 +-
- include/libbb.h                  | 183 ++++++++++++++++++++++++++++++++++++++-
+ include/libbb.h                  | 183 ++++++++++++++++++++++++++++++-
  include/platform.h               |  18 +++-
- init/init.c                      | 112 ++++++++++++++++++++++++
- libbb/appletlib.c                |  22 +++++
- libbb/auto_string.c              |   5 ++
+ init/init.c                      | 112 +++++++++++++++++++
+ libbb/appletlib.c                |  22 ++++
+ libbb/auto_string.c              |   5 +
  libbb/bbunit.c                   |   6 ++
  libbb/common_bufsiz.c            |   2 +
  libbb/crc32.c                    |   2 +
  libbb/default_error_retval.c     |   2 +
- libbb/getopt32.c                 |  16 ++--
+ libbb/getopt32.c                 |  16 +--
  libbb/hash_md5_sha.c             |   4 +
  libbb/inet_common.c              |   7 ++
  libbb/inode_hash.c               |   4 +
@@ -21,7 +21,7 @@
  libbb/pidfile.c                  |   2 +
  libbb/procps.c                   |   4 +
  libbb/ptr_to_globals.c           |   2 +
- libbb/pw_encrypt.c               |   5 ++
+ libbb/pw_encrypt.c               |   5 +
  libbb/signals.c                  |   2 +
  libbb/u_signal_names.c           |   2 +-
  libbb/verror_msg.c               |   4 +
@@ -30,13 +30,13 @@
  loginutils/addgroup.c            |   2 +-
  loginutils/adduser.c             |   2 +-
  miscutils/fbsplash.c             |   2 +-
- networking/libiproute/rt_names.c |  20 ++---
+ networking/libiproute/rt_names.c |  20 ++--
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
  networking/tls.c                 |   2 +-
  shell/ash.c                      |   2 +-
- shell/hush.c                     | 111 ++++++++++++++++++++++++
- 38 files changed, 553 insertions(+), 37 deletions(-)
+ shell/hush.c                     | 226 +++++++++++++++++++++++++++++++++++++++
+ 38 files changed, 668 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -1293,10 +1293,27 @@ index 18ccc1329..832924b4e 100644
  	/*sbuf[1] = '\0'; - already is */
  	setvar0(optvar, sbuf);
 diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..7fdb31a10 100644
+index d111f0cc5..c3a243df2 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
-@@ -2099,8 +2099,11 @@ static void hush_exit(int exitcode)
+@@ -379,6 +379,16 @@
+ # define NUM_SCRIPTS 0
+ #endif
+ 
++#ifdef __VSF__
++#include <spawn.h>
++
++extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
++                const posix_spawn_file_actions_t *actions,
++                const posix_spawnattr_t *attr,
++                char * const argv[], char * const env[], void *priv, int priv_size);
++extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
++#endif
++
+ /* So far, all bash compat is controlled by one config option */
+ /* Separate defines document which part of code implements what */
+ #define BASH_PATTERN_SUBST ENABLE_HUSH_BASH_COMPAT
+@@ -2099,8 +2109,11 @@ static void hush_exit(int exitcode)
  		cur_var = G.top_var;
  		while (cur_var) {
  			struct variable *tmp = cur_var;
@@ -1308,20 +1325,146 @@ index d111f0cc5..7fdb31a10 100644
  			cur_var = cur_var->next;
  			free(tmp);
  		}
-@@ -9229,6 +9232,98 @@ static int redirect_and_varexp_helper(
+@@ -7602,6 +7615,106 @@ static void parse_and_run_file(HFILE *fp)
+ }
+ 
+ #if ENABLE_HUSH_TICK
++# ifdef __VSF__
++
++struct generate_stream_from_string_priv {
++	char **to_free;
++	char *s;
++	int channel[2];
++};
++
++static NOINLINE int generate_stream_from_string_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct generate_stream_from_string_priv *priv = (struct generate_stream_from_string_priv *)lbb_ctx->__args.buffer;
++	char **to_free = priv->to_free;
++	const char *s = (const char *)priv->s;
++	int channel[2] = {priv->channel[0], priv->channel[1]};
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	disable_restore_tty_pgrp_on_exit();
++	/* Process substitution is not considered to be usual
++	 * 'command execution'.
++	 * SUSv3 says ctrl-Z should be ignored, ctrl-C should not.
++	 */
++	bb_signals(0
++		+ (1 << SIGTSTP)
++		+ (1 << SIGTTIN)
++		+ (1 << SIGTTOU)
++		, SIG_IGN);
++	close(channel[0]); /* NB: close _first_, then move fd! */
++	xmove_fd(channel[1], 1);
++# if ENABLE_HUSH_TRAP
++	/* Awful hack for `trap` or $(trap).
++	 *
++	 * http://www.opengroup.org/onlinepubs/009695399/utilities/trap.html
++	 * contains an example where "trap" is executed in a subshell:
++	 *
++	 * save_traps=$(trap)
++	 * ...
++	 * eval "$save_traps"
++	 *
++	 * Standard does not say that "trap" in subshell shall print
++	 * parent shell's traps. It only says that its output
++	 * must have suitable form, but then, in the above example
++	 * (which is not supposed to be normative), it implies that.
++	 *
++	 * bash (and probably other shell) does implement it
++	 * (traps are reset to defaults, but "trap" still shows them),
++	 * but as a result, "trap" logic is hopelessly messed up:
++	 *
++	 * # trap
++	 * trap -- 'echo Ho' SIGWINCH  <--- we have a handler
++	 * # (trap)        <--- trap is in subshell - no output (correct, traps are reset)
++	 * # true | trap   <--- trap is in subshell - no output (ditto)
++	 * # echo `true | trap`    <--- in subshell - output (but traps are reset!)
++	 * trap -- 'echo Ho' SIGWINCH
++	 * # echo `(trap)`         <--- in subshell in subshell - output
++	 * trap -- 'echo Ho' SIGWINCH
++	 * # echo `true | (trap)`  <--- in subshell in subshell in subshell - output!
++	 * trap -- 'echo Ho' SIGWINCH
++	 *
++	 * The rules when to forget and when to not forget traps
++	 * get really complex and nonsensical.
++	 *
++	 * Our solution: ONLY bare $(trap) or `trap` is special.
++	 */
++	s = skip_whitespace(s);
++	if (is_prefixed_with(s, "trap")
++	 && skip_whitespace(s + 4)[0] == '\0'
++	) {
++		static const char *const argv[] ALIGN_PTR = { NULL, NULL };
++		builtin_trap((char**)argv);
++		fflush_all(); /* important */
++		_exit(0);
++	}
++# endif
++# if BB_MMU
++	/* Prevent it from trying to handle ctrl-z etc */
++	IF_HUSH_JOB(G.run_list_level = 1;)
++	CLEAR_RANDOM_T(&G.random_gen); /* or else $RANDOM repeats in child */
++	reset_traps_to_defaults();
++	IF_HUSH_MODE_X(G.x_mode_depth++;)
++	//bb_error_msg("%s: ++x_mode_depth=%d", __func__, G.x_mode_depth);
++	parse_and_run_string(s);
++	_exit(G.last_exitcode);
++# else
++	/* We re-execute after vfork on NOMMU. This makes this script safe:
++	 * yes "0123456789012345678901234567890" | dd bs=32 count=64k >BIG
++	 * huge=`cat BIG` # was blocking here forever
++	 * echo OK
++	 */
++	re_execute_shell(&to_free,
++			s,
++			G.global_argv[0],
++			G.global_argv + 1,
++			NULL);
++# endif
++}
++
++# endif
+ static int generate_stream_from_string(const char *s, pid_t *pid_p)
+ {
+ 	pid_t pid;
+@@ -7611,6 +7724,18 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
+ # endif
+ 
+ 	xpipe(channel);
++#ifdef __VSF__
++	struct generate_stream_from_string_priv priv = {
++		.to_free = to_free,
++		.s = (char *)s,
++		.channel[0] = channel[0],
++		.channel[1] = channel[1],
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++
++	__vsf_linux_spawn(&pid, generate_stream_from_string_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++#else
+ 	pid = BB_MMU ? xfork() : xvfork();
+ 	if (pid == 0) { /* child */
+ 		disable_restore_tty_pgrp_on_exit();
+@@ -7692,6 +7817,7 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
+ 				NULL);
+ # endif
+ 	}
++#endif		// __VSF__
+ 
+ 	/* parent */
+ 	*pid_p = pid;
+@@ -9229,6 +9355,90 @@ static int redirect_and_varexp_helper(
  
  	return setup_redirects(command, sqp);
  }
 +
 +#ifdef __VSF__
-+
-+#include <spawn.h>
-+
-+extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
-+                const posix_spawn_file_actions_t *actions,
-+                const posix_spawnattr_t *attr,
-+                char * const argv[], char * const env[], void *priv, int priv_size);
-+extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
 +
 +struct pipe_process_priv {
 +	int next_infd;
@@ -1407,7 +1550,7 @@ index d111f0cc5..7fdb31a10 100644
  static NOINLINE int run_pipe(struct pipe *pi)
  {
  	static const char *const null_ptr = NULL;
-@@ -9584,6 +9679,21 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9584,6 +9794,21 @@ static NOINLINE int run_pipe(struct pipe *pi)
  		G.execute_lineno = command->lineno;
  #endif
  
@@ -1429,7 +1572,7 @@ index d111f0cc5..7fdb31a10 100644
  		command->pid = BB_MMU ? fork() : vfork();
  		if (!command->pid) { /* child */
  #if ENABLE_HUSH_JOB
-@@ -9641,6 +9751,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9641,6 +9866,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
  			pseudo_exec((nommu_save_t*) &nommu_save, command, argv_expanded);
  			/* pseudo_exec() does not return */
  		}
