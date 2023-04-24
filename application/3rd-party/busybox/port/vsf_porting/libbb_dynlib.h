@@ -9,15 +9,13 @@
         const vsf_linux_dynlib_mod_t vsf_busybox_mod_name(__mod_name) = {       \
             .lib_idx            = &vsf_busybox_dynlib_idx,                      \
             .mod_idx            = (__mod_idx),                                  \
-            .module_num         = VSF_BUSYBOX_MOD_NUM,                          \
-            .bss_size           = VSF_BUSYBOX_BSS_SIZE,                         \
+            .module_num         = 1,                                            \
+            .bss_size           = (__mod_size),                                 \
             .mod_size           = (__mod_size),                                 \
             .init               = (__mod_init),                                 \
         };
-#define VSF_BUSYBOX_BSS_SIZE      32768
 enum {
     VSF_BUSYBOX_MOD_LIBBB = 0,
-    VSF_BUSYBOX_MOD_NUM,
 };
 extern int vsf_busybox_dynlib_idx;
 

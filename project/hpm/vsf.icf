@@ -100,10 +100,10 @@ place in DLM with auto order              {
                                           };
 
 place in NONCACHEABLE_RAM                 { section .noncacheable, section .noncacheable.init, section .noncacheable.bss };
-place in SDRAM                            {
+place in DLM                              {
                                             block heap,
                                             readwrite,                                            // Catch-all for initialized/uninitialized data sections (e.g. .data, .noinit)
                                             zeroinit                                              // Catch-all for zero-initialized data sections (e.g. .bss)
                                           };
-place at end of AXI_SRAM                  { block stack };                                        // Stack reserved block at the end
+place at end of DLM                       { block stack };                                        // Stack reserved block at the end
 place at end of DLM                       { block safe_stack };                                   // Safe stack reserved block at the end

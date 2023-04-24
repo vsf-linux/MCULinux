@@ -134,7 +134,7 @@ SECTIONS
         PROVIDE (__edata = .);
         PROVIDE (_edata = .);
         PROVIDE (edata = .);
-    } > SDRAM
+    } > DLM
 
     .fast : AT(etext + __data_end__ - __data_start__) {
         . = ALIGN(8);
@@ -160,14 +160,14 @@ SECTIONS
         . = ALIGN(8);
         _end = .;
         __bss_end__ = .;
-    } > SDRAM
+    } > DLM
 
     .heap : {
         . = ALIGN(8);
         __heap_start__ = .;
         . += HEAP_SIZE;
         __heap_end__ = .;
-    } > SDRAM
+    } > DLM
 
     .noncacheable : AT(etext + __data_end__ - __data_start__ + __ramfunc_end__ - __ramfunc_start__){
         . = ALIGN(8);
