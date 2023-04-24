@@ -5,6 +5,16 @@
 
 int vsf_busybox_dynlib_idx = -1;
 
+#define define_vsf_busybox_mod(__mod_name, __mod_size, __mod_idx, __mod_init)   \
+        const vsf_linux_dynlib_mod_t vsf_busybox_mod_name(__mod_name) = {       \
+            .lib_idx            = &vsf_busybox_dynlib_idx,                      \
+            .mod_idx            = (__mod_idx),                                  \
+            .module_num         = 1,                                            \
+            .bss_size           = (__mod_size),                                 \
+            .mod_size           = (__mod_size),                                 \
+            .init               = (__mod_init),                                 \
+        };
+
 static void __busybox_libbb_init(void *ctx)
 {
     struct __busybox_libbb_ctx *mod_ctx = ctx;
