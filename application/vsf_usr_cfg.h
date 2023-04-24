@@ -83,7 +83,6 @@
 #       define VSF_USE_APPLET                           ENABLED
 #       define VSF_LINUX_USE_APPLET                     ENABLED
 #   endif
-#   define VSF_LINUX_CFG_MAX_ARG_NUM                    128
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
 
 // APP configuration
