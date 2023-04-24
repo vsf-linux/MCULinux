@@ -13,6 +13,8 @@ static void __busybox_libbb_init(void *ctx)
     logmode = LOGMODE_STDIO;
     msg_eol = "\n";
 
+    // init
+    mod_ctx->init.message.log_fd = -1;
     // verror_msg.c
     mod_ctx->verror_msg.syslog_level = LOG_ERR;
 }
