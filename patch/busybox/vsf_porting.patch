@@ -2,9 +2,9 @@
  coreutils/test.c                 |   4 +
  coreutils/test_ptr_hack.c        |   2 +
  editors/awk.c                    |   4 +-
- include/libbb.h                  | 183 ++++++++++++++++++++++++++++++-
+ include/libbb.h                  | 183 +++++++++++++++++++++++++++++++-
  include/platform.h               |  18 +++-
- init/init.c                      | 112 +++++++++++++++++++
+ init/init.c                      | 112 ++++++++++++++++++++
  libbb/appletlib.c                |  22 ++++
  libbb/auto_string.c              |   5 +
  libbb/bbunit.c                   |   6 ++
@@ -35,8 +35,8 @@
  networking/netstat.c             |   4 +-
  networking/tls.c                 |   2 +-
  shell/ash.c                      |   2 +-
- shell/hush.c                     | 226 +++++++++++++++++++++++++++++++++++++++
- 38 files changed, 668 insertions(+), 37 deletions(-)
+ shell/hush.c                     | 224 +++++++++++++++++++++++++++++++++++++++
+ 38 files changed, 666 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -1293,7 +1293,7 @@ index 18ccc1329..832924b4e 100644
  	/*sbuf[1] = '\0'; - already is */
  	setvar0(optvar, sbuf);
 diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..c3a243df2 100644
+index d111f0cc5..2c818ab6f 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
 @@ -379,6 +379,16 @@
@@ -1459,7 +1459,7 @@ index d111f0cc5..c3a243df2 100644
  
  	/* parent */
  	*pid_p = pid;
-@@ -9229,6 +9355,90 @@ static int redirect_and_varexp_helper(
+@@ -9229,6 +9355,89 @@ static int redirect_and_varexp_helper(
  
  	return setup_redirects(command, sqp);
  }
@@ -1472,7 +1472,6 @@ index d111f0cc5..c3a243df2 100644
 +	struct pipe *pi;
 +	struct command *command;
 +	volatile nommu_save_t nommu_save;
-+	char **argv_expanded;
 +};
 +
 +static NOINLINE int pipe_process(int argc, char *argv[])
@@ -1484,7 +1483,7 @@ index d111f0cc5..c3a243df2 100644
 +	struct pipe *pi = priv->pi;
 +	struct command *command = priv->command;
 +	volatile nommu_save_t nommu_save = priv->nommu_save;
-+	char **argv_expanded = priv->argv_expanded;
++	char **argv_expanded = argv;
 +
 +	declare_vsf_busybox_mod(libbb_fork);
 +	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
@@ -1541,7 +1540,7 @@ index d111f0cc5..c3a243df2 100644
 +	/* Stores to nommu_save list of env vars putenv'ed
 +	 * (NOMMU, on MMU we don't need that) */
 +	/* cast away volatility... */
-+	pseudo_exec((nommu_save_t*) &nommu_save, command, argv_expanded);
++	pseudo_exec((nommu_save_t*) &nommu_save, command, argv);
 +	/* pseudo_exec() does not return */
 +}
 +
@@ -1550,7 +1549,7 @@ index d111f0cc5..c3a243df2 100644
  static NOINLINE int run_pipe(struct pipe *pi)
  {
  	static const char *const null_ptr = NULL;
-@@ -9584,6 +9794,21 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9584,6 +9793,20 @@ static NOINLINE int run_pipe(struct pipe *pi)
  		G.execute_lineno = command->lineno;
  #endif
  
@@ -1561,18 +1560,17 @@ index d111f0cc5..c3a243df2 100644
 +			.pi				= pi,
 +			.command		= command,
 +			.nommu_save		= nommu_save,
-+			.argv_expanded	= argv_expanded,
 +		};
 +		struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
 +		memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
 +
 +		command->pid = -1;
-+		__vsf_linux_spawn(&command->pid, pipe_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++		__vsf_linux_spawn(&command->pid, pipe_process, NULL, NULL, argv_expanded, NULL, lbb_ctx, sizeof(*lbb_ctx));
 +#else
  		command->pid = BB_MMU ? fork() : vfork();
  		if (!command->pid) { /* child */
  #if ENABLE_HUSH_JOB
-@@ -9641,6 +9866,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9641,6 +9864,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
  			pseudo_exec((nommu_save_t*) &nommu_save, command, argv_expanded);
  			/* pseudo_exec() does not return */
  		}
