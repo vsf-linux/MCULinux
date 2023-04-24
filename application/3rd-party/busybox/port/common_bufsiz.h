@@ -4,4 +4,4 @@ enum { COMMON_BUFSIZE = 1024 };
 #else
 extern char bb_common_bufsiz1[];
 #endif
-#define setup_common_bufsiz() ((void)0)
+#define setup_common_bufsiz() memset(bb_common_bufsiz1, 0, COMMON_BUFSIZE)
