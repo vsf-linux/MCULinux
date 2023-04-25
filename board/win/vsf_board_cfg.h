@@ -96,6 +96,7 @@
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 #define VSF_LINUX_HOSTFS_TYPE                           "winfs"
+#define VSF_LINUX_MACHINE                               "x86_64"
 #define VSF_LINUX_SOCKET_CFG_WRAPPER                    ENABLED
 
 /*----------------------------------------------------------------------------*
