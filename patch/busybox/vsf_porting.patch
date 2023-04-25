@@ -1293,7 +1293,7 @@ index 18ccc1329..832924b4e 100644
  	/*sbuf[1] = '\0'; - already is */
  	setvar0(optvar, sbuf);
 diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..2c818ab6f 100644
+index d111f0cc5..a1f68e7d4 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
 @@ -379,6 +379,16 @@
@@ -1540,7 +1540,7 @@ index d111f0cc5..2c818ab6f 100644
 +	/* Stores to nommu_save list of env vars putenv'ed
 +	 * (NOMMU, on MMU we don't need that) */
 +	/* cast away volatility... */
-+	pseudo_exec((nommu_save_t*) &nommu_save, command, argv);
++	pseudo_exec((nommu_save_t*) &nommu_save, command, 0 == argc ? NULL : argv);
 +	/* pseudo_exec() does not return */
 +}
 +
