@@ -23,9 +23,15 @@
 
 /*============================ INCLUDES ======================================*/
 
-#include "vsf_board_cfg.h"
+#ifndef __VSF_APPLET__
+#   include "vsf_board_cfg.h"
+#endif
 
 /*============================ MACROS ========================================*/
+
+#ifdef __VSF_APPLET__
+#   define applet_entry                                 _start
+#endif
 
 // components
 #define VSF_USE_HASH                                    ENABLED
