@@ -86,7 +86,6 @@
 #   define VSF_LINUX_CFG_PLS_NUM                        16
 #   define VSF_LINUX_CFG_TLS_NUM                        64
 #   if VSF_USE_LOADER == ENABLED
-#       define VSF_USE_APPLET                           ENABLED
 #       define VSF_LINUX_USE_APPLET                     ENABLED
 #   endif
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
