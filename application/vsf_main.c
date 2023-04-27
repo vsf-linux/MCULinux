@@ -60,6 +60,7 @@ int vsf_linux_create_fhs(void)
     };
     if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_src_argv, NULL)) {
         waitpid(pid, NULL, 0);
+        putenv("VSF_PATH=/src/vsf");
     }
 #   endif
 
