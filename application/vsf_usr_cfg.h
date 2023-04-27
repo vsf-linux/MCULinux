@@ -29,10 +29,6 @@
 
 /*============================ MACROS ========================================*/
 
-#ifdef __VSF_APPLET__
-#   define applet_entry                                 _start
-#endif
-
 // components
 #define VSF_USE_HASH                                    ENABLED
 #   define VSF_HASH_USE_CRC                             ENABLED
