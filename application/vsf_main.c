@@ -52,6 +52,17 @@ int vsf_linux_create_fhs(void)
     // temperary path to make mount command available
     putenv("PATH=/bin");
     pid_t pid;
+
+#   ifdef VSF_SRC_PATH
+    mkdirs("/src/vsf", 0);
+    const char *mount_src_argv[] = {
+        "mount", "-t", VSF_LINUX_HOSTFS_TYPE, VSF_SRC_PATH, "/src/vsf", NULL,
+    };
+    if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_src_argv, NULL)) {
+        waitpid(pid, NULL, 0);
+    }
+#   endif
+
     mkdir("/usr", 0);
     const char *mount_usr_argv[] = {
         "mount", "-t", VSF_LINUX_HOSTFS_TYPE, "./usr", "/usr", NULL,
