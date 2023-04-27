@@ -573,6 +573,7 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\coreutils\wc.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\coreutils\whoami.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\coreutils\yes.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\debianutils\which.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\editors\awk.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\editors\cmp.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\editors\diff.c" />
@@ -1118,7 +1119,7 @@
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__OOC_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -1146,7 +1147,7 @@
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__OOC_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -1181,7 +1182,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AssemblerListingLocation>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</ObjectFileName>
-      <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -1209,7 +1210,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AssemblerListingLocation>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/__sub0/__sub1/__sub2/__sub3/%(RelativeDir)</ObjectFileName>
-      <AdditionalOptions>-fms-extensions -Xclang -includeD:\test\busybox\vsf.linux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

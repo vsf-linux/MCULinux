@@ -1,6 +1,6 @@
 /* This is a generated file, don't edit */
 
-#define NUM_APPLETS 140
+#define NUM_APPLETS 141
 #define KNOWN_APPNAME_OFFSETS 8
 
 const uint16_t applet_nameofs[] ALIGN2 = {
@@ -8,9 +8,9 @@ const uint16_t applet_nameofs[] ALIGN2 = {
 192,
 297,
 417,
-527,
+534,
 646,
-738,
+741,
 };
 
 const char applet_names[] ALIGN1 = ""
@@ -151,6 +151,7 @@ const char applet_names[] ALIGN1 = ""
 "vi" "\0"
 "volname" "\0"
 "wc" "\0"
+"which" "\0"
 "whoami" "\0"
 "xargs" "\0"
 "yes" "\0"
@@ -291,9 +292,10 @@ const char applet_names[] ALIGN1 = ""
 #define APPLET_NO_vi 134
 #define APPLET_NO_volname 135
 #define APPLET_NO_wc 136
-#define APPLET_NO_whoami 137
-#define APPLET_NO_xargs 138
-#define APPLET_NO_yes 139
+#define APPLET_NO_which 137
+#define APPLET_NO_whoami 138
+#define APPLET_NO_xargs 139
+#define APPLET_NO_yes 140
 
 #ifndef SKIP_applet_main
 int (*const applet_main[])(int argc, char **argv) = {
@@ -434,6 +436,7 @@ uuencode_main,
 vi_main,
 volname_main,
 wc_main,
+which_main,
 whoami_main,
 xargs_main,
 yes_main,
@@ -441,6 +444,7 @@ yes_main,
 #endif
 
 const uint8_t applet_suid[] ALIGN1 = {
+0x00,
 0x00,
 0x00,
 0x00,
@@ -549,4 +553,5 @@ const uint8_t applet_install_loc[] ALIGN1 = {
 0x31,
 0x33,
 0x33,
+0x03,
 };

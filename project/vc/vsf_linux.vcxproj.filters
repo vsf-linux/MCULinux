@@ -823,6 +823,9 @@
     <Filter Include="vsf\shell\sys\linux\lib\3rd-party\glob">
       <UniqueIdentifier>{70f71e57-3f84-4cc6-99a3-5106edeabcf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\3rd-party\busybox\raw\debianutils">
+      <UniqueIdentifier>{7c7653e9-c2a3-44dd-9658-a328d03f031c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -3763,6 +3766,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\lib\3rd-party\glob\glob.c">
       <Filter>vsf\shell\sys\linux\lib\3rd-party\glob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\debianutils\which.c">
+      <Filter>application\3rd-party\busybox\raw\debianutils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
