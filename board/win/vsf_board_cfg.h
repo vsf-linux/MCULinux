@@ -59,6 +59,7 @@
 #define VSF_HAL_USE_USART                               ENABLED
 #define VSF_HAL_USE_DEBUG_STREAM                        ENABLED
 #   define VSF_DEBUG_STREAM_CFG_HW_PRIORITY             vsf_arch_prio_0
+#   define VSF_DEBUG_STREAM_CFG_CR2LF                   ENABLED
 #define VSF_HAL_USE_DISTBUS                             ENABLED
 #   define VSF_HAL_DISTBUS_USE_IO                       ENABLED
 #   define VSF_HAL_DISTBUS_USE_GPIO                     ENABLED
