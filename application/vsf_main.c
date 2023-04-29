@@ -112,6 +112,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/chat", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/chmod", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/cksum", lbb_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/clear", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/cmp", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/comm", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/cp", lbb_main);
