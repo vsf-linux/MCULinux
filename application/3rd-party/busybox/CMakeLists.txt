@@ -147,6 +147,8 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/coreutils/whoami.c
     raw/coreutils/yes.c
 
+    raw/debianutils/which.c
+
     raw/editors/awk.c
     raw/editors/cmp.c
     raw/editors/diff.c

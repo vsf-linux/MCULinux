@@ -2082,15 +2082,6 @@
     <ClInclude Include="..\..\vsf\source\service\loader\elf\vsf_elfloader.h">
       <Filter>vsf\service\loader\elf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\simple_libc\dlfcn.h">
-      <Filter>vsf\shell\sys\linux\include\simple_libc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\simple_libc\mntent.h">
-      <Filter>vsf\shell\sys\linux\include\simple_libc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\simple_libc\paths.h">
-      <Filter>vsf\shell\sys\linux\include\simple_libc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\simple_libc\xlocale.h">
       <Filter>vsf\shell\sys\linux\include\simple_libc</Filter>
     </ClInclude>
