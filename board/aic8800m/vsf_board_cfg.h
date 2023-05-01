@@ -134,6 +134,7 @@
 #define VSF_LINUX_CFG_STACKSIZE                         (8 * 1024)
 #define VSF_LINUX_USE_SIMPLE_LIBC                       ENABLED
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#   define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT             ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 
 /*----------------------------------------------------------------------------*

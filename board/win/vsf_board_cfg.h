@@ -95,6 +95,7 @@
 #define VSF_USBH_USE_HUB                                DISABLED
 
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#   define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT             ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED
 #define VSF_LINUX_HOSTFS_TYPE                           "winfs"
 #define VSF_LINUX_MACHINE                               "x86_64"
