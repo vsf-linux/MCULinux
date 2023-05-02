@@ -167,6 +167,16 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
 
     raw/libpwdgrp/uidgid_get.c
 
+    raw/networking/ftpd.c
+    raw/networking/httpd.c
+    raw/networking/ntpd.c
+    raw/networking/parse_pasv_epsv.c
+    raw/networking/ping.c
+    raw/networking/tenlet.c
+    raw/networking/telnetd.c
+    raw/networking/tftp.c
+    raw/networking/wget.c
+
     raw/miscutils/ascii.c
     raw/miscutils/bc.c
     raw/miscutils/chat.c
@@ -208,6 +218,7 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/libbb/bb_strtod.c
     raw/libbb/bb_strtonum.c
     raw/libbb/bbunit.c
+    raw/libbb/change_identity.c
     raw/libbb/chomp.c
     raw/libbb/common_bufsiz.c
     raw/libbb/compare_string_array.c

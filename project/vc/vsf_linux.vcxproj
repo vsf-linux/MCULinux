@@ -602,6 +602,7 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\bb_qsort.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\bb_strtod.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\bb_strtonum.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\change_identity.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\chomp.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\common_bufsiz.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\libbb\compare_string_array.c" />
@@ -743,6 +744,15 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\miscutils\ts.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\miscutils\ttysize.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\miscutils\volname.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\ftpd.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\httpd.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\ntpd.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\parse_pasv_epsv.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\ping.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\telnet.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\telnetd.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tftp.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\wget.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\cttyhack.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\hush.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\match.c" />
