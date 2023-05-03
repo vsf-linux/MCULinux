@@ -238,6 +238,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/xargs", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/yes", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ping", lbb_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wget", lbb_main);
 
     return 0;
 }
