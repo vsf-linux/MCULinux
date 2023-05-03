@@ -2,7 +2,7 @@
  coreutils/test.c                 |   4 +
  coreutils/test_ptr_hack.c        |   2 +
  editors/awk.c                    |   4 +-
- include/libbb.h                  | 183 +++++++++++++++++++++++++++++++-
+ include/libbb.h                  | 191 +++++++++++++++++++++++++++++++++-
  include/platform.h               |  18 +++-
  init/init.c                      | 112 ++++++++++++++++++++
  libbb/appletlib.c                |  22 ++++
@@ -34,9 +34,10 @@
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
  networking/tls.c                 |   2 +-
+ networking/wget.c                |  58 +++++++++++
  shell/ash.c                      |   2 +-
- shell/hush.c                     | 224 +++++++++++++++++++++++++++++++++++++++
- 38 files changed, 666 insertions(+), 37 deletions(-)
+ shell/hush.c                     | 214 +++++++++++++++++++++++++++++++++++++++
+ 39 files changed, 722 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -120,10 +121,10 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..d320358b4 100644
+index cca33a177..ef9f1f951 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,31 @@
+@@ -55,6 +55,39 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
@@ -132,6 +133,14 @@ index cca33a177..d320358b4 100644
 +# include <vsf.h>
 +# include <getopt.h>
 +# include "vsf_porting/libbb_dynlib.h"
++
++// VSF uses spawn to replace fork/vfork
++# include <spawn.h>
++extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
++                const posix_spawn_file_actions_t *actions,
++                const posix_spawnattr_t *attr,
++                char * const argv[], char * const env[], void *priv, int priv_size);
++extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
 +
 +# ifdef VSF_ARCH_SETJMP
 +#  undef setjmp
@@ -155,7 +164,7 @@ index cca33a177..d320358b4 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +207,9 @@
+@@ -182,7 +215,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -165,7 +174,7 @@ index cca33a177..d320358b4 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -311,7 +338,21 @@ typedef unsigned long long uoff_t;
+@@ -311,7 +346,21 @@ typedef unsigned long long uoff_t;
   * Even if sizeof(off_t) == sizeof(int), off_t is typedef'ed to long anyway.
   * gcc will throw warnings on printf("%d", off_t)... Have to use %ld etc.
   */
@@ -188,7 +197,7 @@ index cca33a177..d320358b4 100644
  typedef unsigned long uoff_t;
  #  define XATOOFF(a) xatoi_positive(a)
  #  define BB_STRTOOFF bb_strtou
-@@ -383,10 +424,107 @@ struct BUG_off_t_size_is_misdetected {
+@@ -383,10 +432,107 @@ struct BUG_off_t_size_is_misdetected {
  # define BB_GLOBAL_CONST const
  #endif
  
@@ -296,7 +305,7 @@ index cca33a177..d320358b4 100644
  # undef errno
  # define errno (*bb_errno)
  # define bb_cached_errno_ptr 1
-@@ -637,7 +775,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
+@@ -637,7 +783,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
  /* Return old set in the same set: */
  int sigprocmask2(int how, sigset_t *set) FAST_FUNC;
  /* Standard handler which just records signo */
@@ -308,7 +317,7 @@ index cca33a177..d320358b4 100644
  void record_signo(int signo); /* not FAST_FUNC! */
  
  
-@@ -1085,7 +1227,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1235,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -317,7 +326,7 @@ index cca33a177..d320358b4 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -1318,7 +1460,11 @@ enum {
+@@ -1318,7 +1468,11 @@ enum {
  # define bb_daemonize_or_rexec(flags, argv) bb_daemonize_or_rexec(flags)
  # define bb_daemonize(flags)                bb_daemonize_or_rexec(flags, bogus)
  #else
@@ -329,7 +338,7 @@ index cca33a177..d320358b4 100644
    /* Note: re_exec() and fork_or_rexec() do argv[0][0] |= 0x80 on NOMMU!
     * _Parent_ needs to undo it if it doesn't want to have argv[0] mangled.
     */
-@@ -1343,7 +1489,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
+@@ -1343,7 +1497,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
  void make_all_argv_opts(char **argv) FAST_FUNC;
  char* single_argv(char **argv) FAST_FUNC;
  extern const char *const bb_argv_dash[]; /* { "-", NULL } */
@@ -341,7 +350,7 @@ index cca33a177..d320358b4 100644
  uint32_t getopt32(char **argv, const char *applet_opts, ...) FAST_FUNC;
  # define No_argument "\0"
  # define Required_argument "\001"
-@@ -1380,10 +1530,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
+@@ -1380,10 +1538,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
   * of "llist-compatible" structs, and using llist_FOO functions
   * on them.
   */
@@ -354,7 +363,7 @@ index cca33a177..d320358b4 100644
  void llist_add_to(llist_t **old_head, void *data) FAST_FUNC;
  void llist_add_to_end(llist_t **list_head, void *data) FAST_FUNC;
  void *llist_pop(llist_t **elm) FAST_FUNC;
-@@ -1399,7 +1551,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1399,7 +1559,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
   * to create pidfiles regardless of FEATURE_PIDFILE */
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
@@ -366,7 +375,7 @@ index cca33a177..d320358b4 100644
  void write_pidfile(const char *path) FAST_FUNC;
  void write_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
  void remove_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
-@@ -1418,10 +1574,17 @@ enum {
+@@ -1418,10 +1582,17 @@ enum {
  	LOGMODE_SYSLOG = (1 << 1) * ENABLE_FEATURE_SYSLOG,
  	LOGMODE_BOTH = LOGMODE_SYSLOG + LOGMODE_STDIO,
  };
@@ -384,7 +393,7 @@ index cca33a177..d320358b4 100644
  void xfunc_die(void) NORETURN FAST_FUNC;
  void bb_show_usage(void) NORETURN FAST_FUNC;
  void bb_error_msg(const char *s, ...) __attribute__ ((format (printf, 1, 2))) FAST_FUNC;
-@@ -2189,7 +2352,11 @@ enum {
+@@ -2189,7 +2360,11 @@ enum {
  	SHA3_OUTSIZE   = 28,
  };
  
@@ -396,7 +405,7 @@ index cca33a177..d320358b4 100644
  uint32_t *crc32_filltable(uint32_t *tbl256, int endian) FAST_FUNC;
  uint32_t *crc32_new_table_le(void) FAST_FUNC;
  uint32_t *global_crc32_new_table_le(void) FAST_FUNC;
-@@ -2228,7 +2395,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
+@@ -2228,7 +2403,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
  int ubi_get_volid_by_name(unsigned ubi_devnum, const char *vol_name) FAST_FUNC;
  
  
@@ -408,7 +417,7 @@ index cca33a177..d320358b4 100644
  
  /* Some older linkers don't perform string merging, we used to have common strings
   * as global arrays to do it by hand. But:
-@@ -2294,7 +2465,11 @@ struct globals;
+@@ -2294,7 +2473,11 @@ struct globals;
  /* '*const' ptr makes gcc optimize code much better.
   * Magic prevents ptr_to_globals from going into rodata.
   * If you want to assign a value, use SET_PTR_TO_GLOBALS(x) */
@@ -420,7 +429,7 @@ index cca33a177..d320358b4 100644
  
  #define barrier() asm volatile ("":::"memory")
  
-@@ -2414,7 +2589,9 @@ do { \
+@@ -2414,7 +2597,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -1279,6 +1288,89 @@ index 8d074c058..52d56fded 100644
  }
  
  static void tls_aesgcm_decrypt(tls_state_t *tls, uint8_t *buf, int size)
+diff --git a/networking/wget.c b/networking/wget.c
+index 9ec0e67b9..289e333ea 100644
+--- a/networking/wget.c
++++ b/networking/wget.c
+@@ -766,6 +766,50 @@ static int spawn_https_helper_openssl(const char *host, unsigned port)
+ #endif
+ 
+ #if ENABLE_FEATURE_WGET_HTTPS
++# ifdef __VSF__
++struct spawn_ssl_client_priv {
++	int network_fd;
++	int flags;
++	int sp[2];
++};
++
++static NOINLINE int spawn_ssl_client_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct spawn_ssl_client_priv *priv = (struct spawn_ssl_client_priv *)lbb_ctx->__args.buffer;
++	int network_fd = priv->network_fd;
++	int flags = priv->flags;
++	int sp[2] = {priv->sp[0], priv->sp[1]};
++	char *servername = (char *)&priv[1];
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	close(sp[0]);
++	xmove_fd(sp[1], 0);
++	xdup2(0, 1);
++	if (BB_MMU) {
++		tls_state_t *tls = new_tls_state();
++		tls->ifd = tls->ofd = network_fd;
++		tls_handshake(tls, servername);
++		tls_run_copy_loop(tls, flags);
++		exit(0);
++	} else {
++		char *argv[6];
++
++		xmove_fd(network_fd, 3);
++		argv[0] = (char*)"ssl_client";
++		argv[1] = (char*)"-s3";
++		//TODO: if (!is_ip_address(servername))...
++		argv[2] = (char*)"-n";
++		argv[3] = servername;
++		argv[4] = (flags & TLSLOOP_EXIT_ON_LOCAL_EOF ? (char*)"-e" : NULL);
++		argv[5] = NULL;
++		BB_EXECVP(argv[0], argv);
++		bb_perror_msg_and_die("can't execute '%s'", argv[0]);
++	}
++}
++# endif
+ static void spawn_ssl_client(const char *host, int network_fd, int flags)
+ {
+ 	int sp[2];
+@@ -786,6 +830,19 @@ static void spawn_ssl_client(const char *host, int network_fd, int flags)
+ 		bb_simple_perror_msg_and_die("socketpair");
+ 
+ 	fflush_all();
++#ifdef __VSF__
++	struct spawn_ssl_client_priv priv = {
++		.network_fd		= network_fd,
++		.flags			= flags,
++		.sp[0]			= sp[0],
++		.sp[1]			= sp[1],
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), servername);
++
++	__vsf_linux_spawn(&pid, spawn_ssl_client_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++#else
+ 	pid = BB_MMU ? xfork() : xvfork();
+ 	if (pid == 0) {
+ 		/* Child */
+@@ -814,6 +871,7 @@ static void spawn_ssl_client(const char *host, int network_fd, int flags)
+ 		}
+ 		/* notreached */
+ 	}
++#endif		// __VSF__
+ 
+ 	/* Parent */
+ 	free(servername);
 diff --git a/shell/ash.c b/shell/ash.c
 index 18ccc1329..832924b4e 100644
 --- a/shell/ash.c
@@ -1293,27 +1385,10 @@ index 18ccc1329..832924b4e 100644
  	/*sbuf[1] = '\0'; - already is */
  	setvar0(optvar, sbuf);
 diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..a1f68e7d4 100644
+index d111f0cc5..622dcd70f 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
-@@ -379,6 +379,16 @@
- # define NUM_SCRIPTS 0
- #endif
- 
-+#ifdef __VSF__
-+#include <spawn.h>
-+
-+extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
-+                const posix_spawn_file_actions_t *actions,
-+                const posix_spawnattr_t *attr,
-+                char * const argv[], char * const env[], void *priv, int priv_size);
-+extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
-+#endif
-+
- /* So far, all bash compat is controlled by one config option */
- /* Separate defines document which part of code implements what */
- #define BASH_PATTERN_SUBST ENABLE_HUSH_BASH_COMPAT
-@@ -2099,8 +2109,11 @@ static void hush_exit(int exitcode)
+@@ -2099,8 +2099,11 @@ static void hush_exit(int exitcode)
  		cur_var = G.top_var;
  		while (cur_var) {
  			struct variable *tmp = cur_var;
@@ -1325,7 +1400,7 @@ index d111f0cc5..a1f68e7d4 100644
  			cur_var = cur_var->next;
  			free(tmp);
  		}
-@@ -7602,6 +7615,106 @@ static void parse_and_run_file(HFILE *fp)
+@@ -7602,6 +7605,106 @@ static void parse_and_run_file(HFILE *fp)
  }
  
  #if ENABLE_HUSH_TICK
@@ -1432,7 +1507,7 @@ index d111f0cc5..a1f68e7d4 100644
  static int generate_stream_from_string(const char *s, pid_t *pid_p)
  {
  	pid_t pid;
-@@ -7611,6 +7724,18 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
+@@ -7611,6 +7714,18 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
  # endif
  
  	xpipe(channel);
@@ -1451,7 +1526,7 @@ index d111f0cc5..a1f68e7d4 100644
  	pid = BB_MMU ? xfork() : xvfork();
  	if (pid == 0) { /* child */
  		disable_restore_tty_pgrp_on_exit();
-@@ -7692,6 +7817,7 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
+@@ -7692,6 +7807,7 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
  				NULL);
  # endif
  	}
@@ -1459,7 +1534,7 @@ index d111f0cc5..a1f68e7d4 100644
  
  	/* parent */
  	*pid_p = pid;
-@@ -9229,6 +9355,89 @@ static int redirect_and_varexp_helper(
+@@ -9229,6 +9345,89 @@ static int redirect_and_varexp_helper(
  
  	return setup_redirects(command, sqp);
  }
@@ -1549,7 +1624,7 @@ index d111f0cc5..a1f68e7d4 100644
  static NOINLINE int run_pipe(struct pipe *pi)
  {
  	static const char *const null_ptr = NULL;
-@@ -9584,6 +9793,20 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9584,6 +9783,20 @@ static NOINLINE int run_pipe(struct pipe *pi)
  		G.execute_lineno = command->lineno;
  #endif
  
@@ -1570,7 +1645,7 @@ index d111f0cc5..a1f68e7d4 100644
  		command->pid = BB_MMU ? fork() : vfork();
  		if (!command->pid) { /* child */
  #if ENABLE_HUSH_JOB
-@@ -9641,6 +9864,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
+@@ -9641,6 +9854,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
  			pseudo_exec((nommu_save_t*) &nommu_save, command, argv_expanded);
  			/* pseudo_exec() does not return */
  		}
