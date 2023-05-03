@@ -25,6 +25,7 @@
  libbb/signals.c                  |   2 +
  libbb/u_signal_names.c           |   2 +-
  libbb/verror_msg.c               |   4 +
+ libbb/vfork_daemon_rexec.c       |  20 ++++
  libbb/xfunc_die.c                |   2 +
  libbb/xfuncs.c                   |   6 +-
  loginutils/addgroup.c            |   2 +-
@@ -33,11 +34,12 @@
  networking/libiproute/rt_names.c |  20 ++--
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
+ networking/telnetd.c             |  99 ++++++++++++++++++
  networking/tls.c                 |   2 +-
  networking/wget.c                |  58 +++++++++++
  shell/ash.c                      |   2 +-
  shell/hush.c                     | 214 +++++++++++++++++++++++++++++++++++++++
- 39 files changed, 722 insertions(+), 37 deletions(-)
+ 41 files changed, 841 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -1073,6 +1075,50 @@ index 71512aee2..0b865cadd 100644
  
  void FAST_FUNC bb_verror_msg(const char *s, va_list p, const char* strerr)
  {
+diff --git a/libbb/vfork_daemon_rexec.c b/libbb/vfork_daemon_rexec.c
+index 79141936a..0bff78867 100644
+--- a/libbb/vfork_daemon_rexec.c
++++ b/libbb/vfork_daemon_rexec.c
+@@ -258,6 +258,17 @@ void FAST_FUNC re_exec(char **argv)
+ 	bb_perror_msg_and_die("can't execute '%s'", bb_busybox_exec_path);
+ }
+ 
++# ifdef __VSF__
++static NOINLINE int fork_or_rexec_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	re_exec(argv);
++}
++# endif
+ pid_t FAST_FUNC fork_or_rexec(char **argv)
+ {
+ 	pid_t pid;
+@@ -266,12 +277,21 @@ pid_t FAST_FUNC fork_or_rexec(char **argv)
+ 		return 0;
+ 
+ 	/* fflush_all(); ? - so far all callers had no buffered output to flush */
++# ifdef __VSF__
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
+ 
++	int result = __vsf_linux_spawn(&pid, fork_or_rexec_process, NULL, NULL, argv, NULL, lbb_ctx, sizeof(*lbb_ctx));
++	if (result) {
++		bb_simple_perror_msg_and_die("vfork");
++	}
++	return pid;
++# else
+ 	pid = xvfork();
+ 	if (pid) /* parent */
+ 		return pid;
+ 	/* child - re-exec ourself */
+ 	re_exec(argv);
++# endif
+ }
+ #endif
+ 
 diff --git a/libbb/xfunc_die.c b/libbb/xfunc_die.c
 index 25b99066d..b74dfc31d 100644
 --- a/libbb/xfunc_die.c
@@ -1275,6 +1321,130 @@ index 807800a62..82889307d 100644
  	return 0;
  }
  
+diff --git a/networking/telnetd.c b/networking/telnetd.c
+index 0805e464f..c76a925f6 100644
+--- a/networking/telnetd.c
++++ b/networking/telnetd.c
+@@ -424,6 +424,85 @@ enum {
+ 	OPT_WAIT       = (1 << 8) * ENABLE_FEATURE_TELNETD_INETD_WAIT, /* -w SEC */
+ };
+ 
++#ifdef __VSF__
++struct make_new_session_priv {
++	int sock;
++	char tty_name[GETPTY_BUFSIZE];
++};
++
++static NOINLINE int make_new_session_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct make_new_session_priv *priv = (struct make_new_session_priv *)lbb_ctx->__args.buffer;
++	char *tty_name = priv->tty_name;
++	int sock = priv->sock;
++	const char *login_argv[2];
++	struct termios termbuf;
++	int pid;
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	bb_signals((1 << SIGCHLD) + (1 << SIGPIPE), SIG_DFL);
++
++	pid = getpid();
++
++	if (ENABLE_FEATURE_UTMP) {
++		len_and_sockaddr *lsa = get_peer_lsa(sock);
++		char *hostname = NULL;
++		if (lsa) {
++			hostname = xmalloc_sockaddr2dotted(&lsa->u.sa);
++			free(lsa);
++		}
++		write_new_utmp(pid, LOGIN_PROCESS, tty_name, /*username:*/ "LOGIN", hostname);
++		free(hostname);
++	}
++
++	/* Make new session and process group */
++	setsid();
++
++	/* Open the child's side of the tty */
++	/* NB: setsid() disconnects from any previous ctty's. Therefore
++	 * we must open child's side of the tty AFTER setsid! */
++	close(0);
++	xopen(tty_name, O_RDWR); /* becomes our ctty */
++	xdup2(0, 1);
++	xdup2(0, 2);
++	tcsetpgrp(0, pid); /* switch this tty's process group to us */
++
++	/* The pseudo-terminal allocated to the client is configured to operate
++	 * in cooked mode, and with XTABS CRMOD enabled (see tty(4)) */
++	tcgetattr(0, &termbuf);
++	termbuf.c_lflag |= ECHO; /* if we use readline we dont want this */
++	termbuf.c_oflag |= ONLCR | XTABS;
++	termbuf.c_iflag |= ICRNL;
++	termbuf.c_iflag &= ~IXOFF;
++	/*termbuf.c_lflag &= ~ICANON;*/
++	tcsetattr_stdin_TCSANOW(&termbuf);
++
++	/* Uses FILE-based I/O to stdout, but does fflush_all(),
++	 * so should be safe with vfork.
++	 * I fear, though, that some users will have ridiculously big
++	 * issue files, and they may block writing to fd 1,
++	 * (parent is supposed to read it, but parent waits
++	 * for vforked child to exec!) */
++	print_login_issue(G.issuefile, tty_name);
++
++	/* Exec shell / login / whatever */
++	login_argv[0] = G.loginpath;
++	login_argv[1] = NULL;
++	/* exec busybox applet (if PREFER_APPLETS=y), if that fails,
++	 * exec external program.
++	 * NB: sock is either 0 or has CLOEXEC set on it.
++	 * fd has CLOEXEC set on it too. These two fds will be closed here.
++	 */
++	BB_EXECVP(G.loginpath, (char **)login_argv);
++	/* _exit is safer with vfork, and we shouldn't send message
++	 * to remote clients anyway */
++	_exit(EXIT_FAILURE); /*bb_perror_msg_and_die("execv %s", G.loginpath);*/
++}
++#endif
++
+ static struct tsession *
+ make_new_session(
+ 		IF_FEATURE_TELNETD_STANDALONE(int sock)
+@@ -497,6 +576,25 @@ make_new_session(
+ 	}
+ 
+ 	fflush_all();
++#ifdef __VSF__
++	struct make_new_session_priv priv = {
++		.sock	= sock,
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(priv.tty_name, tty_name, sizeof(tty_name));
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++
++	int result = __vsf_linux_spawn(&pid, make_new_session_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++	if (result) {
++		free(ts);
++		close(fd);
++		/* sock will be closed by caller */
++		bb_simple_perror_msg("vfork");
++		return NULL;
++	}
++	ts->shell_pid = pid;
++	return ts;
++#else
+ 	pid = vfork(); /* NOMMU-friendly */
+ 	if (pid < 0) {
+ 		free(ts);
+@@ -572,6 +670,7 @@ make_new_session(
+ 	/* _exit is safer with vfork, and we shouldn't send message
+ 	 * to remote clients anyway */
+ 	_exit(EXIT_FAILURE); /*bb_perror_msg_and_die("execv %s", G.loginpath);*/
++#endif
+ }
+ 
+ #if ENABLE_FEATURE_TELNETD_STANDALONE
 diff --git a/networking/tls.c b/networking/tls.c
 index 8d074c058..52d56fded 100644
 --- a/networking/tls.c
