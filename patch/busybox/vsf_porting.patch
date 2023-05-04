@@ -31,6 +31,7 @@
  loginutils/addgroup.c            |   2 +-
  loginutils/adduser.c             |   2 +-
  miscutils/fbsplash.c             |   2 +-
+ networking/httpd.c               | 138 +++++++++++++++++++++++++
  networking/libiproute/rt_names.c |  20 ++--
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
@@ -39,7 +40,7 @@
  networking/wget.c                |  58 +++++++++++
  shell/ash.c                      |   2 +-
  shell/hush.c                     | 214 +++++++++++++++++++++++++++++++++++++++
- 41 files changed, 841 insertions(+), 37 deletions(-)
+ 42 files changed, 979 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -1197,6 +1198,190 @@ index 2934d8eb7..8d9ba6c5c 100644
  #endif
  			fb_drawprogressbar(num);
  		}
+diff --git a/networking/httpd.c b/networking/httpd.c
+index ffc58e10b..41950bca0 100644
+--- a/networking/httpd.c
++++ b/networking/httpd.c
+@@ -1541,6 +1541,90 @@ static void setenv1(const char *name, const char *value)
+  * const char *orig_uri         The original URI before rewriting (if any)
+  * int post_len                 Length of the POST body.
+  */
++#ifdef __VSF__
++struct send_cgi_and_exit_priv {
++	struct fd_pair fromCgi;
++	struct fd_pair toCgi;
++	int last_slash_pos_to_url;
++};
++
++static NOINLINE int send_cgi_and_exit_process(int argc, char *__argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct send_cgi_and_exit_priv *priv = (struct send_cgi_and_exit_priv *)lbb_ctx->__args.buffer;
++	struct fd_pair fromCgi = priv->fromCgi;
++	struct fd_pair toCgi = priv->toCgi;
++	const char *url = (const char *)&priv[1];
++	char *script, *last_slash = (char *)url + priv->last_slash_pos_to_url;
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	char *argv[3];
++
++	xfunc_error_retval = 242;
++
++	/* NB: close _first_, then move fds! */
++	close(toCgi.wr);
++	close(fromCgi.rd);
++	xmove_fd(toCgi.rd, 0);  /* replace stdin with the pipe */
++	xmove_fd(fromCgi.wr, 1);  /* replace stdout with the pipe */
++	/* User seeing stderr output can be a security problem.
++	 * If CGI really wants that, it can always do dup itself. */
++	/* dup2(1, 2); */
++
++	/* Chdiring to script's dir */
++	script = last_slash;
++	if (script != url) { /* paranoia */
++		*script = '\0';
++		if (chdir_or_warn(url + 1) != 0) {
++			goto error_execing_cgi;
++		}
++		// not needed: *script = '/';
++	}
++	script++;
++
++	/* set argv[0] to name without path */
++	argv[0] = script;
++	argv[1] = NULL;
++
++#if ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
++	{
++		char *suffix = strrchr(script, '.');
++
++		if (suffix) {
++			Htaccess *cur;
++			for (cur = script_i; cur; cur = cur->next) {
++				if (strcmp(cur->before_colon + 1, suffix) == 0) {
++					/* found interpreter name */
++					argv[0] = cur->after_colon;
++					argv[1] = script;
++					argv[2] = NULL;
++					break;
++				}
++			}
++		}
++	}
++#endif
++	/* restore default signal dispositions for CGI process */
++	bb_signals(0
++		| (1 << SIGCHLD)
++		| (1 << SIGPIPE)
++		| (1 << SIGHUP)
++		, SIG_DFL);
++
++	/* _NOT_ execvp. We do not search PATH. argv[0] is a filename
++	 * without any dir components and will only match a file
++	 * in the current directory */
++	execv(argv[0], argv);
++	if (verbose)
++		bb_perror_msg("can't execute '%s'", argv[0]);
++ error_execing_cgi:
++	/* send to stdout
++	 * (we are CGI here, our stdout is pumped to the net) */
++	send_headers_and_exit(HTTP_NOT_FOUND);
++}
++#endif
+ static void send_cgi_and_exit(
+ 		const char *url,
+ 		const char *orig_uri,
+@@ -1642,6 +1726,21 @@ static void send_cgi_and_exit(
+ 	xpiped_pair(fromCgi);
+ 	xpiped_pair(toCgi);
+ 
++#ifdef __VSF__
++	struct send_cgi_and_exit_priv priv = {
++		.fromCgi = fromCgi,
++		.toCgi = toCgi,
++		.last_slash_pos_to_url = last_slash - url,
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), url);
++
++	int result = __vsf_linux_spawn(&pid, send_cgi_and_exit_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++	if (result) {
++		log_and_exit();
++	}
++#else
+ 	pid = vfork();
+ 	if (pid < 0) {
+ 		/* TODO: log perror? */
+@@ -1714,6 +1813,7 @@ static void send_cgi_and_exit(
+ 		 * (we are CGI here, our stdout is pumped to the net) */
+ 		send_headers_and_exit(HTTP_NOT_FOUND);
+ 	} /* end child */
++#endif
+ 
+ 	/* Parent process */
+ 
+@@ -2675,6 +2775,33 @@ static void mini_httpd(int server_socket)
+ 	/* never reached */
+ }
+ #else
++# ifdef __VSF__
++struct mini_httpd_nommu_priv {
++	int server_socket;
++	int n;
++};
++
++static NOINLINE int mini_httpd_nommu_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct mini_httpd_nommu_priv *priv = (struct mini_httpd_nommu_priv *)lbb_ctx->__args.buffer;
++	int server_socket = priv->server_socket;
++	int n = priv->n;
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	/* Do not reload config on HUP */
++	signal(SIGHUP, SIG_IGN);
++	close(server_socket);
++	xmove_fd(n, 0);
++	xdup2(0, 1);
++
++	/* Run a copy of ourself in inetd mode */
++	re_exec(argv);
++}
++# endif
++
+ static void mini_httpd_nommu(int server_socket, int argc, char **argv) NORETURN;
+ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
+ {
+@@ -2700,6 +2827,16 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
+ 		/* set the KEEPALIVE option to cull dead connections */
+ 		setsockopt_keepalive(n);
+ 
++# ifdef __VSF__
++		struct mini_httpd_nommu_priv priv = {
++			.server_socket = server_socket,
++			.n = n,
++		};
++		struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++		memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++
++		__vsf_linux_spawn(NULL, mini_httpd_nommu_process, NULL, NULL, argv_copy, NULL, lbb_ctx, sizeof(*lbb_ctx));
++# else
+ 		if (vfork() == 0) {
+ 			/* child */
+ 			/* Do not reload config on HUP */
+@@ -2711,6 +2848,7 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
+ 			/* Run a copy of ourself in inetd mode */
+ 			re_exec(argv_copy);
+ 		}
++# endif
+ 		argv_copy[0][0] &= 0x7f;
+ 		/* parent, or vfork failed */
+ 		close(n);
 diff --git a/networking/libiproute/rt_names.c b/networking/libiproute/rt_names.c
 index 3c2fad912..5999f3b8d 100644
 --- a/networking/libiproute/rt_names.c
