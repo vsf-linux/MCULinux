@@ -1,3 +1,5 @@
+#define __VSF_LINUX_FS_CLASS_INHERIT__
+#define __VSF_FS_CLASS_INHERIT__
 #include <unistd.h>
 #include <spawn.h>
 #include <sys/wait.h>
@@ -27,12 +29,75 @@ static int __busybox_export(int argc, char *argv[])
 WEAK(vsf_board_init)
 void vsf_board_init(void) {}
 
+typedef struct vsf_linux_dev_res_t {
+    vsf_queue_stream_t pty_streams[1][2];
+} vsf_linux_dev_res_t;
+static vsf_linux_dev_res_t __vsf_linux_dev_res;
+
+static vsf_linux_term_priv_t *priv_master;
+static vsf_linux_term_priv_t *priv_slave;
 int vsf_linux_create_fhs(void)
 {
     // 0. devfs, busybox, etc
     vsf_linux_vfs_init();
 
-    // 1. hardware driver related demo
+    // 1. hardware driver
+    char pty_name[] = "/dev/ptyp0";
+    int fd_master, fd_slave;
+    vsf_linux_fd_t *sfd_master;
+    vsf_linux_fd_t *sfd_slave;
+    vsf_queue_stream_t *queue_stream0, *queue_stream1;
+    vk_vfs_file_t *vfs_file;
+    extern void __vsf_linux_rx_stream_init(vsf_linux_stream_priv_t *priv_tx);
+    extern vk_vfs_file_t * __vsf_linux_get_vfs(int fd);
+    for (int i = 0; i < dimof(__vsf_linux_dev_res.pty_streams); i++) {
+        queue_stream0 = &__vsf_linux_dev_res.pty_streams[i][0];
+        queue_stream0->max_buffer_size = -1;
+        queue_stream0->max_entry_num = -1;
+        queue_stream0->op = &vsf_queue_stream_op;
+        VSF_STREAM_INIT(queue_stream0);
+        queue_stream1 = &__vsf_linux_dev_res.pty_streams[i][1];
+        queue_stream1->max_buffer_size = -1;
+        queue_stream1->max_entry_num = -1;
+        queue_stream1->op = &vsf_queue_stream_op;
+        VSF_STREAM_INIT(queue_stream1);
+
+        pty_name[9] = '0' + i;
+
+        pty_name[5] = 'p';
+        vsf_linux_fs_bind_target_ex(pty_name, NULL, &vsf_linux_term_fdop,
+                NULL, NULL,
+                VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE | VSF_FILE_ATTR_TTY, 0);
+        fd_master = open(pty_name, 0);
+        sfd_master = vsf_linux_fd_get(fd_master);
+        priv_master = (vsf_linux_term_priv_t *)sfd_master->priv;
+        priv_master->subop = &__vsf_linux_stream_fdop;
+        priv_master->stream_rx = &queue_stream0->use_as__vsf_stream_t;
+        priv_master->stream_tx = &queue_stream1->use_as__vsf_stream_t;
+        __vsf_linux_rx_stream_init(priv_master);
+        __vsf_linux_tx_stream_init(priv_master);
+        vsf_linux_term_fdop.fn_init(sfd_master);
+        vfs_file = __vsf_linux_get_vfs(fd_master);
+        vfs_file->f.param = priv_master;
+        vfs_file->attr |= __VSF_FILE_ATTR_SHARE_PRIV;
+
+        pty_name[5] = 't';
+        vsf_linux_fs_bind_target_ex(pty_name, NULL, &vsf_linux_term_fdop,
+                NULL, NULL,
+                VSF_FILE_ATTR_READ | VSF_FILE_ATTR_WRITE | VSF_FILE_ATTR_TTY, 0);
+        fd_slave = open(pty_name, 0);
+        sfd_slave = vsf_linux_fd_get(fd_slave);
+        priv_slave = (vsf_linux_term_priv_t *)sfd_slave->priv;
+        priv_slave->subop = &__vsf_linux_stream_fdop;
+        priv_slave->stream_rx = &queue_stream1->use_as__vsf_stream_t;
+        priv_slave->stream_tx = &queue_stream0->use_as__vsf_stream_t;
+        __vsf_linux_rx_stream_init(priv_slave);
+        __vsf_linux_tx_stream_init(priv_slave);
+        vsf_linux_term_fdop.fn_init(sfd_slave);
+        vfs_file = __vsf_linux_get_vfs(fd_slave);
+        vfs_file->f.param = priv_slave;
+        vfs_file->attr |= __VSF_FILE_ATTR_SHARE_PRIV;
+    }
 
     // 2. fs
 
