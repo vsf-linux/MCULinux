@@ -3791,6 +3791,39 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\parse_pasv_epsv.c">
       <Filter>application\3rd-party\busybox\raw\networking</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\ssl_client.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_rsa.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_aes.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_fe.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_sp_c32.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_pstm.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_aesgcm.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_pstm_mul_comba.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_pstm_sqr_comba.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_pstm_montgomery_reduce.c">
+      <Filter>application\3rd-party\busybox\raw\networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">

@@ -1,6 +1,6 @@
 /* This is a generated file, don't edit */
 
-#define NUM_APPLETS 150
+#define NUM_APPLETS 151
 #define KNOWN_APPNAME_OFFSETS 8
 
 const uint16_t applet_nameofs[] ALIGN2 = {
@@ -8,9 +8,9 @@ const uint16_t applet_nameofs[] ALIGN2 = {
 203,
 326,
 447,
-561,
-683,
-788,
+564,
+694,
+799,
 };
 
 const char applet_names[] ALIGN1 = ""
@@ -125,6 +125,7 @@ const char applet_names[] ALIGN1 = ""
 "sleep" "\0"
 "sort" "\0"
 "split" "\0"
+"ssl_client" "\0"
 "stat" "\0"
 "strings" "\0"
 "stty" "\0"
@@ -275,45 +276,46 @@ const char applet_names[] ALIGN1 = ""
 #define APPLET_NO_sleep 108
 #define APPLET_NO_sort 109
 #define APPLET_NO_split 110
-#define APPLET_NO_stat 111
-#define APPLET_NO_strings 112
-#define APPLET_NO_stty 113
-#define APPLET_NO_sum 114
-#define APPLET_NO_sync 115
-#define APPLET_NO_tac 116
-#define APPLET_NO_tail 117
-#define APPLET_NO_tee 118
-#define APPLET_NO_telnet 119
-#define APPLET_NO_telnetd 120
-#define APPLET_NO_test 121
-#define APPLET_NO_tftp 122
-#define APPLET_NO_tftpd 123
-#define APPLET_NO_timeout 124
-#define APPLET_NO_touch 125
-#define APPLET_NO_tr 126
-#define APPLET_NO_tree 127
-#define APPLET_NO_true 128
-#define APPLET_NO_truncate 129
-#define APPLET_NO_ts 130
-#define APPLET_NO_tsort 131
-#define APPLET_NO_tty 132
-#define APPLET_NO_ttysize 133
-#define APPLET_NO_uname 134
-#define APPLET_NO_unexpand 135
-#define APPLET_NO_uniq 136
-#define APPLET_NO_unix2dos 137
-#define APPLET_NO_unlink 138
-#define APPLET_NO_usleep 139
-#define APPLET_NO_uudecode 140
-#define APPLET_NO_uuencode 141
-#define APPLET_NO_vi 142
-#define APPLET_NO_volname 143
-#define APPLET_NO_wc 144
-#define APPLET_NO_wget 145
-#define APPLET_NO_which 146
-#define APPLET_NO_whoami 147
-#define APPLET_NO_xargs 148
-#define APPLET_NO_yes 149
+#define APPLET_NO_ssl_client 111
+#define APPLET_NO_stat 112
+#define APPLET_NO_strings 113
+#define APPLET_NO_stty 114
+#define APPLET_NO_sum 115
+#define APPLET_NO_sync 116
+#define APPLET_NO_tac 117
+#define APPLET_NO_tail 118
+#define APPLET_NO_tee 119
+#define APPLET_NO_telnet 120
+#define APPLET_NO_telnetd 121
+#define APPLET_NO_test 122
+#define APPLET_NO_tftp 123
+#define APPLET_NO_tftpd 124
+#define APPLET_NO_timeout 125
+#define APPLET_NO_touch 126
+#define APPLET_NO_tr 127
+#define APPLET_NO_tree 128
+#define APPLET_NO_true 129
+#define APPLET_NO_truncate 130
+#define APPLET_NO_ts 131
+#define APPLET_NO_tsort 132
+#define APPLET_NO_tty 133
+#define APPLET_NO_ttysize 134
+#define APPLET_NO_uname 135
+#define APPLET_NO_unexpand 136
+#define APPLET_NO_uniq 137
+#define APPLET_NO_unix2dos 138
+#define APPLET_NO_unlink 139
+#define APPLET_NO_usleep 140
+#define APPLET_NO_uudecode 141
+#define APPLET_NO_uuencode 142
+#define APPLET_NO_vi 143
+#define APPLET_NO_volname 144
+#define APPLET_NO_wc 145
+#define APPLET_NO_wget 146
+#define APPLET_NO_which 147
+#define APPLET_NO_whoami 148
+#define APPLET_NO_xargs 149
+#define APPLET_NO_yes 150
 
 #ifndef SKIP_applet_main
 int (*const applet_main[])(int argc, char **argv) = {
@@ -428,6 +430,7 @@ shuf_main,
 sleep_main,
 sort_main,
 split_main,
+ssl_client_main,
 stat_main,
 strings_main,
 stty_main,
@@ -567,24 +570,25 @@ const uint8_t applet_install_loc[] ALIGN1 = {
 0x33,
 0x33,
 0x31,
-0x13,
-0x13,
-0x13,
 0x33,
+0x31,
+0x31,
+0x31,
+0x33,
+0x43,
 0x33,
 0x34,
-0x43,
+0x31,
 0x13,
 0x33,
-0x31,
-0x33,
-0x33,
-0x31,
 0x33,
 0x13,
 0x33,
+0x33,
 0x31,
+0x13,
 0x33,
 0x33,
 0x33,
+0x03,
 };

@@ -175,6 +175,17 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/networking/tenlet.c
     raw/networking/telnetd.c
     raw/networking/tftp.c
+    raw/networking/tls.c
+    raw/networking/tls_aes.c
+    raw/networking/tls_aesgcm.c
+    raw/networking/tls_fe.c
+    raw/networking/tls_pstm.c
+    raw/networking/tls_pstm_montgomery_reduce.c
+    raw/networking/tls_pstm_mul_comba.c
+    raw/networking/tls_pstm_sqr_comba.c
+    raw/networking/tls_rsa.c
+    raw/networking/tls_sp_c32.c
+    raw/networking/ssl_client.c
     raw/networking/wget.c
 
     raw/miscutils/ascii.c

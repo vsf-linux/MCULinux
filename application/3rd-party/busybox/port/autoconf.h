@@ -2,7 +2,7 @@
  * Automatically generated C config: don't edit
  * Busybox version: 1.37.0.git
  */
-#define AUTOCONF_TIMESTAMP "2023-05-03 21:50:00 CST"
+#define AUTOCONF_TIMESTAMP "2023-05-06 02:46:52 CST"
 
 #define CONFIG_HAVE_DOT_CONFIG 1
 #define ENABLE_HAVE_DOT_CONFIG 1
@@ -5004,10 +5004,14 @@
 #define ENABLE_SLATTACH 0
 #define IF_SLATTACH(...)
 #define IF_NOT_SLATTACH(...) __VA_ARGS__
-#undef CONFIG_SSL_CLIENT
-#define ENABLE_SSL_CLIENT 0
-#define IF_SSL_CLIENT(...)
-#define IF_NOT_SSL_CLIENT(...) __VA_ARGS__
+#define CONFIG_SSL_CLIENT 1
+#define ENABLE_SSL_CLIENT 1
+#ifdef MAKE_SUID
+# define IF_SSL_CLIENT(...) __VA_ARGS__ "CONFIG_SSL_CLIENT"
+#else
+# define IF_SSL_CLIENT(...) __VA_ARGS__
+#endif
+#define IF_NOT_SSL_CLIENT(...)
 #undef CONFIG_TC
 #define ENABLE_TC 0
 #define IF_TC(...)
