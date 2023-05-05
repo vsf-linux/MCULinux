@@ -31,6 +31,7 @@
  loginutils/addgroup.c            |   2 +-
  loginutils/adduser.c             |   2 +-
  miscutils/fbsplash.c             |   2 +-
+ networking/ftpd.c                |  62 ++++++++++++
  networking/httpd.c               | 138 +++++++++++++++++++++++++
  networking/libiproute/rt_names.c |  20 ++--
  networking/libiproute/rtm_map.c  |   2 +-
@@ -40,7 +41,7 @@
  networking/wget.c                |  58 +++++++++++
  shell/ash.c                      |   2 +-
  shell/hush.c                     | 214 +++++++++++++++++++++++++++++++++++++++
- 42 files changed, 979 insertions(+), 37 deletions(-)
+ 43 files changed, 1041 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -1198,6 +1199,93 @@ index 2934d8eb7..8d9ba6c5c 100644
  #endif
  			fb_drawprogressbar(num);
  		}
+diff --git a/networking/ftpd.c b/networking/ftpd.c
+index 0d6a289c7..532bd1bce 100644
+--- a/networking/ftpd.c
++++ b/networking/ftpd.c
+@@ -673,6 +673,55 @@ handle_retr(void)
+ 
+ /* List commands */
+ 
++#ifdef __VSF__
++struct popen_ls_priv {
++	struct fd_pair outfd;
++};
++
++static NOINLINE int popen_ls_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct popen_ls_priv *priv = (struct popen_ls_priv *)lbb_ctx->__args.buffer;
++	struct fd_pair outfd = priv->outfd;
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++#if !BB_MMU
++	int cur_fd;
++#endif
++	/* child */
++	/* NB: close _first_, then move fd! */
++	close(outfd.rd);
++	xmove_fd(outfd.wr, STDOUT_FILENO);
++	/* Opening /dev/null in chroot is hard.
++	 * Just making sure STDIN_FILENO is opened
++	 * to something harmless. Paranoia,
++	 * ls won't read it anyway */
++	close(STDIN_FILENO);
++	dup(STDOUT_FILENO); /* copy will become STDIN_FILENO */
++#if BB_MMU
++	/* memset(&G, 0, sizeof(G)); - ls_main does it */
++	exit(ls_main(/*argc_unused*/ 0, (char**) argv));
++#else
++	cur_fd = xopen(".", O_RDONLY | O_DIRECTORY);
++	/* On NOMMU, we want to execute a child - copy of ourself
++	 * in order to unblock parent after vfork.
++	 * In chroot we usually can't re-exec. Thus we escape
++	 * out of the chroot back to original root.
++	 */
++	if (G.root_fd >= 0) {
++		if (fchdir(G.root_fd) != 0 || chroot(".") != 0)
++			_exit(127);
++		/*close(G.root_fd); - close_on_exec_on() took care of this */
++	}
++	/* Child expects directory to list on fd #3 */
++	xmove_fd(cur_fd, 3);
++	execv(bb_busybox_exec_path, (char**) argv);
++	_exit(127);
++#endif
++}
++#endif
+ static int
+ popen_ls(const char *opt)
+ {
+@@ -701,6 +750,18 @@ popen_ls(const char *opt)
+ 	xpiped_pair(outfd);
+ 
+ 	/*fflush_all(); - so far we dont use stdio on output */
++#ifdef __VSF__
++	struct popen_ls_priv priv = {
++		.outfd = outfd,
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++
++	int result = __vsf_linux_spawn(&pid, popen_ls_process, NULL, NULL, (char * const *)argv, NULL, lbb_ctx, sizeof(*lbb_ctx));
++	if (result) {
++		bb_simple_perror_msg_and_die("vfork");
++	}
++#else
+ 	pid = BB_MMU ? xfork() : xvfork();
+ 	if (pid == 0) {
+ #if !BB_MMU
+@@ -737,6 +798,7 @@ popen_ls(const char *opt)
+ 		_exit(127);
+ #endif
+ 	}
++#endif
+ 
+ 	/* parent */
+ 	close(outfd.wr);
 diff --git a/networking/httpd.c b/networking/httpd.c
 index ffc58e10b..41950bca0 100644
 --- a/networking/httpd.c
