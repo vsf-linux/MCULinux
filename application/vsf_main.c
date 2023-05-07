@@ -35,7 +35,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_vfs_init();
 
     // 1. hardware driver
-    vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0");
+    vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0", true);
 
     // 2. fs
 
@@ -244,6 +244,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/wget", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/telnetd", lbb_main);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/httpd", lbb_main);
+    vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/ssl_client", lbb_main);
 
     return 0;
 }
