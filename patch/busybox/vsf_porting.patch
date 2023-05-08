@@ -2,7 +2,7 @@
  coreutils/test.c                 |   4 +
  coreutils/test_ptr_hack.c        |   2 +
  editors/awk.c                    |   4 +-
- include/libbb.h                  | 191 ++++++++++++++++++++++++++++++++++-
+ include/libbb.h                  | 194 ++++++++++++++++++++++++++++++++++-
  include/platform.h               |  18 +++-
  init/init.c                      | 112 +++++++++++++++++++++
  libbb/appletlib.c                |  22 ++++
@@ -32,7 +32,7 @@
  loginutils/adduser.c             |   2 +-
  miscutils/fbsplash.c             |   2 +-
  networking/ftpd.c                |  62 ++++++++++++
- networking/httpd.c               | 138 +++++++++++++++++++++++++
+ networking/httpd.c               | 141 ++++++++++++++++++++++++++
  networking/libiproute/rt_names.c |  20 ++--
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
@@ -41,7 +41,7 @@
  networking/wget.c                |  58 +++++++++++
  shell/ash.c                      |   2 +-
  shell/hush.c                     | 211 +++++++++++++++++++++++++++++++++++++++
- 43 files changed, 1038 insertions(+), 37 deletions(-)
+ 43 files changed, 1044 insertions(+), 37 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -125,10 +125,10 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..ef9f1f951 100644
+index cca33a177..c528a6e57 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,39 @@
+@@ -55,6 +55,42 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
@@ -146,6 +146,9 @@ index cca33a177..ef9f1f951 100644
 +                char * const argv[], char * const env[], void *priv, int priv_size);
 +extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
 +
++# ifndef LONG_BIT
++#  define LONG_BIT 32
++# endif
 +# ifdef VSF_ARCH_SETJMP
 +#  undef setjmp
 +#  define setjmp VSF_ARCH_SETJMP
@@ -168,7 +171,7 @@ index cca33a177..ef9f1f951 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +215,9 @@
+@@ -182,7 +218,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -178,7 +181,7 @@ index cca33a177..ef9f1f951 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -311,7 +346,21 @@ typedef unsigned long long uoff_t;
+@@ -311,7 +349,21 @@ typedef unsigned long long uoff_t;
   * Even if sizeof(off_t) == sizeof(int), off_t is typedef'ed to long anyway.
   * gcc will throw warnings on printf("%d", off_t)... Have to use %ld etc.
   */
@@ -201,7 +204,7 @@ index cca33a177..ef9f1f951 100644
  typedef unsigned long uoff_t;
  #  define XATOOFF(a) xatoi_positive(a)
  #  define BB_STRTOOFF bb_strtou
-@@ -383,10 +432,107 @@ struct BUG_off_t_size_is_misdetected {
+@@ -383,10 +435,107 @@ struct BUG_off_t_size_is_misdetected {
  # define BB_GLOBAL_CONST const
  #endif
  
@@ -309,7 +312,7 @@ index cca33a177..ef9f1f951 100644
  # undef errno
  # define errno (*bb_errno)
  # define bb_cached_errno_ptr 1
-@@ -637,7 +783,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
+@@ -637,7 +786,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
  /* Return old set in the same set: */
  int sigprocmask2(int how, sigset_t *set) FAST_FUNC;
  /* Standard handler which just records signo */
@@ -321,7 +324,7 @@ index cca33a177..ef9f1f951 100644
  void record_signo(int signo); /* not FAST_FUNC! */
  
  
-@@ -1085,7 +1235,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1238,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -330,7 +333,7 @@ index cca33a177..ef9f1f951 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -1318,7 +1468,11 @@ enum {
+@@ -1318,7 +1471,11 @@ enum {
  # define bb_daemonize_or_rexec(flags, argv) bb_daemonize_or_rexec(flags)
  # define bb_daemonize(flags)                bb_daemonize_or_rexec(flags, bogus)
  #else
@@ -342,7 +345,7 @@ index cca33a177..ef9f1f951 100644
    /* Note: re_exec() and fork_or_rexec() do argv[0][0] |= 0x80 on NOMMU!
     * _Parent_ needs to undo it if it doesn't want to have argv[0] mangled.
     */
-@@ -1343,7 +1497,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
+@@ -1343,7 +1500,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
  void make_all_argv_opts(char **argv) FAST_FUNC;
  char* single_argv(char **argv) FAST_FUNC;
  extern const char *const bb_argv_dash[]; /* { "-", NULL } */
@@ -354,7 +357,7 @@ index cca33a177..ef9f1f951 100644
  uint32_t getopt32(char **argv, const char *applet_opts, ...) FAST_FUNC;
  # define No_argument "\0"
  # define Required_argument "\001"
-@@ -1380,10 +1538,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
+@@ -1380,10 +1541,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
   * of "llist-compatible" structs, and using llist_FOO functions
   * on them.
   */
@@ -367,7 +370,7 @@ index cca33a177..ef9f1f951 100644
  void llist_add_to(llist_t **old_head, void *data) FAST_FUNC;
  void llist_add_to_end(llist_t **list_head, void *data) FAST_FUNC;
  void *llist_pop(llist_t **elm) FAST_FUNC;
-@@ -1399,7 +1559,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1399,7 +1562,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
   * to create pidfiles regardless of FEATURE_PIDFILE */
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
@@ -379,7 +382,7 @@ index cca33a177..ef9f1f951 100644
  void write_pidfile(const char *path) FAST_FUNC;
  void write_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
  void remove_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
-@@ -1418,10 +1582,17 @@ enum {
+@@ -1418,10 +1585,17 @@ enum {
  	LOGMODE_SYSLOG = (1 << 1) * ENABLE_FEATURE_SYSLOG,
  	LOGMODE_BOTH = LOGMODE_SYSLOG + LOGMODE_STDIO,
  };
@@ -397,7 +400,7 @@ index cca33a177..ef9f1f951 100644
  void xfunc_die(void) NORETURN FAST_FUNC;
  void bb_show_usage(void) NORETURN FAST_FUNC;
  void bb_error_msg(const char *s, ...) __attribute__ ((format (printf, 1, 2))) FAST_FUNC;
-@@ -2189,7 +2360,11 @@ enum {
+@@ -2189,7 +2363,11 @@ enum {
  	SHA3_OUTSIZE   = 28,
  };
  
@@ -409,7 +412,7 @@ index cca33a177..ef9f1f951 100644
  uint32_t *crc32_filltable(uint32_t *tbl256, int endian) FAST_FUNC;
  uint32_t *crc32_new_table_le(void) FAST_FUNC;
  uint32_t *global_crc32_new_table_le(void) FAST_FUNC;
-@@ -2228,7 +2403,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
+@@ -2228,7 +2406,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
  int ubi_get_volid_by_name(unsigned ubi_devnum, const char *vol_name) FAST_FUNC;
  
  
@@ -421,7 +424,7 @@ index cca33a177..ef9f1f951 100644
  
  /* Some older linkers don't perform string merging, we used to have common strings
   * as global arrays to do it by hand. But:
-@@ -2294,7 +2473,11 @@ struct globals;
+@@ -2294,7 +2476,11 @@ struct globals;
  /* '*const' ptr makes gcc optimize code much better.
   * Magic prevents ptr_to_globals from going into rodata.
   * If you want to assign a value, use SET_PTR_TO_GLOBALS(x) */
@@ -433,7 +436,7 @@ index cca33a177..ef9f1f951 100644
  
  #define barrier() asm volatile ("":::"memory")
  
-@@ -2414,7 +2597,9 @@ do { \
+@@ -2414,7 +2600,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -1287,7 +1290,7 @@ index 0d6a289c7..532bd1bce 100644
  	/* parent */
  	close(outfd.wr);
 diff --git a/networking/httpd.c b/networking/httpd.c
-index ffc58e10b..41950bca0 100644
+index ffc58e10b..345c49b19 100644
 --- a/networking/httpd.c
 +++ b/networking/httpd.c
 @@ -1541,6 +1541,90 @@ static void setenv1(const char *name, const char *value)
@@ -1381,7 +1384,17 @@ index ffc58e10b..41950bca0 100644
  static void send_cgi_and_exit(
  		const char *url,
  		const char *orig_uri,
-@@ -1642,6 +1726,21 @@ static void send_cgi_and_exit(
+@@ -1560,6 +1644,9 @@ static void send_cgi_and_exit(
+ 	/* Make a copy. NB: caller guarantees:
+ 	 * url[0] == '/', url[1] != '/' */
+ 	url = xstrdup(url);
++#ifdef __VSF__
++	int urllen = strlen(url);
++#endif
+ 
+ 	/*
+ 	 * We are mucking with environment _first_ and then vfork/exec,
+@@ -1642,6 +1729,21 @@ static void send_cgi_and_exit(
  	xpiped_pair(fromCgi);
  	xpiped_pair(toCgi);
  
@@ -1393,7 +1406,7 @@ index ffc58e10b..41950bca0 100644
 +	};
 +	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
 +	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), url);
++	memcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), url, urllen + 1);
 +
 +	int result = __vsf_linux_spawn(&pid, send_cgi_and_exit_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
 +	if (result) {
@@ -1403,7 +1416,7 @@ index ffc58e10b..41950bca0 100644
  	pid = vfork();
  	if (pid < 0) {
  		/* TODO: log perror? */
-@@ -1714,6 +1813,7 @@ static void send_cgi_and_exit(
+@@ -1714,6 +1816,7 @@ static void send_cgi_and_exit(
  		 * (we are CGI here, our stdout is pumped to the net) */
  		send_headers_and_exit(HTTP_NOT_FOUND);
  	} /* end child */
@@ -1411,7 +1424,7 @@ index ffc58e10b..41950bca0 100644
  
  	/* Parent process */
  
-@@ -2675,6 +2775,33 @@ static void mini_httpd(int server_socket)
+@@ -2675,6 +2778,33 @@ static void mini_httpd(int server_socket)
  	/* never reached */
  }
  #else
@@ -1445,7 +1458,7 @@ index ffc58e10b..41950bca0 100644
  static void mini_httpd_nommu(int server_socket, int argc, char **argv) NORETURN;
  static void mini_httpd_nommu(int server_socket, int argc, char **argv)
  {
-@@ -2700,6 +2827,16 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
+@@ -2700,6 +2830,16 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
  		/* set the KEEPALIVE option to cull dead connections */
  		setsockopt_keepalive(n);
  
@@ -1462,7 +1475,7 @@ index ffc58e10b..41950bca0 100644
  		if (vfork() == 0) {
  			/* child */
  			/* Do not reload config on HUP */
-@@ -2711,6 +2848,7 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
+@@ -2711,6 +2851,7 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
  			/* Run a copy of ourself in inetd mode */
  			re_exec(argv_copy);
  		}
