@@ -172,7 +172,7 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/networking/ntpd.c
     raw/networking/parse_pasv_epsv.c
     raw/networking/ping.c
-    raw/networking/tenlet.c
+    raw/networking/telnet.c
     raw/networking/telnetd.c
     raw/networking/tftp.c
     raw/networking/tls.c
