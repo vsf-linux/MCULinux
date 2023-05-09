@@ -1,0 +1,99 @@
+#!/bin/sh
+
+repo_url='https://gitee.com/vsf-linux/MCULinux.repo/raw/main/'
+software_name='vpt(VSF linux package tool)'
+software_version=0.0.1
+operation=''
+machine=''
+
+tmp_list_file=/tmp/vpt/list.txt
+tmp_deb_file=/tmp/vpt/install.deb
+
+me=$0
+case "$0" in
+*/*)
+	me=`echo $0 | sed -e 's!.*/\(.*\)!\1!' 2>/dev/null`
+	test "$me" || me=$0
+	;;
+esac
+
+machine=`uname -m 2>/dev/null`
+target_url=${repo_url}${machine}'/'
+if ! test -d /tmp/vpt; then
+	mkdir /tmp/vpt
+fi
+
+if test $# -eq 0; then
+	operation=help
+else
+	operation=$1;
+	shift;
+fi
+
+search_list(){
+	target="${target_url}${1}/list.txt"
+	if test -f "${tmp_list_file}"; then
+		rm "${tmp_list_file}"
+	fi
+	wget -q -O "${tmp_list_file}" $target 2>/dev/null
+	if [ "$?" != 0 ]; then
+		echo "fail to get $target"
+	elif test $# -gt 1; then
+		grep -E "$2" "${tmp_list_file}"
+	else
+		cat "${tmp_list_file}"
+	fi
+	if test -f "${tmp_list_file}"; then
+		rm "${tmp_list_file}"
+	fi
+}
+
+install(){
+	target="${target_url}${1}/latest.deb"
+	if test -f "${tmp_deb_file}"; then
+		rm "${tmp_deb_file}"
+	fi
+	wget -q -O "${tmp_deb_file}" $target 2>/dev/null && dpkg -i "${tmp_deb_file}" || echo "fail to get $target"
+	if test -f "${tmp_deb_file}"; then
+		rm "${tmp_deb_file}"
+	fi
+}
+
+case "$operation" in
+help)
+	cat >&2 <<EOM
+$software_name $software_version
+Usage: $me operation [params]
+
+$software_name is a simplified commandline package manager for MCULinux based on VSF.
+
+Commands supported:
+  help - print this message
+  list - list softwares
+  search - search packages of a software
+  install - install packages
+EOM
+	exit 1
+	;;
+list)
+	if test $# -eq 0; then
+		search_list ""
+	else
+		for target in $*; do
+			echo "packages in ${target}:"
+			search_list "${target}"
+			echo " "
+		done
+	fi
+	;;
+search)
+	search_list "${target}" $*
+	;;
+install)
+	for target in $*; do
+		echo "installing ${target}:"
+		install "${target}"
+		echo " "
+	done
+	;;
+esac
