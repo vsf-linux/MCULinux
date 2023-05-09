@@ -38,6 +38,7 @@ int vsf_linux_create_fhs(void)
     vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0", true);
 
     // 2. fs
+    mkdir("/tmp", 0);
 
     // 3. install executables
     extern int mount_main(int argc, char *argv[]);
