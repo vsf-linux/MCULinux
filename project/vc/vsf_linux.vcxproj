@@ -477,8 +477,27 @@
   <ItemGroup>
     <ClCompile Include="..\..\application\3rd-party\busybox\port\vsf_porting\libbb_dynlib.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\bbunzip.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\dpkg.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_align.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_extract_all.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_skip.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\decompress_bunzip2.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\decompress_gunzip.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_all.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_list.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_list_reassign.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\find_list_entry.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_ar.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_tar.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_tar_gz.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\header_skip.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\init_handle.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\open_transformer.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\seek_by_jump.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\seek_by_read.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unpack_ar_archive.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unsafe_prefix.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unsafe_symlink_target.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\console-tools\chvt.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\console-tools\clear.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\console-tools\deallocvt.c" />

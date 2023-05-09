@@ -3824,6 +3824,63 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_pstm_montgomery_reduce.c">
       <Filter>application\3rd-party\busybox\raw\networking</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\dpkg.c">
+      <Filter>application\3rd-party\busybox\raw\archival</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\init_handle.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_list.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_list_reassign.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unpack_ar_archive.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_extract_all.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\find_list_entry.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\decompress_gunzip.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_skip.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unsafe_symlink_target.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_tar.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\filter_accept_all.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_tar_gz.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\header_skip.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\seek_by_jump.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\get_header_ar.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\data_align.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\seek_by_read.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unsafe_prefix.c">
+      <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
