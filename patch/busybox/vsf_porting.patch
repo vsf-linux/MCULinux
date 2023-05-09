@@ -1,48 +1,137 @@
- coreutils/sort.c                 |  11 ++
- coreutils/test.c                 |   4 +
- coreutils/test_ptr_hack.c        |   2 +
- editors/awk.c                    |   4 +-
- include/libbb.h                  | 194 ++++++++++++++++++++++++++++++++++-
- include/platform.h               |  18 +++-
- init/init.c                      | 112 +++++++++++++++++++++
- libbb/appletlib.c                |  22 ++++
- libbb/auto_string.c              |   5 +
- libbb/bbunit.c                   |   6 ++
- libbb/common_bufsiz.c            |   2 +
- libbb/crc32.c                    |   2 +
- libbb/default_error_retval.c     |   2 +
- libbb/getopt32.c                 |  16 +--
- libbb/hash_md5_sha.c             |   4 +
- libbb/inet_common.c              |   7 ++
- libbb/inode_hash.c               |   4 +
- libbb/lineedit.c                 |   4 +
- libbb/lineedit_ptr_hack.c        |   2 +
- libbb/makedev.c                  |   4 +-
- libbb/pidfile.c                  |   2 +
- libbb/procps.c                   |   4 +
- libbb/ptr_to_globals.c           |   2 +
- libbb/pw_encrypt.c               |   5 +
- libbb/signals.c                  |   2 +
- libbb/u_signal_names.c           |   2 +-
- libbb/verror_msg.c               |   4 +
- libbb/vfork_daemon_rexec.c       |  20 ++++
- libbb/xfunc_die.c                |   2 +
- libbb/xfuncs.c                   |   6 +-
- loginutils/addgroup.c            |   2 +-
- loginutils/adduser.c             |   2 +-
- miscutils/fbsplash.c             |   2 +-
- networking/ftpd.c                |  62 ++++++++++++
- networking/httpd.c               | 141 ++++++++++++++++++++++++++
- networking/libiproute/rt_names.c |  20 ++--
- networking/libiproute/rtm_map.c  |   2 +-
- networking/netstat.c             |   4 +-
- networking/telnetd.c             |  99 ++++++++++++++++++
- networking/tls.c                 |   2 +-
- networking/wget.c                |  58 +++++++++++
- shell/ash.c                      |   2 +-
- shell/hush.c                     | 211 +++++++++++++++++++++++++++++++++++++++
- 43 files changed, 1044 insertions(+), 37 deletions(-)
+ archival/libarchive/open_transformer.c |  63 ++++++++++
+ coreutils/sort.c                       |  11 ++
+ coreutils/test.c                       |   4 +
+ coreutils/test_ptr_hack.c              |   2 +
+ editors/awk.c                          |   4 +-
+ include/libbb.h                        | 194 +++++++++++++++++++++++++++++-
+ include/platform.h                     |  18 ++-
+ init/init.c                            | 112 +++++++++++++++++
+ libbb/appletlib.c                      |  22 ++++
+ libbb/auto_string.c                    |   5 +
+ libbb/bbunit.c                         |   6 +
+ libbb/common_bufsiz.c                  |   2 +
+ libbb/crc32.c                          |   2 +
+ libbb/default_error_retval.c           |   2 +
+ libbb/getopt32.c                       |  16 +--
+ libbb/hash_md5_sha.c                   |   4 +
+ libbb/inet_common.c                    |   7 ++
+ libbb/inode_hash.c                     |   4 +
+ libbb/lineedit.c                       |   4 +
+ libbb/lineedit_ptr_hack.c              |   2 +
+ libbb/makedev.c                        |   4 +-
+ libbb/pidfile.c                        |   2 +
+ libbb/procps.c                         |   4 +
+ libbb/ptr_to_globals.c                 |   2 +
+ libbb/pw_encrypt.c                     |   5 +
+ libbb/signals.c                        |   2 +
+ libbb/u_signal_names.c                 |   2 +-
+ libbb/verror_msg.c                     |   4 +
+ libbb/vfork_daemon_rexec.c             |  20 ++++
+ libbb/xfunc_die.c                      |   2 +
+ libbb/xfuncs.c                         |   6 +-
+ loginutils/addgroup.c                  |   2 +-
+ loginutils/adduser.c                   |   2 +-
+ miscutils/fbsplash.c                   |   2 +-
+ networking/ftpd.c                      |  62 ++++++++++
+ networking/httpd.c                     | 141 ++++++++++++++++++++++
+ networking/libiproute/rt_names.c       |  20 ++--
+ networking/libiproute/rtm_map.c        |   2 +-
+ networking/netstat.c                   |   4 +-
+ networking/telnetd.c                   |  99 ++++++++++++++++
+ networking/tls.c                       |   2 +-
+ networking/wget.c                      |  58 +++++++++
+ shell/ash.c                            |   2 +-
+ shell/hush.c                           | 211 +++++++++++++++++++++++++++++++++
+ 44 files changed, 1107 insertions(+), 37 deletions(-)
 
+diff --git a/archival/libarchive/open_transformer.c b/archival/libarchive/open_transformer.c
+index 44715ef25..f8f0028ae 100644
+--- a/archival/libarchive/open_transformer.c
++++ b/archival/libarchive/open_transformer.c
+@@ -96,6 +96,57 @@ void check_errors_in_children(int signo)
+ }
+ 
+ /* transformer(), more than meets the eye */
++# ifdef __VSF__
++
++struct fork_transformer_priv {
++	int fd;
++	struct fd_pair fd_pipe;
++};
++
++static NOINLINE int fork_transformer_process(int argc, char *argv[])
++{
++	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
++	struct fork_transformer_priv *priv = (struct fork_transformer_priv *)lbb_ctx->__args.buffer;
++	int fd = priv->fd;
++	struct fd_pair fd_pipe = priv->fd_pipe;
++	const char *transform_prog = (const char *)&priv[1];
++
++	declare_vsf_busybox_mod(libbb_fork);
++	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
++
++	close(fd_pipe.rd); /* we don't want to read from the parent */
++	// FIXME: error check?
++#if BB_MMU
++	{
++		IF_DESKTOP(long long) int r;
++		transformer_state_t xstate;
++		init_transformer_state(&xstate);
++		xstate.signature_skipped = signature_skipped;
++		xstate.src_fd = fd;
++		xstate.dst_fd = fd_pipe.wr;
++		r = transformer(&xstate);
++		if (ENABLE_FEATURE_CLEAN_UP) {
++			close(fd_pipe.wr); /* send EOF */
++			close(fd);
++		}
++		/* must be _exit! bug was actually seen here */
++		_exit(/*error if:*/ r < 0);
++	}
++#else
++	{
++		char *argv[4];
++		xmove_fd(fd, 0);
++		xmove_fd(fd_pipe.wr, 1);
++		argv[0] = (char*)transform_prog;
++		argv[1] = (char*)"-cf";
++		argv[2] = (char*)"-";
++		argv[3] = NULL;
++		BB_EXECVP(transform_prog, argv);
++		bb_perror_msg_and_die("can't execute '%s'", transform_prog);
++	}
++#endif
++}
++#endif
+ #if BB_MMU
+ void FAST_FUNC fork_transformer(int fd,
+ 	int signature_skipped,
+@@ -109,6 +160,17 @@ void FAST_FUNC fork_transformer(int fd, const char *transform_prog)
+ 	int pid;
+ 
+ 	xpiped_pair(fd_pipe);
++#ifdef __VSF__
++	struct fork_transformer_priv priv = {
++		.fd = fd,
++		.fd_pipe = fd_pipe,
++	};
++	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
++	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
++	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), transform_prog);
++
++	__vsf_linux_spawn(&pid, fork_transformer_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
++#else
+ 	pid = BB_MMU ? xfork() : xvfork();
+ 	if (pid == 0) {
+ 		/* Child */
+@@ -145,6 +207,7 @@ void FAST_FUNC fork_transformer(int fd, const char *transform_prog)
+ #endif
+ 		/* notreached */
+ 	}
++#endif
+ 
+ 	/* parent process */
+ 	close(fd_pipe.wr); /* don't want to write to the child */
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
 --- a/coreutils/sort.c
