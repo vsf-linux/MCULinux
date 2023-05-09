@@ -5,7 +5,7 @@ software_name='vpt(VSF linux package tool)'
 software_version=0.0.1
 operation=''
 machine=''
-abi=win
+abi=pe
 
 tmp_list_file=/tmp/vpt/list.txt
 tmp_deb_file=/tmp/vpt/install.deb
