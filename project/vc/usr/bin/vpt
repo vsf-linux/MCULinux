@@ -5,6 +5,7 @@ software_name='vpt(VSF linux package tool)'
 software_version=0.0.1
 operation=''
 machine=''
+abi=win
 
 tmp_list_file=/tmp/vpt/list.txt
 tmp_deb_file=/tmp/vpt/install.deb
@@ -18,7 +19,11 @@ case "$0" in
 esac
 
 machine=`uname -m 2>/dev/null`
-target_url=${repo_url}${machine}'/'
+if [ -z "${abi}" ]; then
+	target_url=${repo_url}${machine}'/'
+else
+	target_url=${repo_url}${machine}'/'${abi}'/'
+fi
 if ! test -d /tmp/vpt; then
 	mkdir /tmp/vpt
 fi
