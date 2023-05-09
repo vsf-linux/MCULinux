@@ -91,6 +91,14 @@ int vsf_linux_create_fhs(void)
     if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_home_argv, NULL)) {
         waitpid(pid, NULL, 0);
     }
+
+    mkdir("/var", 0);
+    const char *mount_var_argv[] = {
+        "mount", "-t", VSF_LINUX_HOSTFS_TYPE, "./var", "/var", NULL,
+    };
+    if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_var_argv, NULL)) {
+        waitpid(pid, NULL, 0);
+    }
 #else
     const char *inittab_content = ":1:askfirst:/bin/sh\n";
     mkdir("/etc", 0);
