@@ -1,0 +1,16 @@
+ shell/hush.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/shell/hush.c b/shell/hush.c
+index e6be70078..fd742fd2c 100644
+--- a/shell/hush.c
++++ b/shell/hush.c
+@@ -9835,7 +9835,7 @@ static int run_list(struct pipe *pi)
+ 				continue;
+ 			}
+ 		} else {
+-			if (rword == RES_ELSE || rword == RES_ELIF) {
++			if (rword == RES_ELSE || (last_rword != RES_ELIF && rword == RES_ELIF)) {
+ 				/* "if <true> then ... ELSE/ELIF cmd":
+ 				 * skip cmd and all following ones */
+ 				break;
