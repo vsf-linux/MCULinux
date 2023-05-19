@@ -1,16 +1,28 @@
- shell/hush.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ shell/hush.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/shell/hush.c b/shell/hush.c
-index e6be70078..fd742fd2c 100644
+index e6be70078..00f3a3f8f 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
-@@ -9835,7 +9835,7 @@ static int run_list(struct pipe *pi)
+@@ -9722,6 +9722,9 @@ static int run_list(struct pipe *pi)
+ #endif
+ 	smallint last_followup;
+ 	smalluint rcode;
++#if ENABLE_HUSH_IF
++	bool if_matched = false;
++#endif
+ #if ENABLE_HUSH_IF || ENABLE_HUSH_CASE
+ 	smalluint cond_code = 0;
+ #else
+@@ -9835,7 +9838,9 @@ static int run_list(struct pipe *pi)
  				continue;
  			}
  		} else {
 -			if (rword == RES_ELSE || rword == RES_ELIF) {
-+			if (rword == RES_ELSE || (last_rword != RES_ELIF && rword == RES_ELIF)) {
++			if (rword == RES_THEN) {
++				if_matched = true;
++			} else if ((rword == RES_ELSE || rword == RES_ELIF) && if_matched) {
  				/* "if <true> then ... ELSE/ELIF cmd":
  				 * skip cmd and all following ones */
  				break;
