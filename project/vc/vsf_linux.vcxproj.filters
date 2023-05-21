@@ -2193,6 +2193,9 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\net\if_arp.h">
       <Filter>vsf\shell\sys\linux\include\net</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termio.h">
+      <Filter>vsf\shell\sys\linux\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">

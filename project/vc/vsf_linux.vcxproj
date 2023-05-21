@@ -421,6 +421,7 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\sys\un.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\sys\utsname.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\sys\wait.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termio.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termios.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\unistd.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\vsf_linux_devfs.h" />
