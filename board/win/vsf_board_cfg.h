@@ -115,6 +115,7 @@
 #define APP_CFG_USBH_ARCH_PRIO                          vsf_arch_prio_0
 
 #define VSF_SRC_PATH                                    "../../vsf"
+#define MCULINUX_SRC_PATH                               "../.."
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/

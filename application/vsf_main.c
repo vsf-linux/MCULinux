@@ -57,12 +57,22 @@ int vsf_linux_create_fhs(void)
     putenv("PATH=/bin");
     pid_t pid;
 
+#   ifdef MCULINUX_SRC_PATH
+    mkdirs("/src/mculinux", 0);
+    const char *mount_mculinux_src_argv[] = {
+        "mount", "-t", VSF_LINUX_HOSTFS_TYPE, MCULINUX_SRC_PATH, "/src/mculinux", NULL,
+    };
+    if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_mculinux_src_argv, NULL)) {
+        waitpid(pid, NULL, 0);
+    }
+#   endif
+
 #   ifdef VSF_SRC_PATH
     mkdirs("/src/vsf", 0);
-    const char *mount_src_argv[] = {
+    const char *mount_vsf_src_argv[] = {
         "mount", "-t", VSF_LINUX_HOSTFS_TYPE, VSF_SRC_PATH, "/src/vsf", NULL,
     };
-    if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_src_argv, NULL)) {
+    if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_vsf_src_argv, NULL)) {
         waitpid(pid, NULL, 0);
         putenv("VSF_PATH=/src/vsf");
     }
