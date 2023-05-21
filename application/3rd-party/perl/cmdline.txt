@@ -1,2 +1,1 @@
-rm -rf UU
 raw/Configure -Dcc=tcc -Dusenm=n -d
