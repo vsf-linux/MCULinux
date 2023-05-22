@@ -1,1 +1,1 @@
-raw/Configure -Dcc=tcc -Dusenm=n -d
+raw/Configure -Dcc=tcc -Dusedevel -Dusenm=n -d
