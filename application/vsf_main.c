@@ -9,9 +9,6 @@
 #ifndef VSF_APP_ENTRY
 #   define VSF_APP_ENTRY        VSF_USER_ENTRY
 #endif
-#if VSF_LINUX_CFG_LINK_FILE != ENABLED
-#   error mculinux need VSF_LINUX_CFG_LINK_FILE to be enabled
-#endif
 
 extern int lbb_main(int argc, char *argv[]);
 static int __busybox_export(int argc, char *argv[])
@@ -124,6 +121,9 @@ int vsf_linux_create_fhs(void)
 
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/busybox_export", __busybox_export);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/busybox", lbb_main);
+#if VSF_LINUX_CFG_LINK_FILE != ENABLED
+#   define symlink(__target, __link)    vsf_linux_fs_bind_executable(__link, lbb_main);
+#endif
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/arch");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/ascii");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/awk");
