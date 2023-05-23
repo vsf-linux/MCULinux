@@ -324,9 +324,11 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\errno.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\etherdevice.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\fb.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\fd.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\firmware.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\fs.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\gfp.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\hdreg.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\hid.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\hrtimer.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\i2c-dev.h" />
@@ -790,6 +792,7 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\math.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\random.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\shell_common.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\util-linux\mkfs_vfat.c" />
     <ClCompile Include="..\..\application\vsf_main.c" />
     <ClCompile Include="..\..\board\win\vsf_board.c" />
     <ClCompile Include="..\..\vsf\example\template\demo\linux_demo\dynloader_demo.c" />

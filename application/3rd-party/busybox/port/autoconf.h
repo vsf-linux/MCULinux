@@ -2,7 +2,7 @@
  * Automatically generated C config: don't edit
  * Busybox version: 1.37.0.git
  */
-#define AUTOCONF_TIMESTAMP "2023-05-10 02:40:26 CST"
+#define AUTOCONF_TIMESTAMP "2023-05-23 19:43:28 CST"
 
 #define CONFIG_HAVE_DOT_CONFIG 1
 #define ENABLE_HAVE_DOT_CONFIG 1
@@ -3572,10 +3572,14 @@
 #define ENABLE_MKDOSFS 0
 #define IF_MKDOSFS(...)
 #define IF_NOT_MKDOSFS(...) __VA_ARGS__
-#undef CONFIG_MKFS_VFAT
-#define ENABLE_MKFS_VFAT 0
-#define IF_MKFS_VFAT(...)
-#define IF_NOT_MKFS_VFAT(...) __VA_ARGS__
+#define CONFIG_MKFS_VFAT 1
+#define ENABLE_MKFS_VFAT 1
+#ifdef MAKE_SUID
+# define IF_MKFS_VFAT(...) __VA_ARGS__ "CONFIG_MKFS_VFAT"
+#else
+# define IF_MKFS_VFAT(...) __VA_ARGS__
+#endif
+#define IF_NOT_MKFS_VFAT(...)
 #undef CONFIG_MKSWAP
 #define ENABLE_MKSWAP 0
 #define IF_MKSWAP(...)

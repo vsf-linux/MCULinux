@@ -829,6 +829,9 @@
     <Filter Include="application\3rd-party\busybox\raw\networking">
       <UniqueIdentifier>{e621ff73-4c2b-49fd-ac21-e0b820580299}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\3rd-party\busybox\raw\util-linux">
+      <UniqueIdentifier>{7062dafa-2a41-4a85-9f46-bc0d4b2f41a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2195,6 +2198,12 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termio.h">
       <Filter>vsf\shell\sys\linux\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\fd.h">
+      <Filter>vsf\shell\sys\linux\include\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\hdreg.h">
+      <Filter>vsf\shell\sys\linux\include\linux</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3883,6 +3892,9 @@
     </ClCompile>
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\libarchive\unsafe_prefix.c">
       <Filter>application\3rd-party\busybox\raw\archival\libarchive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\util-linux\mkfs_vfat.c">
+      <Filter>application\3rd-party\busybox\raw\util-linux</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -269,6 +269,7 @@ int vsf_linux_create_fhs(void)
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/ssl_client");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/dpkg");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/gunzip");
+    symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/mkfs.vfat");
 
     return 0;
 }

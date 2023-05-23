@@ -188,6 +188,8 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/shell/random.c
     raw/shell/shell_common.c
 
+    raw/util-linux/mkfs_vfat.c
+
     raw/libbb/appletlib.c
     raw/libbb/ask_confirmation.c
     raw/libbb/auto_string.c
