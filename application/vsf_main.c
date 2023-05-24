@@ -146,6 +146,7 @@ int vsf_linux_create_fhs(void)
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/cut");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/date");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/dc");
+    symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/dd");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/devmem");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/df");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/diff");
