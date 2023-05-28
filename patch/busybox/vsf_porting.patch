@@ -1,137 +1,42 @@
- archival/libarchive/open_transformer.c |  63 ++++++++++
- coreutils/sort.c                       |  11 ++
- coreutils/test.c                       |   4 +
- coreutils/test_ptr_hack.c              |   2 +
- editors/awk.c                          |   4 +-
- include/libbb.h                        | 194 +++++++++++++++++++++++++++++-
- include/platform.h                     |  18 ++-
- init/init.c                            | 112 +++++++++++++++++
- libbb/appletlib.c                      |  22 ++++
- libbb/auto_string.c                    |   5 +
- libbb/bbunit.c                         |   6 +
- libbb/common_bufsiz.c                  |   2 +
- libbb/crc32.c                          |   2 +
- libbb/default_error_retval.c           |   2 +
- libbb/getopt32.c                       |  16 +--
- libbb/hash_md5_sha.c                   |   4 +
- libbb/inet_common.c                    |   7 ++
- libbb/inode_hash.c                     |   4 +
- libbb/lineedit.c                       |   4 +
- libbb/lineedit_ptr_hack.c              |   2 +
- libbb/makedev.c                        |   4 +-
- libbb/pidfile.c                        |   2 +
- libbb/procps.c                         |   4 +
- libbb/ptr_to_globals.c                 |   2 +
- libbb/pw_encrypt.c                     |   5 +
- libbb/signals.c                        |   2 +
- libbb/u_signal_names.c                 |   2 +-
- libbb/verror_msg.c                     |   4 +
- libbb/vfork_daemon_rexec.c             |  20 ++++
- libbb/xfunc_die.c                      |   2 +
- libbb/xfuncs.c                         |   6 +-
- loginutils/addgroup.c                  |   2 +-
- loginutils/adduser.c                   |   2 +-
- miscutils/fbsplash.c                   |   2 +-
- networking/ftpd.c                      |  62 ++++++++++
- networking/httpd.c                     | 141 ++++++++++++++++++++++
- networking/libiproute/rt_names.c       |  20 ++--
- networking/libiproute/rtm_map.c        |   2 +-
- networking/netstat.c                   |   4 +-
- networking/telnetd.c                   |  99 ++++++++++++++++
- networking/tls.c                       |   2 +-
- networking/wget.c                      |  58 +++++++++
- shell/ash.c                            |   2 +-
- shell/hush.c                           | 211 +++++++++++++++++++++++++++++++++
- 44 files changed, 1107 insertions(+), 37 deletions(-)
+ coreutils/sort.c                 |  11 +++
+ coreutils/test.c                 |   4 +
+ coreutils/test_ptr_hack.c        |   2 +
+ editors/awk.c                    |   4 +-
+ include/libbb.h                  | 186 ++++++++++++++++++++++++++++++++++++++-
+ include/platform.h               |  18 +++-
+ init/init.c                      |   9 ++
+ libbb/appletlib.c                |  22 +++++
+ libbb/auto_string.c              |   5 ++
+ libbb/bbunit.c                   |   6 ++
+ libbb/common_bufsiz.c            |   2 +
+ libbb/crc32.c                    |   2 +
+ libbb/default_error_retval.c     |   2 +
+ libbb/getopt32.c                 |  16 ++--
+ libbb/hash_md5_sha.c             |   4 +
+ libbb/inet_common.c              |   7 ++
+ libbb/inode_hash.c               |   4 +
+ libbb/lineedit.c                 |   4 +
+ libbb/lineedit_ptr_hack.c        |   2 +
+ libbb/makedev.c                  |   4 +-
+ libbb/pidfile.c                  |   2 +
+ libbb/procps.c                   |   4 +
+ libbb/ptr_to_globals.c           |   2 +
+ libbb/pw_encrypt.c               |   5 ++
+ libbb/signals.c                  |   2 +
+ libbb/u_signal_names.c           |   2 +-
+ libbb/verror_msg.c               |   4 +
+ libbb/xfunc_die.c                |   2 +
+ libbb/xfuncs.c                   |   6 +-
+ loginutils/addgroup.c            |   2 +-
+ loginutils/adduser.c             |   2 +-
+ miscutils/fbsplash.c             |   2 +-
+ networking/libiproute/rt_names.c |  20 ++---
+ networking/libiproute/rtm_map.c  |   2 +-
+ networking/netstat.c             |   4 +-
+ networking/tls.c                 |   2 +-
+ shell/ash.c                      |   2 +-
+ 37 files changed, 342 insertions(+), 37 deletions(-)
 
-diff --git a/archival/libarchive/open_transformer.c b/archival/libarchive/open_transformer.c
-index 44715ef25..f8f0028ae 100644
---- a/archival/libarchive/open_transformer.c
-+++ b/archival/libarchive/open_transformer.c
-@@ -96,6 +96,57 @@ void check_errors_in_children(int signo)
- }
- 
- /* transformer(), more than meets the eye */
-+# ifdef __VSF__
-+
-+struct fork_transformer_priv {
-+	int fd;
-+	struct fd_pair fd_pipe;
-+};
-+
-+static NOINLINE int fork_transformer_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct fork_transformer_priv *priv = (struct fork_transformer_priv *)lbb_ctx->__args.buffer;
-+	int fd = priv->fd;
-+	struct fd_pair fd_pipe = priv->fd_pipe;
-+	const char *transform_prog = (const char *)&priv[1];
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	close(fd_pipe.rd); /* we don't want to read from the parent */
-+	// FIXME: error check?
-+#if BB_MMU
-+	{
-+		IF_DESKTOP(long long) int r;
-+		transformer_state_t xstate;
-+		init_transformer_state(&xstate);
-+		xstate.signature_skipped = signature_skipped;
-+		xstate.src_fd = fd;
-+		xstate.dst_fd = fd_pipe.wr;
-+		r = transformer(&xstate);
-+		if (ENABLE_FEATURE_CLEAN_UP) {
-+			close(fd_pipe.wr); /* send EOF */
-+			close(fd);
-+		}
-+		/* must be _exit! bug was actually seen here */
-+		_exit(/*error if:*/ r < 0);
-+	}
-+#else
-+	{
-+		char *argv[4];
-+		xmove_fd(fd, 0);
-+		xmove_fd(fd_pipe.wr, 1);
-+		argv[0] = (char*)transform_prog;
-+		argv[1] = (char*)"-cf";
-+		argv[2] = (char*)"-";
-+		argv[3] = NULL;
-+		BB_EXECVP(transform_prog, argv);
-+		bb_perror_msg_and_die("can't execute '%s'", transform_prog);
-+	}
-+#endif
-+}
-+#endif
- #if BB_MMU
- void FAST_FUNC fork_transformer(int fd,
- 	int signature_skipped,
-@@ -109,6 +160,17 @@ void FAST_FUNC fork_transformer(int fd, const char *transform_prog)
- 	int pid;
- 
- 	xpiped_pair(fd_pipe);
-+#ifdef __VSF__
-+	struct fork_transformer_priv priv = {
-+		.fd = fd,
-+		.fd_pipe = fd_pipe,
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), transform_prog);
-+
-+	__vsf_linux_spawn(&pid, fork_transformer_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+#else
- 	pid = BB_MMU ? xfork() : xvfork();
- 	if (pid == 0) {
- 		/* Child */
-@@ -145,6 +207,7 @@ void FAST_FUNC fork_transformer(int fd, const char *transform_prog)
- #endif
- 		/* notreached */
- 	}
-+#endif
- 
- 	/* parent process */
- 	close(fd_pipe.wr); /* don't want to write to the child */
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
 --- a/coreutils/sort.c
@@ -214,10 +119,10 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..c528a6e57 100644
+index cca33a177..e024f2a02 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,42 @@
+@@ -55,6 +55,34 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
@@ -226,14 +131,6 @@ index cca33a177..c528a6e57 100644
 +# include <vsf.h>
 +# include <getopt.h>
 +# include "vsf_porting/libbb_dynlib.h"
-+
-+// VSF uses spawn to replace fork/vfork
-+# include <spawn.h>
-+extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
-+                const posix_spawn_file_actions_t *actions,
-+                const posix_spawnattr_t *attr,
-+                char * const argv[], char * const env[], void *priv, int priv_size);
-+extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
 +
 +# ifndef LONG_BIT
 +#  define LONG_BIT 32
@@ -260,7 +157,7 @@ index cca33a177..c528a6e57 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +218,9 @@
+@@ -182,7 +210,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -270,7 +167,7 @@ index cca33a177..c528a6e57 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -311,7 +349,21 @@ typedef unsigned long long uoff_t;
+@@ -311,7 +341,21 @@ typedef unsigned long long uoff_t;
   * Even if sizeof(off_t) == sizeof(int), off_t is typedef'ed to long anyway.
   * gcc will throw warnings on printf("%d", off_t)... Have to use %ld etc.
   */
@@ -293,7 +190,7 @@ index cca33a177..c528a6e57 100644
  typedef unsigned long uoff_t;
  #  define XATOOFF(a) xatoi_positive(a)
  #  define BB_STRTOOFF bb_strtou
-@@ -383,10 +435,107 @@ struct BUG_off_t_size_is_misdetected {
+@@ -383,10 +427,107 @@ struct BUG_off_t_size_is_misdetected {
  # define BB_GLOBAL_CONST const
  #endif
  
@@ -401,7 +298,7 @@ index cca33a177..c528a6e57 100644
  # undef errno
  # define errno (*bb_errno)
  # define bb_cached_errno_ptr 1
-@@ -637,7 +786,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
+@@ -637,7 +778,11 @@ int sigprocmask_allsigs(int how) FAST_FUNC;
  /* Return old set in the same set: */
  int sigprocmask2(int how, sigset_t *set) FAST_FUNC;
  /* Standard handler which just records signo */
@@ -413,7 +310,7 @@ index cca33a177..c528a6e57 100644
  void record_signo(int signo); /* not FAST_FUNC! */
  
  
-@@ -1085,7 +1238,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1230,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -422,7 +319,7 @@ index cca33a177..c528a6e57 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -1318,7 +1471,11 @@ enum {
+@@ -1318,7 +1463,11 @@ enum {
  # define bb_daemonize_or_rexec(flags, argv) bb_daemonize_or_rexec(flags)
  # define bb_daemonize(flags)                bb_daemonize_or_rexec(flags, bogus)
  #else
@@ -434,7 +331,7 @@ index cca33a177..c528a6e57 100644
    /* Note: re_exec() and fork_or_rexec() do argv[0][0] |= 0x80 on NOMMU!
     * _Parent_ needs to undo it if it doesn't want to have argv[0] mangled.
     */
-@@ -1343,7 +1500,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
+@@ -1343,7 +1492,11 @@ int sanitize_env_if_suid(void) FAST_FUNC;
  void make_all_argv_opts(char **argv) FAST_FUNC;
  char* single_argv(char **argv) FAST_FUNC;
  extern const char *const bb_argv_dash[]; /* { "-", NULL } */
@@ -446,7 +343,7 @@ index cca33a177..c528a6e57 100644
  uint32_t getopt32(char **argv, const char *applet_opts, ...) FAST_FUNC;
  # define No_argument "\0"
  # define Required_argument "\001"
-@@ -1380,10 +1541,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
+@@ -1380,10 +1533,12 @@ uint32_t getopt32long(char **argv, const char *optstring, const char *longopts,
   * of "llist-compatible" structs, and using llist_FOO functions
   * on them.
   */
@@ -459,7 +356,7 @@ index cca33a177..c528a6e57 100644
  void llist_add_to(llist_t **old_head, void *data) FAST_FUNC;
  void llist_add_to_end(llist_t **list_head, void *data) FAST_FUNC;
  void *llist_pop(llist_t **elm) FAST_FUNC;
-@@ -1399,7 +1562,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1399,7 +1554,11 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
   * to create pidfiles regardless of FEATURE_PIDFILE */
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
@@ -471,7 +368,7 @@ index cca33a177..c528a6e57 100644
  void write_pidfile(const char *path) FAST_FUNC;
  void write_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
  void remove_pidfile_std_path_and_ext(const char *path) FAST_FUNC;
-@@ -1418,10 +1585,17 @@ enum {
+@@ -1418,10 +1577,17 @@ enum {
  	LOGMODE_SYSLOG = (1 << 1) * ENABLE_FEATURE_SYSLOG,
  	LOGMODE_BOTH = LOGMODE_SYSLOG + LOGMODE_STDIO,
  };
@@ -489,7 +386,7 @@ index cca33a177..c528a6e57 100644
  void xfunc_die(void) NORETURN FAST_FUNC;
  void bb_show_usage(void) NORETURN FAST_FUNC;
  void bb_error_msg(const char *s, ...) __attribute__ ((format (printf, 1, 2))) FAST_FUNC;
-@@ -2189,7 +2363,11 @@ enum {
+@@ -2189,7 +2355,11 @@ enum {
  	SHA3_OUTSIZE   = 28,
  };
  
@@ -501,7 +398,7 @@ index cca33a177..c528a6e57 100644
  uint32_t *crc32_filltable(uint32_t *tbl256, int endian) FAST_FUNC;
  uint32_t *crc32_new_table_le(void) FAST_FUNC;
  uint32_t *global_crc32_new_table_le(void) FAST_FUNC;
-@@ -2228,7 +2406,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
+@@ -2228,7 +2398,11 @@ unsigned ubi_devnum_from_devname(const char *str) FAST_FUNC;
  int ubi_get_volid_by_name(unsigned ubi_devnum, const char *vol_name) FAST_FUNC;
  
  
@@ -513,7 +410,7 @@ index cca33a177..c528a6e57 100644
  
  /* Some older linkers don't perform string merging, we used to have common strings
   * as global arrays to do it by hand. But:
-@@ -2294,7 +2476,11 @@ struct globals;
+@@ -2294,7 +2468,11 @@ struct globals;
  /* '*const' ptr makes gcc optimize code much better.
   * Magic prevents ptr_to_globals from going into rodata.
   * If you want to assign a value, use SET_PTR_TO_GLOBALS(x) */
@@ -525,7 +422,7 @@ index cca33a177..c528a6e57 100644
  
  #define barrier() asm volatile ("":::"memory")
  
-@@ -2414,7 +2600,9 @@ do { \
+@@ -2414,7 +2592,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -594,7 +491,7 @@ index ea0512f36..a592eecb4 100644
  
  /* Define bb_setpgrp */
 diff --git a/init/init.c b/init/init.c
-index 1e1ce833d..0cc64f524 100644
+index 1e1ce833d..fd7caf8b4 100644
 --- a/init/init.c
 +++ b/init/init.c
 @@ -261,7 +261,11 @@ static void message(int where, const char *fmt, ...)
@@ -619,124 +516,7 @@ index 1e1ce833d..0cc64f524 100644
  	}
  #endif
  
-@@ -476,6 +483,108 @@ static void init_exec(const char *command)
- }
- 
- /* Used only by run_actions */
-+#ifdef __VSF__
-+
-+#define __VSF_LINUX_CLASS_INHERIT__
-+#include <unistd.h>
-+#include <spawn.h>
-+
-+extern int __vsf_linux_spawn(pid_t *pid, vsf_linux_main_entry_t entry,
-+                const posix_spawn_file_actions_t *actions,
-+                const posix_spawnattr_t *attr,
-+                char * const argv[], char * const env[], void *priv, int priv_size);
-+extern void * __vsf_linux_get_process_priv(vsf_linux_process_t *process);
-+
-+struct action_process_ctx {
-+	const struct init_action *a;
-+};
-+
-+static int __action_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct action_process_ctx *ctx = (struct action_process_ctx *)lbb_ctx->__args.buffer;
-+	const struct init_action *a = ctx->a;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	/* Reset signal handlers that were set by the parent process */
-+	reset_sighandlers_and_unblock_sigs();
-+
-+	/* Create a new session and make ourself the process group leader */
-+	setsid();
-+
-+	/* Open the new terminal device */
-+	if (!open_stdio_to_tty(a->terminal))
-+		_exit(EXIT_FAILURE);
-+
-+	/* NB: on NOMMU we can't wait for input in child, so
-+	 * "askfirst" will work the same as "respawn". */
-+	if (BB_MMU && (a->action_type & ASKFIRST)) {
-+		static const char press_enter[] ALIGN1 =
-+#ifdef CUSTOMIZED_BANNER
-+#include CUSTOMIZED_BANNER
-+#endif
-+			"\nPlease press Enter to activate this console. ";
-+		char c;
-+		/*
-+		 * Save memory by not exec-ing anything large (like a shell)
-+		 * before the user wants it. This is critical if swap is not
-+		 * enabled and the system has low memory. Generally this will
-+		 * be run on the second virtual console, and the first will
-+		 * be allowed to start a shell or whatever an init script
-+		 * specifies.
-+		 */
-+		dbg_message(L_LOG, "waiting for enter to start '%s'"
-+					"(pid %d, tty '%s')\n",
-+				a->command, getpid(), a->terminal);
-+		full_write(STDOUT_FILENO, press_enter, sizeof(press_enter) - 1);
-+		while (safe_read(STDIN_FILENO, &c, 1) == 1 && c != '\n')
-+			continue;
-+	}
-+
-+	/*
-+	 * When a file named /.init_enable_core exists, setrlimit is called
-+	 * before processes are spawned to set core file size as unlimited.
-+	 * This is for debugging only.  Don't use this is production, unless
-+	 * you want core dumps lying about....
-+	 */
-+	if (ENABLE_FEATURE_INIT_COREDUMPS) {
-+		if (access("/.init_enable_core", F_OK) == 0) {
-+			struct rlimit limit;
-+			limit.rlim_cur = RLIM_INFINITY;
-+			limit.rlim_max = RLIM_INFINITY;
-+			setrlimit(RLIMIT_CORE, &limit);
-+		}
-+	}
-+
-+	/* Log the process name and args */
-+	message(L_LOG, "starting pid %u, tty '%s': '%s'",
-+			(int)getpid(), a->terminal, a->command);
-+
-+	/* Now run it.  The new program will take over this PID,
-+	 * so nothing further in init.c should be run. */
-+	init_exec(a->command);
-+	/* We're still here?  Some error happened. */
-+	_exit(-1);
-+}
-+
-+static pid_t run(const struct init_action *a)
-+{
-+	struct action_process_ctx ctx = {
-+		.a			= a,
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &ctx, sizeof(ctx));
-+	pid_t pid = -1;
-+	if ((__vsf_linux_spawn(&pid, __action_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx)) < 0) || (pid < 0)) {
-+		message(L_LOG | L_CONSOLE, "can't spawn");
-+		return -1;
-+	}
-+	return pid;
-+}
-+
-+#else
- static pid_t run(const struct init_action *a)
- {
- 	pid_t pid;
-@@ -552,6 +661,7 @@ static pid_t run(const struct init_action *a)
- 	/* We're still here?  Some error happened. */
- 	_exit(-1);
- }
-+#endif
- 
- static struct init_action *mark_terminated(pid_t pid)
- {
-@@ -682,9 +792,11 @@ static void parse_inittab(void)
+@@ -682,9 +689,11 @@ static void parse_inittab(void)
  		/* Askfirst shell on tty1-4 */
  		new_init_action(ASKFIRST, bb_default_login_shell, "");
  //TODO: VC_1 instead of ""? "" is console -> ctty problems -> angry users
@@ -1012,7 +792,7 @@ index a125244ca..616fbc68a 100644
  /*
   * Return name if statbuf->st_ino && statbuf->st_dev are recorded in
 diff --git a/libbb/lineedit.c b/libbb/lineedit.c
-index d6b2e76ff..eeca42428 100644
+index b942f540a..306b6d825 100644
 --- a/libbb/lineedit.c
 +++ b/libbb/lineedit.c
 @@ -189,7 +189,11 @@ struct lineedit_statics {
@@ -1169,50 +949,6 @@ index 71512aee2..0b865cadd 100644
  
  void FAST_FUNC bb_verror_msg(const char *s, va_list p, const char* strerr)
  {
-diff --git a/libbb/vfork_daemon_rexec.c b/libbb/vfork_daemon_rexec.c
-index 79141936a..0bff78867 100644
---- a/libbb/vfork_daemon_rexec.c
-+++ b/libbb/vfork_daemon_rexec.c
-@@ -258,6 +258,17 @@ void FAST_FUNC re_exec(char **argv)
- 	bb_perror_msg_and_die("can't execute '%s'", bb_busybox_exec_path);
- }
- 
-+# ifdef __VSF__
-+static NOINLINE int fork_or_rexec_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	re_exec(argv);
-+}
-+# endif
- pid_t FAST_FUNC fork_or_rexec(char **argv)
- {
- 	pid_t pid;
-@@ -266,12 +277,21 @@ pid_t FAST_FUNC fork_or_rexec(char **argv)
- 		return 0;
- 
- 	/* fflush_all(); ? - so far all callers had no buffered output to flush */
-+# ifdef __VSF__
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
- 
-+	int result = __vsf_linux_spawn(&pid, fork_or_rexec_process, NULL, NULL, argv, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+	if (result) {
-+		bb_simple_perror_msg_and_die("vfork");
-+	}
-+	return pid;
-+# else
- 	pid = xvfork();
- 	if (pid) /* parent */
- 		return pid;
- 	/* child - re-exec ourself */
- 	re_exec(argv);
-+# endif
- }
- #endif
- 
 diff --git a/libbb/xfunc_die.c b/libbb/xfunc_die.c
 index 25b99066d..b74dfc31d 100644
 --- a/libbb/xfunc_die.c
@@ -1291,287 +1027,6 @@ index 2934d8eb7..8d9ba6c5c 100644
  #endif
  			fb_drawprogressbar(num);
  		}
-diff --git a/networking/ftpd.c b/networking/ftpd.c
-index 0d6a289c7..532bd1bce 100644
---- a/networking/ftpd.c
-+++ b/networking/ftpd.c
-@@ -673,6 +673,55 @@ handle_retr(void)
- 
- /* List commands */
- 
-+#ifdef __VSF__
-+struct popen_ls_priv {
-+	struct fd_pair outfd;
-+};
-+
-+static NOINLINE int popen_ls_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct popen_ls_priv *priv = (struct popen_ls_priv *)lbb_ctx->__args.buffer;
-+	struct fd_pair outfd = priv->outfd;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+#if !BB_MMU
-+	int cur_fd;
-+#endif
-+	/* child */
-+	/* NB: close _first_, then move fd! */
-+	close(outfd.rd);
-+	xmove_fd(outfd.wr, STDOUT_FILENO);
-+	/* Opening /dev/null in chroot is hard.
-+	 * Just making sure STDIN_FILENO is opened
-+	 * to something harmless. Paranoia,
-+	 * ls won't read it anyway */
-+	close(STDIN_FILENO);
-+	dup(STDOUT_FILENO); /* copy will become STDIN_FILENO */
-+#if BB_MMU
-+	/* memset(&G, 0, sizeof(G)); - ls_main does it */
-+	exit(ls_main(/*argc_unused*/ 0, (char**) argv));
-+#else
-+	cur_fd = xopen(".", O_RDONLY | O_DIRECTORY);
-+	/* On NOMMU, we want to execute a child - copy of ourself
-+	 * in order to unblock parent after vfork.
-+	 * In chroot we usually can't re-exec. Thus we escape
-+	 * out of the chroot back to original root.
-+	 */
-+	if (G.root_fd >= 0) {
-+		if (fchdir(G.root_fd) != 0 || chroot(".") != 0)
-+			_exit(127);
-+		/*close(G.root_fd); - close_on_exec_on() took care of this */
-+	}
-+	/* Child expects directory to list on fd #3 */
-+	xmove_fd(cur_fd, 3);
-+	execv(bb_busybox_exec_path, (char**) argv);
-+	_exit(127);
-+#endif
-+}
-+#endif
- static int
- popen_ls(const char *opt)
- {
-@@ -701,6 +750,18 @@ popen_ls(const char *opt)
- 	xpiped_pair(outfd);
- 
- 	/*fflush_all(); - so far we dont use stdio on output */
-+#ifdef __VSF__
-+	struct popen_ls_priv priv = {
-+		.outfd = outfd,
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+
-+	int result = __vsf_linux_spawn(&pid, popen_ls_process, NULL, NULL, (char * const *)argv, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+	if (result) {
-+		bb_simple_perror_msg_and_die("vfork");
-+	}
-+#else
- 	pid = BB_MMU ? xfork() : xvfork();
- 	if (pid == 0) {
- #if !BB_MMU
-@@ -737,6 +798,7 @@ popen_ls(const char *opt)
- 		_exit(127);
- #endif
- 	}
-+#endif
- 
- 	/* parent */
- 	close(outfd.wr);
-diff --git a/networking/httpd.c b/networking/httpd.c
-index ffc58e10b..345c49b19 100644
---- a/networking/httpd.c
-+++ b/networking/httpd.c
-@@ -1541,6 +1541,90 @@ static void setenv1(const char *name, const char *value)
-  * const char *orig_uri         The original URI before rewriting (if any)
-  * int post_len                 Length of the POST body.
-  */
-+#ifdef __VSF__
-+struct send_cgi_and_exit_priv {
-+	struct fd_pair fromCgi;
-+	struct fd_pair toCgi;
-+	int last_slash_pos_to_url;
-+};
-+
-+static NOINLINE int send_cgi_and_exit_process(int argc, char *__argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct send_cgi_and_exit_priv *priv = (struct send_cgi_and_exit_priv *)lbb_ctx->__args.buffer;
-+	struct fd_pair fromCgi = priv->fromCgi;
-+	struct fd_pair toCgi = priv->toCgi;
-+	const char *url = (const char *)&priv[1];
-+	char *script, *last_slash = (char *)url + priv->last_slash_pos_to_url;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	char *argv[3];
-+
-+	xfunc_error_retval = 242;
-+
-+	/* NB: close _first_, then move fds! */
-+	close(toCgi.wr);
-+	close(fromCgi.rd);
-+	xmove_fd(toCgi.rd, 0);  /* replace stdin with the pipe */
-+	xmove_fd(fromCgi.wr, 1);  /* replace stdout with the pipe */
-+	/* User seeing stderr output can be a security problem.
-+	 * If CGI really wants that, it can always do dup itself. */
-+	/* dup2(1, 2); */
-+
-+	/* Chdiring to script's dir */
-+	script = last_slash;
-+	if (script != url) { /* paranoia */
-+		*script = '\0';
-+		if (chdir_or_warn(url + 1) != 0) {
-+			goto error_execing_cgi;
-+		}
-+		// not needed: *script = '/';
-+	}
-+	script++;
-+
-+	/* set argv[0] to name without path */
-+	argv[0] = script;
-+	argv[1] = NULL;
-+
-+#if ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
-+	{
-+		char *suffix = strrchr(script, '.');
-+
-+		if (suffix) {
-+			Htaccess *cur;
-+			for (cur = script_i; cur; cur = cur->next) {
-+				if (strcmp(cur->before_colon + 1, suffix) == 0) {
-+					/* found interpreter name */
-+					argv[0] = cur->after_colon;
-+					argv[1] = script;
-+					argv[2] = NULL;
-+					break;
-+				}
-+			}
-+		}
-+	}
-+#endif
-+	/* restore default signal dispositions for CGI process */
-+	bb_signals(0
-+		| (1 << SIGCHLD)
-+		| (1 << SIGPIPE)
-+		| (1 << SIGHUP)
-+		, SIG_DFL);
-+
-+	/* _NOT_ execvp. We do not search PATH. argv[0] is a filename
-+	 * without any dir components and will only match a file
-+	 * in the current directory */
-+	execv(argv[0], argv);
-+	if (verbose)
-+		bb_perror_msg("can't execute '%s'", argv[0]);
-+ error_execing_cgi:
-+	/* send to stdout
-+	 * (we are CGI here, our stdout is pumped to the net) */
-+	send_headers_and_exit(HTTP_NOT_FOUND);
-+}
-+#endif
- static void send_cgi_and_exit(
- 		const char *url,
- 		const char *orig_uri,
-@@ -1560,6 +1644,9 @@ static void send_cgi_and_exit(
- 	/* Make a copy. NB: caller guarantees:
- 	 * url[0] == '/', url[1] != '/' */
- 	url = xstrdup(url);
-+#ifdef __VSF__
-+	int urllen = strlen(url);
-+#endif
- 
- 	/*
- 	 * We are mucking with environment _first_ and then vfork/exec,
-@@ -1642,6 +1729,21 @@ static void send_cgi_and_exit(
- 	xpiped_pair(fromCgi);
- 	xpiped_pair(toCgi);
- 
-+#ifdef __VSF__
-+	struct send_cgi_and_exit_priv priv = {
-+		.fromCgi = fromCgi,
-+		.toCgi = toCgi,
-+		.last_slash_pos_to_url = last_slash - url,
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+	memcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), url, urllen + 1);
-+
-+	int result = __vsf_linux_spawn(&pid, send_cgi_and_exit_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+	if (result) {
-+		log_and_exit();
-+	}
-+#else
- 	pid = vfork();
- 	if (pid < 0) {
- 		/* TODO: log perror? */
-@@ -1714,6 +1816,7 @@ static void send_cgi_and_exit(
- 		 * (we are CGI here, our stdout is pumped to the net) */
- 		send_headers_and_exit(HTTP_NOT_FOUND);
- 	} /* end child */
-+#endif
- 
- 	/* Parent process */
- 
-@@ -2675,6 +2778,33 @@ static void mini_httpd(int server_socket)
- 	/* never reached */
- }
- #else
-+# ifdef __VSF__
-+struct mini_httpd_nommu_priv {
-+	int server_socket;
-+	int n;
-+};
-+
-+static NOINLINE int mini_httpd_nommu_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct mini_httpd_nommu_priv *priv = (struct mini_httpd_nommu_priv *)lbb_ctx->__args.buffer;
-+	int server_socket = priv->server_socket;
-+	int n = priv->n;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	/* Do not reload config on HUP */
-+	signal(SIGHUP, SIG_IGN);
-+	close(server_socket);
-+	xmove_fd(n, 0);
-+	xdup2(0, 1);
-+
-+	/* Run a copy of ourself in inetd mode */
-+	re_exec(argv);
-+}
-+# endif
-+
- static void mini_httpd_nommu(int server_socket, int argc, char **argv) NORETURN;
- static void mini_httpd_nommu(int server_socket, int argc, char **argv)
- {
-@@ -2700,6 +2830,16 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
- 		/* set the KEEPALIVE option to cull dead connections */
- 		setsockopt_keepalive(n);
- 
-+# ifdef __VSF__
-+		struct mini_httpd_nommu_priv priv = {
-+			.server_socket = server_socket,
-+			.n = n,
-+		};
-+		struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+		memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+
-+		__vsf_linux_spawn(NULL, mini_httpd_nommu_process, NULL, NULL, argv_copy, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+# else
- 		if (vfork() == 0) {
- 			/* child */
- 			/* Do not reload config on HUP */
-@@ -2711,6 +2851,7 @@ static void mini_httpd_nommu(int server_socket, int argc, char **argv)
- 			/* Run a copy of ourself in inetd mode */
- 			re_exec(argv_copy);
- 		}
-+# endif
- 		argv_copy[0][0] &= 0x7f;
- 		/* parent, or vfork failed */
- 		close(n);
 diff --git a/networking/libiproute/rt_names.c b/networking/libiproute/rt_names.c
 index 3c2fad912..5999f3b8d 100644
 --- a/networking/libiproute/rt_names.c
@@ -1696,130 +1151,6 @@ index 807800a62..82889307d 100644
  	return 0;
  }
  
-diff --git a/networking/telnetd.c b/networking/telnetd.c
-index 0805e464f..c76a925f6 100644
---- a/networking/telnetd.c
-+++ b/networking/telnetd.c
-@@ -424,6 +424,85 @@ enum {
- 	OPT_WAIT       = (1 << 8) * ENABLE_FEATURE_TELNETD_INETD_WAIT, /* -w SEC */
- };
- 
-+#ifdef __VSF__
-+struct make_new_session_priv {
-+	int sock;
-+	char tty_name[GETPTY_BUFSIZE];
-+};
-+
-+static NOINLINE int make_new_session_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct make_new_session_priv *priv = (struct make_new_session_priv *)lbb_ctx->__args.buffer;
-+	char *tty_name = priv->tty_name;
-+	int sock = priv->sock;
-+	const char *login_argv[2];
-+	struct termios termbuf;
-+	int pid;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	bb_signals((1 << SIGCHLD) + (1 << SIGPIPE), SIG_DFL);
-+
-+	pid = getpid();
-+
-+	if (ENABLE_FEATURE_UTMP) {
-+		len_and_sockaddr *lsa = get_peer_lsa(sock);
-+		char *hostname = NULL;
-+		if (lsa) {
-+			hostname = xmalloc_sockaddr2dotted(&lsa->u.sa);
-+			free(lsa);
-+		}
-+		write_new_utmp(pid, LOGIN_PROCESS, tty_name, /*username:*/ "LOGIN", hostname);
-+		free(hostname);
-+	}
-+
-+	/* Make new session and process group */
-+	setsid();
-+
-+	/* Open the child's side of the tty */
-+	/* NB: setsid() disconnects from any previous ctty's. Therefore
-+	 * we must open child's side of the tty AFTER setsid! */
-+	close(0);
-+	xopen(tty_name, O_RDWR); /* becomes our ctty */
-+	xdup2(0, 1);
-+	xdup2(0, 2);
-+	tcsetpgrp(0, pid); /* switch this tty's process group to us */
-+
-+	/* The pseudo-terminal allocated to the client is configured to operate
-+	 * in cooked mode, and with XTABS CRMOD enabled (see tty(4)) */
-+	tcgetattr(0, &termbuf);
-+	termbuf.c_lflag |= ECHO; /* if we use readline we dont want this */
-+	termbuf.c_oflag |= ONLCR | XTABS;
-+	termbuf.c_iflag |= ICRNL;
-+	termbuf.c_iflag &= ~IXOFF;
-+	/*termbuf.c_lflag &= ~ICANON;*/
-+	tcsetattr_stdin_TCSANOW(&termbuf);
-+
-+	/* Uses FILE-based I/O to stdout, but does fflush_all(),
-+	 * so should be safe with vfork.
-+	 * I fear, though, that some users will have ridiculously big
-+	 * issue files, and they may block writing to fd 1,
-+	 * (parent is supposed to read it, but parent waits
-+	 * for vforked child to exec!) */
-+	print_login_issue(G.issuefile, tty_name);
-+
-+	/* Exec shell / login / whatever */
-+	login_argv[0] = G.loginpath;
-+	login_argv[1] = NULL;
-+	/* exec busybox applet (if PREFER_APPLETS=y), if that fails,
-+	 * exec external program.
-+	 * NB: sock is either 0 or has CLOEXEC set on it.
-+	 * fd has CLOEXEC set on it too. These two fds will be closed here.
-+	 */
-+	BB_EXECVP(G.loginpath, (char **)login_argv);
-+	/* _exit is safer with vfork, and we shouldn't send message
-+	 * to remote clients anyway */
-+	_exit(EXIT_FAILURE); /*bb_perror_msg_and_die("execv %s", G.loginpath);*/
-+}
-+#endif
-+
- static struct tsession *
- make_new_session(
- 		IF_FEATURE_TELNETD_STANDALONE(int sock)
-@@ -497,6 +576,25 @@ make_new_session(
- 	}
- 
- 	fflush_all();
-+#ifdef __VSF__
-+	struct make_new_session_priv priv = {
-+		.sock	= sock,
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(priv.tty_name, tty_name, sizeof(tty_name));
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+
-+	int result = __vsf_linux_spawn(&pid, make_new_session_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+	if (result) {
-+		free(ts);
-+		close(fd);
-+		/* sock will be closed by caller */
-+		bb_simple_perror_msg("vfork");
-+		return NULL;
-+	}
-+	ts->shell_pid = pid;
-+	return ts;
-+#else
- 	pid = vfork(); /* NOMMU-friendly */
- 	if (pid < 0) {
- 		free(ts);
-@@ -572,6 +670,7 @@ make_new_session(
- 	/* _exit is safer with vfork, and we shouldn't send message
- 	 * to remote clients anyway */
- 	_exit(EXIT_FAILURE); /*bb_perror_msg_and_die("execv %s", G.loginpath);*/
-+#endif
- }
- 
- #if ENABLE_FEATURE_TELNETD_STANDALONE
 diff --git a/networking/tls.c b/networking/tls.c
 index 8d074c058..52d56fded 100644
 --- a/networking/tls.c
@@ -1833,94 +1164,11 @@ index 8d074c058..52d56fded 100644
  }
  
  static void tls_aesgcm_decrypt(tls_state_t *tls, uint8_t *buf, int size)
-diff --git a/networking/wget.c b/networking/wget.c
-index 9ec0e67b9..289e333ea 100644
---- a/networking/wget.c
-+++ b/networking/wget.c
-@@ -766,6 +766,50 @@ static int spawn_https_helper_openssl(const char *host, unsigned port)
- #endif
- 
- #if ENABLE_FEATURE_WGET_HTTPS
-+# ifdef __VSF__
-+struct spawn_ssl_client_priv {
-+	int network_fd;
-+	int flags;
-+	int sp[2];
-+};
-+
-+static NOINLINE int spawn_ssl_client_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct spawn_ssl_client_priv *priv = (struct spawn_ssl_client_priv *)lbb_ctx->__args.buffer;
-+	int network_fd = priv->network_fd;
-+	int flags = priv->flags;
-+	int sp[2] = {priv->sp[0], priv->sp[1]};
-+	char *servername = (char *)&priv[1];
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	close(sp[0]);
-+	xmove_fd(sp[1], 0);
-+	xdup2(0, 1);
-+	if (BB_MMU) {
-+		tls_state_t *tls = new_tls_state();
-+		tls->ifd = tls->ofd = network_fd;
-+		tls_handshake(tls, servername);
-+		tls_run_copy_loop(tls, flags);
-+		exit(0);
-+	} else {
-+		char *argv[6];
-+
-+		xmove_fd(network_fd, 3);
-+		argv[0] = (char*)"ssl_client";
-+		argv[1] = (char*)"-s3";
-+		//TODO: if (!is_ip_address(servername))...
-+		argv[2] = (char*)"-n";
-+		argv[3] = servername;
-+		argv[4] = (flags & TLSLOOP_EXIT_ON_LOCAL_EOF ? (char*)"-e" : NULL);
-+		argv[5] = NULL;
-+		BB_EXECVP(argv[0], argv);
-+		bb_perror_msg_and_die("can't execute '%s'", argv[0]);
-+	}
-+}
-+# endif
- static void spawn_ssl_client(const char *host, int network_fd, int flags)
- {
- 	int sp[2];
-@@ -786,6 +830,19 @@ static void spawn_ssl_client(const char *host, int network_fd, int flags)
- 		bb_simple_perror_msg_and_die("socketpair");
- 
- 	fflush_all();
-+#ifdef __VSF__
-+	struct spawn_ssl_client_priv priv = {
-+		.network_fd		= network_fd,
-+		.flags			= flags,
-+		.sp[0]			= sp[0],
-+		.sp[1]			= sp[1],
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+	strcpy((char *)lbb_ctx->__args.buffer + sizeof(priv), servername);
-+
-+	__vsf_linux_spawn(&pid, spawn_ssl_client_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+#else
- 	pid = BB_MMU ? xfork() : xvfork();
- 	if (pid == 0) {
- 		/* Child */
-@@ -814,6 +871,7 @@ static void spawn_ssl_client(const char *host, int network_fd, int flags)
- 		}
- 		/* notreached */
- 	}
-+#endif		// __VSF__
- 
- 	/* Parent */
- 	free(servername);
 diff --git a/shell/ash.c b/shell/ash.c
-index 18ccc1329..832924b4e 100644
+index 5f8c8ea19..a862872a5 100644
 --- a/shell/ash.c
 +++ b/shell/ash.c
-@@ -11714,7 +11714,7 @@ getopts(char *optstr, char *optvar, char **optfirst)
+@@ -11715,7 +11715,7 @@ getopts(char *optstr, char *optvar, char **optfirst)
  		setvar0("OPTARG", nullstr);
   out:
  	ind = optnext - optfirst + 1;
@@ -1929,260 +1177,3 @@ index 18ccc1329..832924b4e 100644
  	sbuf[0] = c;
  	/*sbuf[1] = '\0'; - already is */
  	setvar0(optvar, sbuf);
-diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..6ea369acc 100644
---- a/shell/hush.c
-+++ b/shell/hush.c
-@@ -7602,6 +7602,106 @@ static void parse_and_run_file(HFILE *fp)
- }
- 
- #if ENABLE_HUSH_TICK
-+# ifdef __VSF__
-+
-+struct generate_stream_from_string_priv {
-+	char **to_free;
-+	char *s;
-+	int channel[2];
-+};
-+
-+static NOINLINE int generate_stream_from_string_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct generate_stream_from_string_priv *priv = (struct generate_stream_from_string_priv *)lbb_ctx->__args.buffer;
-+	char **to_free = priv->to_free;
-+	const char *s = (const char *)priv->s;
-+	int channel[2] = {priv->channel[0], priv->channel[1]};
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+	disable_restore_tty_pgrp_on_exit();
-+	/* Process substitution is not considered to be usual
-+	 * 'command execution'.
-+	 * SUSv3 says ctrl-Z should be ignored, ctrl-C should not.
-+	 */
-+	bb_signals(0
-+		+ (1 << SIGTSTP)
-+		+ (1 << SIGTTIN)
-+		+ (1 << SIGTTOU)
-+		, SIG_IGN);
-+	close(channel[0]); /* NB: close _first_, then move fd! */
-+	xmove_fd(channel[1], 1);
-+# if ENABLE_HUSH_TRAP
-+	/* Awful hack for `trap` or $(trap).
-+	 *
-+	 * http://www.opengroup.org/onlinepubs/009695399/utilities/trap.html
-+	 * contains an example where "trap" is executed in a subshell:
-+	 *
-+	 * save_traps=$(trap)
-+	 * ...
-+	 * eval "$save_traps"
-+	 *
-+	 * Standard does not say that "trap" in subshell shall print
-+	 * parent shell's traps. It only says that its output
-+	 * must have suitable form, but then, in the above example
-+	 * (which is not supposed to be normative), it implies that.
-+	 *
-+	 * bash (and probably other shell) does implement it
-+	 * (traps are reset to defaults, but "trap" still shows them),
-+	 * but as a result, "trap" logic is hopelessly messed up:
-+	 *
-+	 * # trap
-+	 * trap -- 'echo Ho' SIGWINCH  <--- we have a handler
-+	 * # (trap)        <--- trap is in subshell - no output (correct, traps are reset)
-+	 * # true | trap   <--- trap is in subshell - no output (ditto)
-+	 * # echo `true | trap`    <--- in subshell - output (but traps are reset!)
-+	 * trap -- 'echo Ho' SIGWINCH
-+	 * # echo `(trap)`         <--- in subshell in subshell - output
-+	 * trap -- 'echo Ho' SIGWINCH
-+	 * # echo `true | (trap)`  <--- in subshell in subshell in subshell - output!
-+	 * trap -- 'echo Ho' SIGWINCH
-+	 *
-+	 * The rules when to forget and when to not forget traps
-+	 * get really complex and nonsensical.
-+	 *
-+	 * Our solution: ONLY bare $(trap) or `trap` is special.
-+	 */
-+	s = skip_whitespace(s);
-+	if (is_prefixed_with(s, "trap")
-+	 && skip_whitespace(s + 4)[0] == '\0'
-+	) {
-+		static const char *const argv[] ALIGN_PTR = { NULL, NULL };
-+		builtin_trap((char**)argv);
-+		fflush_all(); /* important */
-+		_exit(0);
-+	}
-+# endif
-+# if BB_MMU
-+	/* Prevent it from trying to handle ctrl-z etc */
-+	IF_HUSH_JOB(G.run_list_level = 1;)
-+	CLEAR_RANDOM_T(&G.random_gen); /* or else $RANDOM repeats in child */
-+	reset_traps_to_defaults();
-+	IF_HUSH_MODE_X(G.x_mode_depth++;)
-+	//bb_error_msg("%s: ++x_mode_depth=%d", __func__, G.x_mode_depth);
-+	parse_and_run_string(s);
-+	_exit(G.last_exitcode);
-+# else
-+	/* We re-execute after vfork on NOMMU. This makes this script safe:
-+	 * yes "0123456789012345678901234567890" | dd bs=32 count=64k >BIG
-+	 * huge=`cat BIG` # was blocking here forever
-+	 * echo OK
-+	 */
-+	re_execute_shell(&to_free,
-+			s,
-+			G.global_argv[0],
-+			G.global_argv + 1,
-+			NULL);
-+# endif
-+}
-+
-+# endif
- static int generate_stream_from_string(const char *s, pid_t *pid_p)
- {
- 	pid_t pid;
-@@ -7611,6 +7711,18 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
- # endif
- 
- 	xpipe(channel);
-+#ifdef __VSF__
-+	struct generate_stream_from_string_priv priv = {
-+		.to_free = to_free,
-+		.s = (char *)s,
-+		.channel[0] = channel[0],
-+		.channel[1] = channel[1],
-+	};
-+	struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+	memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+
-+	__vsf_linux_spawn(&pid, generate_stream_from_string_process, NULL, NULL, NULL, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+#else
- 	pid = BB_MMU ? xfork() : xvfork();
- 	if (pid == 0) { /* child */
- 		disable_restore_tty_pgrp_on_exit();
-@@ -7692,6 +7804,7 @@ static int generate_stream_from_string(const char *s, pid_t *pid_p)
- 				NULL);
- # endif
- 	}
-+#endif		// __VSF__
- 
- 	/* parent */
- 	*pid_p = pid;
-@@ -9229,6 +9342,89 @@ static int redirect_and_varexp_helper(
- 
- 	return setup_redirects(command, sqp);
- }
-+
-+#ifdef __VSF__
-+
-+struct pipe_process_priv {
-+	int next_infd;
-+	struct fd_pair pipefds;
-+	struct pipe *pi;
-+	struct command *command;
-+	volatile nommu_save_t nommu_save;
-+};
-+
-+static NOINLINE int pipe_process(int argc, char *argv[])
-+{
-+	struct __busybox_libbb_ctx *lbb_ctx = (struct __busybox_libbb_ctx *)__vsf_linux_get_process_priv(NULL);
-+	struct pipe_process_priv *priv = (struct pipe_process_priv *)lbb_ctx->__args.buffer;
-+	int next_infd = priv->next_infd;
-+	struct fd_pair pipefds = priv->pipefds;
-+	struct pipe *pi = priv->pi;
-+	struct command *command = priv->command;
-+	volatile nommu_save_t nommu_save = priv->nommu_save;
-+	char **argv_expanded = argv;
-+
-+	declare_vsf_busybox_mod(libbb_fork);
-+	vsf_linux_dynlib_ctx_set(&vsf_busybox_mod_name(libbb_fork), lbb_ctx);
-+
-+#if ENABLE_HUSH_JOB
-+	disable_restore_tty_pgrp_on_exit();
-+	CLEAR_RANDOM_T(&G.random_gen); /* or else $RANDOM repeats in child */
-+
-+	/* Every child adds itself to new process group
-+	 * with pgid == pid_of_first_child_in_pipe */
-+	if (G.run_list_level == 1 && G_interactive_fd) {
-+		pid_t pgrp;
-+		pgrp = pi->pgrp;
-+		if (pgrp < 0) /* true for 1st process only */
-+			pgrp = getpid();
-+		if (setpgid(0, pgrp) == 0
-+		 && pi->followup != PIPE_BG
-+		 && G_saved_tty_pgrp /* we have ctty */
-+		) {
-+			/* We do it in *every* child, not just first,
-+			 * to avoid races */
-+			tcsetpgrp(G_interactive_fd, pgrp);
-+		}
-+	}
-+#endif
-+	if (pi->alive_cmds == 0 && pi->followup == PIPE_BG) {
-+		/* 1st cmd in backgrounded pipe
-+		 * should have its stdin /dev/null'ed */
-+		close(0);
-+		if (open(bb_dev_null, O_RDONLY))
-+			xopen("/", O_RDONLY);
-+	} else {
-+		xmove_fd(next_infd, 0);
-+	}
-+	xmove_fd(pipefds.wr, 1);
-+	if (pipefds.rd > 1)
-+		close(pipefds.rd);
-+	/* Like bash, explicit redirects override pipes,
-+	 * and the pipe fd (fd#1) is available for dup'ing:
-+	 * "cmd1 2>&1 | cmd2": fd#1 is duped to fd#2, thus stderr
-+	 * of cmd1 goes into pipe.
-+	 */
-+	if (setup_redirects(command, NULL)) {
-+		/* Happens when redir file can't be opened:
-+		 * $ hush -c 'echo FOO >&2 | echo BAR 3>/qwe/rty; echo BAZ'
-+		 * FOO
-+		 * hush: can't open '/qwe/rty': No such file or directory
-+		 * BAZ
-+		 * (echo BAR is not executed, it hits _exit(1) below)
-+		 */
-+		_exit(1);
-+	}
-+
-+	/* Stores to nommu_save list of env vars putenv'ed
-+	 * (NOMMU, on MMU we don't need that) */
-+	/* cast away volatility... */
-+	pseudo_exec((nommu_save_t*) &nommu_save, command, 0 == argc ? NULL : argv);
-+	/* pseudo_exec() does not return */
-+}
-+
-+#endif
-+
- static NOINLINE int run_pipe(struct pipe *pi)
- {
- 	static const char *const null_ptr = NULL;
-@@ -9584,6 +9780,20 @@ static NOINLINE int run_pipe(struct pipe *pi)
- 		G.execute_lineno = command->lineno;
- #endif
- 
-+#ifdef __VSF__
-+		struct pipe_process_priv priv = {
-+			.next_infd		= next_infd,
-+			.pipefds		= pipefds,
-+			.pi				= pi,
-+			.command		= command,
-+			.nommu_save		= nommu_save,
-+		};
-+		struct __busybox_libbb_ctx *lbb_ctx = libbb_ctx;
-+		memcpy(lbb_ctx->__args.buffer, &priv, sizeof(priv));
-+
-+		command->pid = -1;
-+		__vsf_linux_spawn(&command->pid, pipe_process, NULL, NULL, argv_expanded, NULL, lbb_ctx, sizeof(*lbb_ctx));
-+#else
- 		command->pid = BB_MMU ? fork() : vfork();
- 		if (!command->pid) { /* child */
- #if ENABLE_HUSH_JOB
-@@ -9641,6 +9851,7 @@ static NOINLINE int run_pipe(struct pipe *pi)
- 			pseudo_exec((nommu_save_t*) &nommu_save, command, argv_expanded);
- 			/* pseudo_exec() does not return */
- 		}
-+#endif
- 
- 		/* parent or error */
- #if ENABLE_HUSH_FAST
