@@ -832,6 +832,9 @@
     <Filter Include="application\3rd-party\busybox\raw\util-linux">
       <UniqueIdentifier>{7062dafa-2a41-4a85-9f46-bc0d4b2f41a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\hal\driver\common\dac">
+      <UniqueIdentifier>{66abc9e1-000d-4c80-b785-b0e95ab44962}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2204,6 +2207,9 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\hdreg.h">
       <Filter>vsf\shell\sys\linux\include\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\hal\driver\common\dac\dac_template.h">
+      <Filter>vsf\hal\driver\common\dac</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3896,6 +3902,9 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\util-linux\mkfs_vfat.c">
       <Filter>application\3rd-party\busybox\raw\util-linux</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\vsf\source\hal\driver\common\dac\dac_common.c">
+      <Filter>vsf\hal\driver\common\dac</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\vsf\source\hal\arch\common\arch_without_thread_suspend\vsf_arch_without_thread_suspend_template.inc">
@@ -3975,6 +3984,9 @@
     </None>
     <None Include="..\..\vsf\source\shell\sys\linux\include\simple_libc\string_view">
       <Filter>vsf\shell\sys\linux\include\simple_libc</Filter>
+    </None>
+    <None Include="..\..\vsf\source\hal\driver\common\dac\dac_template.inc">
+      <Filter>vsf\hal\driver\common\dac</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
