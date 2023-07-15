@@ -3,8 +3,6 @@
 cmake_policy(SET CMP0079 NEW)
 
 file(GLOB_RECURSE BUSYBOX_SOURCES
-    port/vsf_porting/libbb_dynlib.c
-
     raw/archival/libarchive/open_transformer.c
     raw/archival/libarchive/init_handle.c
     raw/archival/libarchive/filter_accept_all.c
@@ -336,7 +334,6 @@ vsf_add_compile_definitions(
 )
 vsf_add_include_directories(
     port
-    port/vsf_porting
     raw/include
 
     ${VSF_COMMON_INCLUDE_DIRECTORIES}
@@ -345,6 +342,16 @@ vsf_add_include_directories(
 vsf_add_sources(
     ${BUSYBOX_SOURCES}
 )
+
+if (NOT DEFINED VSF_APPLET)
+    vsf_add_include_directories(
+        port/vsf_porting
+    )
+    vsf_add_sources(
+        port/vsf_porting/libbb_dynlib.c
+    )
+endif()
+
 if(VSF_LINUX_USE_SIMPLE_LIBC)
     vsf_add_include_directories(
         $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc
