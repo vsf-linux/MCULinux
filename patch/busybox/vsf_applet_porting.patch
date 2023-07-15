@@ -1,6 +1,6 @@
  editors/awk.c                    |  4 +--
  include/libbb.h                  | 55 +++++++++++++++++++++++++++++++++++++---
- include/platform.h               | 18 ++++++++++---
+ include/platform.h               | 17 ++++++++++---
  init/init.c                      |  2 ++
  libbb/appletlib.c                |  4 +++
  libbb/getopt32.c                 | 14 +++++-----
@@ -15,7 +15,7 @@
  networking/netstat.c             |  4 +--
  networking/tls.c                 |  2 +-
  shell/ash.c                      |  2 +-
- 17 files changed, 104 insertions(+), 37 deletions(-)
+ 17 files changed, 103 insertions(+), 37 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..b3b52f106 100644
@@ -135,21 +135,20 @@ index cca33a177..1c3e43e05 100644
  
  
 diff --git a/include/platform.h b/include/platform.h
-index ea0512f36..a592eecb4 100644
+index ea0512f36..6f7afb3fe 100644
 --- a/include/platform.h
 +++ b/include/platform.h
-@@ -7,6 +7,10 @@
+@@ -7,6 +7,9 @@
  #ifndef BB_PLATFORM_H
  #define BB_PLATFORM_H 1
  
 +#ifdef __VSF__
-+# include "autoconf.h"
 +# undef UNICODE
 +#endif
  
  /* Convenience macros to test the version of gcc. */
  #undef __GNUC_PREREQ
-@@ -24,7 +28,7 @@
+@@ -24,7 +27,7 @@
  # endif
  #endif
  
@@ -158,7 +157,7 @@ index ea0512f36..a592eecb4 100644
  # ifndef __attribute__
  #  define __attribute__(x)
  # endif
-@@ -65,7 +69,9 @@
+@@ -65,7 +68,9 @@
   * to the new pointer) after the function returns a non-NULL value."
   */
  #define RETURNS_MALLOC __attribute__ ((malloc))
@@ -169,7 +168,7 @@ index ea0512f36..a592eecb4 100644
  #define ALIGNED(m) __attribute__ ((__aligned__(m)))
  
  /* __NO_INLINE__: some gcc's do not honor inlining! :( */
-@@ -81,7 +87,9 @@
+@@ -81,7 +86,9 @@
  #  define UNUSED_PARAM_RESULT
  # endif
  #else
@@ -180,7 +179,7 @@ index ea0512f36..a592eecb4 100644
  # define NOINLINE
  # define DEPRECATED
  # define UNUSED_PARAM_RESULT
-@@ -318,7 +326,9 @@ typedef unsigned smalluint;
+@@ -318,7 +325,9 @@ typedef unsigned smalluint;
   || defined __dietlibc__ \
   || defined __BIONIC__ \
   || defined _NEWLIB_VERSION

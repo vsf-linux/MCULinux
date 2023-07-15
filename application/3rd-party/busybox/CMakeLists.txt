@@ -343,6 +343,9 @@ vsf_add_sources(
     ${BUSYBOX_SOURCES}
 )
 
+get_filename_component(__BUSYBOX_PORT_DIR port ABSOLUTE)
+target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -include ${__BUSYBOX_PORT_DIR}/autoconf.h)
+
 if (NOT DEFINED VSF_APPLET)
     vsf_add_include_directories(
         port/vsf_porting
