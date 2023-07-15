@@ -48,7 +48,7 @@ else()
   include($ENV{VSF_PATH}/script/cmake/compilers/armllvm.cmake)
 endif()
 
-project(vsf_applet C CXX ASM)
+project(busybox C CXX ASM)
 
 # target & configurations
 set(VSF_TARGET CortexM4)
