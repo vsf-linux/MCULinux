@@ -10,16 +10,16 @@ message(STATUS "VSF_PATH: $ENV{VSF_PATH}")
 
 # compiler configurations
 
-if(NOT TRUE)
+if(TRUE)
   # arm-none-eabi-gcc will not pass compiler checker of cmake, so include before project
   # **************** Seems not Working ****************
   # refer to arm-none-eabi-gcc BUG: https://answers.launchpad.net/gcc-arm-embedded/+question/675869
   set(CMAKE_C_FLAGS 
-      "-Ofast -fms-extensions -nostdlib -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
+      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
       CACHE INTERNAL "C compiler common flags"
   )
   set(CMAKE_CXX_FLAGS 
-      "-Ofast -fms-extensions -nostdlib -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
+      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
       CACHE INTERNAL "C++ compiler common flags"
   )
   include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
