@@ -223,7 +223,7 @@ index d5335d353..63bb34fc5 100644
  
  	argc = string_array_len(argv);
 -	xfunc_error_retval = applet_main[applet_no](argc, argv);
-+	applet_entry = (int (*)(int argc, char **argv))vsf_applet_xip_remap((void *)applet_main[applet_no]);
++	applet_entry = (int (*)(int argc, char **argv))vsf_applet_remap((void *)applet_main[applet_no]);
 +	xfunc_error_retval = applet_entry(argc, argv);
  
  	/* Note: applet_main() may also not return (die on a xfunc or such) */
