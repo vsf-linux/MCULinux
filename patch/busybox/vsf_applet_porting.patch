@@ -2,7 +2,7 @@
  include/libbb.h                  | 55 +++++++++++++++++++++++++++++++++++++---
  include/platform.h               | 17 ++++++++++---
  init/init.c                      |  2 ++
- libbb/appletlib.c                |  4 +++
+ libbb/appletlib.c                |  8 +++++-
  libbb/getopt32.c                 | 14 +++++-----
  libbb/makedev.c                  |  4 ++-
  libbb/u_signal_names.c           |  2 +-
@@ -15,7 +15,7 @@
  networking/netstat.c             |  4 +--
  networking/tls.c                 |  2 +-
  shell/ash.c                      |  2 +-
- 17 files changed, 103 insertions(+), 37 deletions(-)
+ 17 files changed, 106 insertions(+), 38 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..b3b52f106 100644
@@ -207,10 +207,28 @@ index 1e1ce833d..ce717f41a 100644
  		new_init_action(CTRLALTDEL, "reboot", "");
  		/* Umount all filesystems on halt/reboot */
 diff --git a/libbb/appletlib.c b/libbb/appletlib.c
-index d5335d353..021831905 100644
+index d5335d353..63bb34fc5 100644
 --- a/libbb/appletlib.c
 +++ b/libbb/appletlib.c
-@@ -1028,6 +1028,8 @@ get_script_content(unsigned n UNUSED_PARAM)
+@@ -952,6 +952,7 @@ void FAST_FUNC show_usage_if_dash_dash_help(int applet_no, char **argv)
+ 
+ void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **argv)
+ {
++	int (*applet_entry)(int argc, char **argv);
+ 	int argc;
+ 
+ 	/*
+@@ -966,7 +967,8 @@ void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **ar
+ 		check_suid(applet_no);
+ 
+ 	argc = string_array_len(argv);
+-	xfunc_error_retval = applet_main[applet_no](argc, argv);
++	applet_entry = (int (*)(int argc, char **argv))vsf_applet_xip_remap((void *)applet_main[applet_no]);
++	xfunc_error_retval = applet_entry(argc, argv);
+ 
+ 	/* Note: applet_main() may also not return (die on a xfunc or such) */
+ 	xfunc_die();
+@@ -1028,6 +1030,8 @@ get_script_content(unsigned n UNUSED_PARAM)
  
  #if ENABLE_BUILD_LIBBUSYBOX
  int lbb_main(char **argv)
@@ -219,7 +237,7 @@ index d5335d353..021831905 100644
  #else
  int main(int argc UNUSED_PARAM, char **argv)
  #endif
-@@ -1045,6 +1047,7 @@ int main(int argc UNUSED_PARAM, char **argv)
+@@ -1045,6 +1049,7 @@ int main(int argc UNUSED_PARAM, char **argv)
  	printf("_end:%p %u bytes\n", &_end, end_len);
  #endif
  
@@ -227,7 +245,7 @@ index d5335d353..021831905 100644
  	/* Tweak malloc for reduced memory consumption */
  #ifdef M_TRIM_THRESHOLD
  	/* M_TRIM_THRESHOLD is the maximum amount of freed top-most memory
-@@ -1059,6 +1062,7 @@ int main(int argc UNUSED_PARAM, char **argv)
+@@ -1059,6 +1064,7 @@ int main(int argc UNUSED_PARAM, char **argv)
  	 */
  	mallopt(M_MMAP_THRESHOLD, 32 * 1024 - 256);
  #endif
