@@ -38,11 +38,13 @@ else()
   endif()
 
   set(CMAKE_C_FLAGS
-      "-Oz -mthumb -fropi -frwpi -fno-builtin-printf -fno-builtin-fprintf"
+#      "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"      # GOT-base position independency
+      "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"                              # embedded position independency
       CACHE INTERNAL "C compiler common flags"
   )
   set(CMAKE_CXX_FLAGS
-      "-Oz -mthumb -fropi -frwpi -fno-builtin-printf -fno-builtin-fprintf"
+#      "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fPIC -mno-pic-data-is-text-relative"
+      "-Oz -mthumb -fno-builtin-printf -fno-builtin-fprintf -fropi -frwpi"
       CACHE INTERNAL "C++ compiler common flags"
   )
   include($ENV{VSF_PATH}/script/cmake/compilers/armllvm.cmake)
