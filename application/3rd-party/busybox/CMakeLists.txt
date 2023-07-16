@@ -331,6 +331,7 @@ vsf_add_compile_definitions(
     ENABLE_USE_BB_CRYPT=1
     APP_USE_LINUX_BUSYBOX_DEMO=ENABLED
     __VSF__
+    alloca=__builtin_alloca
 )
 vsf_add_include_directories(
     port
