@@ -87,6 +87,7 @@ vsf_add_include_directories(
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/math
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/stdint
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/assert
+    $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/setjmp
     $ENV{VSF_PATH}/source/shell/sys/linux/include/libusb
 )
 vsf_add_sources(
