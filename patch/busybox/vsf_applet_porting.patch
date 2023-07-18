@@ -1,21 +1,21 @@
- editors/awk.c                    |  4 +--
- include/libbb.h                  | 55 +++++++++++++++++++++++++++++++++++++---
- include/platform.h               | 17 ++++++++++---
+ editors/awk.c                    |  4 ++--
+ include/libbb.h                  | 27 +++++++++++++++++++++++++--
+ include/platform.h               | 14 ++++++++++----
  init/init.c                      |  2 ++
- libbb/appletlib.c                |  8 +++++-
- libbb/getopt32.c                 | 14 +++++-----
- libbb/makedev.c                  |  4 ++-
+ libbb/appletlib.c                |  2 ++
+ libbb/getopt32.c                 | 14 +++++++-------
+ libbb/makedev.c                  |  4 +++-
  libbb/u_signal_names.c           |  2 +-
  libbb/xfuncs.c                   |  2 +-
  loginutils/addgroup.c            |  2 +-
  loginutils/adduser.c             |  2 +-
  miscutils/fbsplash.c             |  2 +-
- networking/libiproute/rt_names.c | 20 +++++++--------
+ networking/libiproute/rt_names.c | 20 ++++++++++----------
  networking/libiproute/rtm_map.c  |  2 +-
- networking/netstat.c             |  4 +--
+ networking/netstat.c             |  4 ++--
  networking/tls.c                 |  2 +-
  shell/ash.c                      |  2 +-
- 17 files changed, 106 insertions(+), 38 deletions(-)
+ 17 files changed, 71 insertions(+), 36 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..b3b52f106 100644
@@ -40,10 +40,10 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..1c3e43e05 100644
+index cca33a177..82e20d45d 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,37 @@
+@@ -55,6 +55,25 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
@@ -52,20 +52,8 @@ index cca33a177..1c3e43e05 100644
 +# include <vsf.h>
 +# include <getopt.h>
 +
-+# ifndef __VSF_APPLET__
-+#  include "vsf_porting/libbb_dynlib.h"
-+# endif
-+
 +# ifndef LONG_BIT
 +#  define LONG_BIT 32
-+# endif
-+# ifdef VSF_ARCH_SETJMP
-+#  undef setjmp
-+#  define setjmp VSF_ARCH_SETJMP
-+# endif
-+# ifdef VSF_ARCH_LONGJMP
-+#  undef longjmp
-+#  define longjmp VSF_ARCH_LONGJMP
 +# endif
 +
 +// remove __reserved in sal.h from M$
@@ -81,7 +69,7 @@ index cca33a177..1c3e43e05 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +213,9 @@
+@@ -182,7 +201,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -91,30 +79,7 @@ index cca33a177..1c3e43e05 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -311,7 +344,21 @@ typedef unsigned long long uoff_t;
-  * Even if sizeof(off_t) == sizeof(int), off_t is typedef'ed to long anyway.
-  * gcc will throw warnings on printf("%d", off_t)... Have to use %ld etc.
-  */
--# if UINT_MAX == ULONG_MAX
-+# ifdef __VSF__
-+#  ifdef __VSF64__
-+typedef unsigned long long uoff_t;
-+#   define XATOOFF(a) xatoull_range((a), 0, LLONG_MAX)
-+#   define BB_STRTOOFF bb_strtoull
-+#   define STRTOOFF strtoull
-+#   define OFF_FMT "ll"
-+#  else
-+typedef unsigned long uoff_t;
-+#   define XATOOFF(a) xatoi_positive(a)
-+#   define BB_STRTOOFF bb_strtou
-+#   define STRTOOFF strtol
-+#   define OFF_FMT "l"
-+#  endif
-+# elif UINT_MAX == ULONG_MAX
- typedef unsigned long uoff_t;
- #  define XATOOFF(a) xatoi_positive(a)
- #  define BB_STRTOOFF bb_strtou
-@@ -1085,7 +1132,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1106,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -123,7 +88,7 @@ index cca33a177..1c3e43e05 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -2414,7 +2461,9 @@ do { \
+@@ -2414,7 +2435,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -135,20 +100,10 @@ index cca33a177..1c3e43e05 100644
  
  
 diff --git a/include/platform.h b/include/platform.h
-index ea0512f36..6f7afb3fe 100644
+index ea0512f36..49112ad36 100644
 --- a/include/platform.h
 +++ b/include/platform.h
-@@ -7,6 +7,9 @@
- #ifndef BB_PLATFORM_H
- #define BB_PLATFORM_H 1
- 
-+#ifdef __VSF__
-+# undef UNICODE
-+#endif
- 
- /* Convenience macros to test the version of gcc. */
- #undef __GNUC_PREREQ
-@@ -24,7 +27,7 @@
+@@ -24,7 +24,7 @@
  # endif
  #endif
  
@@ -157,7 +112,7 @@ index ea0512f36..6f7afb3fe 100644
  # ifndef __attribute__
  #  define __attribute__(x)
  # endif
-@@ -65,7 +68,9 @@
+@@ -65,7 +65,9 @@
   * to the new pointer) after the function returns a non-NULL value."
   */
  #define RETURNS_MALLOC __attribute__ ((malloc))
@@ -168,7 +123,7 @@ index ea0512f36..6f7afb3fe 100644
  #define ALIGNED(m) __attribute__ ((__aligned__(m)))
  
  /* __NO_INLINE__: some gcc's do not honor inlining! :( */
-@@ -81,7 +86,9 @@
+@@ -81,7 +83,9 @@
  #  define UNUSED_PARAM_RESULT
  # endif
  #else
@@ -179,7 +134,7 @@ index ea0512f36..6f7afb3fe 100644
  # define NOINLINE
  # define DEPRECATED
  # define UNUSED_PARAM_RESULT
-@@ -318,7 +325,9 @@ typedef unsigned smalluint;
+@@ -318,7 +322,9 @@ typedef unsigned smalluint;
   || defined __dietlibc__ \
   || defined __BIONIC__ \
   || defined _NEWLIB_VERSION
@@ -207,37 +162,10 @@ index 1e1ce833d..ce717f41a 100644
  		new_init_action(CTRLALTDEL, "reboot", "");
  		/* Umount all filesystems on halt/reboot */
 diff --git a/libbb/appletlib.c b/libbb/appletlib.c
-index d5335d353..63bb34fc5 100644
+index d5335d353..612e21611 100644
 --- a/libbb/appletlib.c
 +++ b/libbb/appletlib.c
-@@ -952,6 +952,7 @@ void FAST_FUNC show_usage_if_dash_dash_help(int applet_no, char **argv)
- 
- void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **argv)
- {
-+	int (*applet_entry)(int argc, char **argv);
- 	int argc;
- 
- 	/*
-@@ -966,7 +967,8 @@ void FAST_FUNC run_applet_no_and_exit(int applet_no, const char *name, char **ar
- 		check_suid(applet_no);
- 
- 	argc = string_array_len(argv);
--	xfunc_error_retval = applet_main[applet_no](argc, argv);
-+	applet_entry = (int (*)(int argc, char **argv))vsf_applet_remap(NULL, (void *)applet_main[applet_no]);
-+	xfunc_error_retval = applet_entry(argc, argv);
- 
- 	/* Note: applet_main() may also not return (die on a xfunc or such) */
- 	xfunc_die();
-@@ -1028,6 +1030,8 @@ get_script_content(unsigned n UNUSED_PARAM)
- 
- #if ENABLE_BUILD_LIBBUSYBOX
- int lbb_main(char **argv)
-+#elif defined(__VSF__) && !defined(__VSF_APPLET__)
-+int lbb_main(int argc UNUSED_PARAM, char **argv)
- #else
- int main(int argc UNUSED_PARAM, char **argv)
- #endif
-@@ -1045,6 +1049,7 @@ int main(int argc UNUSED_PARAM, char **argv)
+@@ -1045,6 +1045,7 @@ int main(int argc UNUSED_PARAM, char **argv)
  	printf("_end:%p %u bytes\n", &_end, end_len);
  #endif
  
@@ -245,7 +173,7 @@ index d5335d353..63bb34fc5 100644
  	/* Tweak malloc for reduced memory consumption */
  #ifdef M_TRIM_THRESHOLD
  	/* M_TRIM_THRESHOLD is the maximum amount of freed top-most memory
-@@ -1059,6 +1064,7 @@ int main(int argc UNUSED_PARAM, char **argv)
+@@ -1059,6 +1060,7 @@ int main(int argc UNUSED_PARAM, char **argv)
  	 */
  	mallopt(M_MMAP_THRESHOLD, 32 * 1024 - 256);
  #endif
