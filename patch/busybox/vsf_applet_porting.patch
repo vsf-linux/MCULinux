@@ -1,10 +1,7 @@
  editors/awk.c                    |  4 ++--
- include/libbb.h                  | 27 +++++++++++++++++++++++++--
- include/platform.h               | 14 ++++++++++----
+ include/libbb.h                  | 21 +++++++++++++++++++--
+ include/platform.h               | 10 +++++++---
  init/init.c                      |  2 ++
- libbb/appletlib.c                |  2 ++
- libbb/getopt32.c                 | 14 +++++++-------
- libbb/makedev.c                  |  4 +++-
  libbb/u_signal_names.c           |  2 +-
  libbb/xfuncs.c                   |  2 +-
  loginutils/addgroup.c            |  2 +-
@@ -15,7 +12,7 @@
  networking/netstat.c             |  4 ++--
  networking/tls.c                 |  2 +-
  shell/ash.c                      |  2 +-
- 17 files changed, 71 insertions(+), 36 deletions(-)
+ 14 files changed, 50 insertions(+), 27 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..b3b52f106 100644
@@ -40,25 +37,19 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..82e20d45d 100644
+index cca33a177..6c559bc8b 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,25 @@
+@@ -55,6 +55,19 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
 +
 +#ifdef __VSF__
-+# include <vsf.h>
 +# include <getopt.h>
 +
 +# ifndef LONG_BIT
 +#  define LONG_BIT 32
-+# endif
-+
-+// remove __reserved in sal.h from M$
-+# ifdef __reserved
-+#  undef __reserved
 +# endif
 +
 +# ifndef SIGWINCH
@@ -69,7 +60,7 @@ index cca33a177..82e20d45d 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +201,9 @@
+@@ -182,7 +195,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -79,7 +70,7 @@ index cca33a177..82e20d45d 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -1085,7 +1106,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1100,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -88,7 +79,7 @@ index cca33a177..82e20d45d 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -2414,7 +2435,9 @@ do { \
+@@ -2414,7 +2429,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  
@@ -100,7 +91,7 @@ index cca33a177..82e20d45d 100644
  
  
 diff --git a/include/platform.h b/include/platform.h
-index ea0512f36..49112ad36 100644
+index ea0512f36..38839ac68 100644
 --- a/include/platform.h
 +++ b/include/platform.h
 @@ -24,7 +24,7 @@
@@ -134,17 +125,6 @@ index ea0512f36..49112ad36 100644
  # define NOINLINE
  # define DEPRECATED
  # define UNUSED_PARAM_RESULT
-@@ -318,7 +322,9 @@ typedef unsigned smalluint;
-  || defined __dietlibc__ \
-  || defined __BIONIC__ \
-  || defined _NEWLIB_VERSION
--# include <features.h>
-+# ifndef __VSF__
-+#  include <features.h>
-+# endif
- #endif
- 
- /* Define bb_setpgrp */
 diff --git a/init/init.c b/init/init.c
 index 1e1ce833d..ce717f41a 100644
 --- a/init/init.c
@@ -161,89 +141,6 @@ index 1e1ce833d..ce717f41a 100644
  		/* Reboot on Ctrl-Alt-Del */
  		new_init_action(CTRLALTDEL, "reboot", "");
  		/* Umount all filesystems on halt/reboot */
-diff --git a/libbb/appletlib.c b/libbb/appletlib.c
-index d5335d353..612e21611 100644
---- a/libbb/appletlib.c
-+++ b/libbb/appletlib.c
-@@ -1045,6 +1045,7 @@ int main(int argc UNUSED_PARAM, char **argv)
- 	printf("_end:%p %u bytes\n", &_end, end_len);
- #endif
- 
-+#ifndef __VSF__
- 	/* Tweak malloc for reduced memory consumption */
- #ifdef M_TRIM_THRESHOLD
- 	/* M_TRIM_THRESHOLD is the maximum amount of freed top-most memory
-@@ -1059,6 +1060,7 @@ int main(int argc UNUSED_PARAM, char **argv)
- 	 */
- 	mallopt(M_MMAP_THRESHOLD, 32 * 1024 - 256);
- #endif
-+#endif
- #if 0 /*def M_TOP_PAD*/
- 	/* When the program break is increased, then M_TOP_PAD bytes are added
- 	 * to the sbrk(2) request. When the heap is trimmed because of free(3),
-diff --git a/libbb/getopt32.c b/libbb/getopt32.c
-index e861d0567..eb6ec7159 100644
---- a/libbb/getopt32.c
-+++ b/libbb/getopt32.c
-@@ -311,7 +311,7 @@ typedef struct {
- 	unsigned switch_off;
- 	unsigned incongruously;
- 	unsigned requires;
--	void **optarg;  /* char**, llist_t** or int *. */
-+	void **poptarg;  /* char**, llist_t** or int *. */
- 	int *counter;
- } t_complementary;
- 
-@@ -383,7 +383,7 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
- 		on_off->opt_char = *s;
- 		on_off->switch_on = (1U << c);
- 		if (*++s == ':') {
--			on_off->optarg = va_arg(p, void **);
-+			on_off->poptarg = va_arg(p, void **);
- 			if (s[1] == '+' || s[1] == '*') {
- 				/* 'o:+' or 'o:*' */
- 				on_off->param_type = (s[1] == '+') ?
-@@ -433,7 +433,7 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
- 			on_off->opt_char = l_o->val;
- 			on_off->switch_on = (1U << c);
- 			if (l_o->has_arg != no_argument)
--				on_off->optarg = va_arg(p, void **);
-+				on_off->poptarg = va_arg(p, void **);
- 			c++;
-  next_long: ;
- 		}
-@@ -561,12 +561,12 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
- 			(*(on_off->counter))++;
- 		if (optarg) {
- 			if (on_off->param_type == PARAM_LIST) {
--				llist_add_to_end((llist_t **)(on_off->optarg), optarg);
-+				llist_add_to_end((llist_t **)(on_off->poptarg), optarg);
- 			} else if (on_off->param_type == PARAM_INT) {
- //TODO: xatoi_positive indirectly pulls in printf machinery
--				*(unsigned*)(on_off->optarg) = xatoi_positive(optarg);
--			} else if (on_off->optarg) {
--				*(char **)(on_off->optarg) = optarg;
-+				*(unsigned*)(on_off->poptarg) = xatoi_positive(optarg);
-+			} else if (on_off->poptarg) {
-+				*(char **)(on_off->poptarg) = optarg;
- 			}
- 		}
- 	}
-diff --git a/libbb/makedev.c b/libbb/makedev.c
-index 06c4039a3..d4a5c9e10 100644
---- a/libbb/makedev.c
-+++ b/libbb/makedev.c
-@@ -14,7 +14,9 @@
-  || defined(__APPLE__)
- # include <sys/types.h>
- #else
--# include <features.h>
-+# ifndef __VSF__
-+#  include <features.h>
-+# endif
- # include <sys/sysmacros.h>
- #endif
- 
 diff --git a/libbb/u_signal_names.c b/libbb/u_signal_names.c
 index f7d598c7a..b76618d04 100644
 --- a/libbb/u_signal_names.c
