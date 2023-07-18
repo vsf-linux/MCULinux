@@ -1,0 +1,26 @@
+ application/3rd-party/busybox/port/autoconf.h | 12 ++++--------
+ 1 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/application/3rd-party/busybox/port/autoconf.h b/application/3rd-party/busybox/port/autoconf.h
+index f25bcbc..0ef1cf5 100644
+--- a/application/3rd-party/busybox/port/autoconf.h
++++ b/application/3rd-party/busybox/port/autoconf.h
+@@ -56,14 +56,10 @@
+ # define IF_FEATURE_VERBOSE_USAGE(...) __VA_ARGS__
+ #endif
+ #define IF_NOT_FEATURE_VERBOSE_USAGE(...)
+-#define CONFIG_FEATURE_COMPRESS_USAGE 1
+-#define ENABLE_FEATURE_COMPRESS_USAGE 1
+-#ifdef MAKE_SUID
+-# define IF_FEATURE_COMPRESS_USAGE(...) __VA_ARGS__ "CONFIG_FEATURE_COMPRESS_USAGE"
+-#else
+-# define IF_FEATURE_COMPRESS_USAGE(...) __VA_ARGS__
+-#endif
+-#define IF_NOT_FEATURE_COMPRESS_USAGE(...)
++#undef CONFIG_FEATURE_COMPRESS_USAGE
++#define ENABLE_FEATURE_COMPRESS_USAGE 0
++#define IF_FEATURE_COMPRESS_USAGE(...)
++#define IF_NOT_FEATURE_COMPRESS_USAGE(...) __VA_ARGS__
+ #undef CONFIG_LFS
+ #define ENABLE_LFS 0
+ #define IF_LFS(...)
