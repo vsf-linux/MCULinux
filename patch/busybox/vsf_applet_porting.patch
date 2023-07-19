@@ -1,5 +1,5 @@
  editors/awk.c                    |  4 ++--
- include/libbb.h                  | 21 +++++++++++++++++++--
+ include/libbb.h                  | 22 ++++++++++++++++++++--
  include/platform.h               | 10 +++++++---
  init/init.c                      |  2 ++
  libbb/u_signal_names.c           |  2 +-
@@ -12,7 +12,7 @@
  networking/netstat.c             |  4 ++--
  networking/tls.c                 |  2 +-
  shell/ash.c                      |  2 +-
- 14 files changed, 50 insertions(+), 27 deletions(-)
+ 14 files changed, 51 insertions(+), 27 deletions(-)
 
 diff --git a/editors/awk.c b/editors/awk.c
 index 728ee8685..b3b52f106 100644
@@ -37,16 +37,17 @@ index 728ee8685..b3b52f106 100644
  				break;
  			}
 diff --git a/include/libbb.h b/include/libbb.h
-index cca33a177..6c559bc8b 100644
+index cca33a177..33ea4be81 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -55,6 +55,19 @@
+@@ -55,6 +55,20 @@
  #include <sys/param.h>
  #include <pwd.h>
  #include <grp.h>
 +
 +#ifdef __VSF__
 +# include <getopt.h>
++# include <sys/sysinfo.h>
 +
 +# ifndef LONG_BIT
 +#  define LONG_BIT 32
@@ -60,7 +61,7 @@ index cca33a177..6c559bc8b 100644
  #if ENABLE_FEATURE_SHADOWPASSWDS
  # if !ENABLE_USE_BB_SHADOW
  /* If using busybox's shadow implementation, do not include the shadow.h
-@@ -182,7 +195,9 @@
+@@ -182,7 +196,9 @@
  
  /* Some libc's forget to declare these, do it ourself */
  
@@ -70,7 +71,7 @@ index cca33a177..6c559bc8b 100644
  /* klogctl is in libc's klog.h, but we cheat and not #include that */
  int klogctl(int type, char *b, int len);
  #ifndef PATH_MAX
-@@ -1085,7 +1100,7 @@ char *safe_gethostname(void) FAST_FUNC;
+@@ -1085,7 +1101,7 @@ char *safe_gethostname(void) FAST_FUNC;
  char* str_tolower(char *str) FAST_FUNC;
  
  char *utoa(unsigned n) FAST_FUNC;
@@ -79,7 +80,7 @@ index cca33a177..6c559bc8b 100644
  /* Returns a pointer past the formatted number, does NOT null-terminate */
  char *utoa_to_buf(unsigned n, char *buf, unsigned buflen) FAST_FUNC;
  char *itoa_to_buf(int n, char *buf, unsigned buflen) FAST_FUNC;
-@@ -2414,7 +2429,9 @@ do { \
+@@ -2414,7 +2430,9 @@ do { \
  	(sizeof(field) == 4 ? SWAP_LE32(field) : BUG_wrong_field_size())
  
  

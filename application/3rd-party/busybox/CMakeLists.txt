@@ -179,6 +179,8 @@ file(GLOB_RECURSE BUSYBOX_SOURCES
     raw/miscutils/ttysize.c
     raw/miscutils/volname.c
 
+    raw/procps/free.c
+
     raw/shell/cttyhack.c
     raw/shell/hush.c
     raw/shell/match.c
