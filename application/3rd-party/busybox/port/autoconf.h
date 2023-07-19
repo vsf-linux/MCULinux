@@ -2,7 +2,7 @@
  * Automatically generated C config: don't edit
  * Busybox version: 1.37.0.git
  */
-#define AUTOCONF_TIMESTAMP "2023-05-23 19:43:28 CST"
+#define AUTOCONF_TIMESTAMP "2023-07-19 21:32:29 CST"
 
 #define CONFIG_HAVE_DOT_CONFIG 1
 #define ENABLE_HAVE_DOT_CONFIG 1
@@ -5476,10 +5476,14 @@
 #define ENABLE_FEATURE_SHOW_THREADS 0
 #define IF_FEATURE_SHOW_THREADS(...)
 #define IF_NOT_FEATURE_SHOW_THREADS(...) __VA_ARGS__
-#undef CONFIG_FREE
-#define ENABLE_FREE 0
-#define IF_FREE(...)
-#define IF_NOT_FREE(...) __VA_ARGS__
+#define CONFIG_FREE 1
+#define ENABLE_FREE 1
+#ifdef MAKE_SUID
+# define IF_FREE(...) __VA_ARGS__ "CONFIG_FREE"
+#else
+# define IF_FREE(...) __VA_ARGS__
+#endif
+#define IF_NOT_FREE(...)
 #undef CONFIG_FUSER
 #define ENABLE_FUSER 0
 #define IF_FUSER(...)

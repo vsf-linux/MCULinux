@@ -1,16 +1,16 @@
 /* This is a generated file, don't edit */
 
-#define NUM_APPLETS 154
+#define NUM_APPLETS 155
 #define KNOWN_APPNAME_OFFSETS 8
 
 const uint16_t applet_nameofs[] ALIGN2 = {
 104,
 208,
-330,
-463,
-583,
-711,
-818,
+335,
+458,
+582,
+716,
+823,
 };
 
 const char applet_names[] ALIGN1 = ""
@@ -60,6 +60,7 @@ const char applet_names[] ALIGN1 = ""
 "fgrep" "\0"
 "find" "\0"
 "fold" "\0"
+"free" "\0"
 "fsync" "\0"
 "ftpd" "\0"
 "grep" "\0"
@@ -214,113 +215,114 @@ const char applet_names[] ALIGN1 = ""
 #define APPLET_NO_fgrep 43
 #define APPLET_NO_find 44
 #define APPLET_NO_fold 45
-#define APPLET_NO_fsync 46
-#define APPLET_NO_ftpd 47
-#define APPLET_NO_grep 48
-#define APPLET_NO_gunzip 49
-#define APPLET_NO_halt 50
-#define APPLET_NO_head 51
-#define APPLET_NO_hexedit 52
-#define APPLET_NO_hostid 53
-#define APPLET_NO_httpd 54
-#define APPLET_NO_hush 55
-#define APPLET_NO_i2cdetect 56
-#define APPLET_NO_i2cdump 57
-#define APPLET_NO_i2cget 58
-#define APPLET_NO_i2cset 59
-#define APPLET_NO_i2ctransfer 60
-#define APPLET_NO_init 61
-#define APPLET_NO_install 62
-#define APPLET_NO_less 63
-#define APPLET_NO_link 64
-#define APPLET_NO_linuxrc 65
-#define APPLET_NO_ln 66
-#define APPLET_NO_logname 67
-#define APPLET_NO_ls 68
-#define APPLET_NO_lsscsi 69
-#define APPLET_NO_man 70
-#define APPLET_NO_md5sum 71
-#define APPLET_NO_microcom 72
-#define APPLET_NO_mim 73
-#define APPLET_NO_mkdir 74
-#define APPLET_NO_mkfifo 75
-#define APPLET_NO_mknod 77
-#define APPLET_NO_mktemp 78
-#define APPLET_NO_mv 79
-#define APPLET_NO_nl 80
-#define APPLET_NO_nohup 81
-#define APPLET_NO_ntpd 82
-#define APPLET_NO_od 83
-#define APPLET_NO_partprobe 84
-#define APPLET_NO_paste 85
-#define APPLET_NO_patch 86
-#define APPLET_NO_ping 87
-#define APPLET_NO_poweroff 88
-#define APPLET_NO_printenv 89
-#define APPLET_NO_printf 90
-#define APPLET_NO_pwd 91
-#define APPLET_NO_readlink 92
-#define APPLET_NO_realpath 93
-#define APPLET_NO_reboot 94
-#define APPLET_NO_reset 95
-#define APPLET_NO_rm 96
-#define APPLET_NO_rmdir 97
-#define APPLET_NO_rx 98
-#define APPLET_NO_sed 99
-#define APPLET_NO_seq 100
-#define APPLET_NO_setkeycodes 101
-#define APPLET_NO_setserial 102
-#define APPLET_NO_sh 103
-#define APPLET_NO_sha1sum 104
-#define APPLET_NO_sha256sum 105
-#define APPLET_NO_sha3sum 106
-#define APPLET_NO_sha512sum 107
-#define APPLET_NO_showkey 108
-#define APPLET_NO_shred 109
-#define APPLET_NO_shuf 110
-#define APPLET_NO_sleep 111
-#define APPLET_NO_sort 112
-#define APPLET_NO_split 113
-#define APPLET_NO_ssl_client 114
-#define APPLET_NO_stat 115
-#define APPLET_NO_strings 116
-#define APPLET_NO_stty 117
-#define APPLET_NO_sum 118
-#define APPLET_NO_sync 119
-#define APPLET_NO_tac 120
-#define APPLET_NO_tail 121
-#define APPLET_NO_tee 122
-#define APPLET_NO_telnet 123
-#define APPLET_NO_telnetd 124
-#define APPLET_NO_test 125
-#define APPLET_NO_tftp 126
-#define APPLET_NO_tftpd 127
-#define APPLET_NO_timeout 128
-#define APPLET_NO_touch 129
-#define APPLET_NO_tr 130
-#define APPLET_NO_tree 131
-#define APPLET_NO_true 132
-#define APPLET_NO_truncate 133
-#define APPLET_NO_ts 134
-#define APPLET_NO_tsort 135
-#define APPLET_NO_tty 136
-#define APPLET_NO_ttysize 137
-#define APPLET_NO_uname 138
-#define APPLET_NO_unexpand 139
-#define APPLET_NO_uniq 140
-#define APPLET_NO_unix2dos 141
-#define APPLET_NO_unlink 142
-#define APPLET_NO_usleep 143
-#define APPLET_NO_uudecode 144
-#define APPLET_NO_uuencode 145
-#define APPLET_NO_vi 146
-#define APPLET_NO_volname 147
-#define APPLET_NO_wc 148
-#define APPLET_NO_wget 149
-#define APPLET_NO_which 150
-#define APPLET_NO_whoami 151
-#define APPLET_NO_xargs 152
-#define APPLET_NO_yes 153
+#define APPLET_NO_free 46
+#define APPLET_NO_fsync 47
+#define APPLET_NO_ftpd 48
+#define APPLET_NO_grep 49
+#define APPLET_NO_gunzip 50
+#define APPLET_NO_halt 51
+#define APPLET_NO_head 52
+#define APPLET_NO_hexedit 53
+#define APPLET_NO_hostid 54
+#define APPLET_NO_httpd 55
+#define APPLET_NO_hush 56
+#define APPLET_NO_i2cdetect 57
+#define APPLET_NO_i2cdump 58
+#define APPLET_NO_i2cget 59
+#define APPLET_NO_i2cset 60
+#define APPLET_NO_i2ctransfer 61
+#define APPLET_NO_init 62
+#define APPLET_NO_install 63
+#define APPLET_NO_less 64
+#define APPLET_NO_link 65
+#define APPLET_NO_linuxrc 66
+#define APPLET_NO_ln 67
+#define APPLET_NO_logname 68
+#define APPLET_NO_ls 69
+#define APPLET_NO_lsscsi 70
+#define APPLET_NO_man 71
+#define APPLET_NO_md5sum 72
+#define APPLET_NO_microcom 73
+#define APPLET_NO_mim 74
+#define APPLET_NO_mkdir 75
+#define APPLET_NO_mkfifo 76
+#define APPLET_NO_mknod 78
+#define APPLET_NO_mktemp 79
+#define APPLET_NO_mv 80
+#define APPLET_NO_nl 81
+#define APPLET_NO_nohup 82
+#define APPLET_NO_ntpd 83
+#define APPLET_NO_od 84
+#define APPLET_NO_partprobe 85
+#define APPLET_NO_paste 86
+#define APPLET_NO_patch 87
+#define APPLET_NO_ping 88
+#define APPLET_NO_poweroff 89
+#define APPLET_NO_printenv 90
+#define APPLET_NO_printf 91
+#define APPLET_NO_pwd 92
+#define APPLET_NO_readlink 93
+#define APPLET_NO_realpath 94
+#define APPLET_NO_reboot 95
+#define APPLET_NO_reset 96
+#define APPLET_NO_rm 97
+#define APPLET_NO_rmdir 98
+#define APPLET_NO_rx 99
+#define APPLET_NO_sed 100
+#define APPLET_NO_seq 101
+#define APPLET_NO_setkeycodes 102
+#define APPLET_NO_setserial 103
+#define APPLET_NO_sh 104
+#define APPLET_NO_sha1sum 105
+#define APPLET_NO_sha256sum 106
+#define APPLET_NO_sha3sum 107
+#define APPLET_NO_sha512sum 108
+#define APPLET_NO_showkey 109
+#define APPLET_NO_shred 110
+#define APPLET_NO_shuf 111
+#define APPLET_NO_sleep 112
+#define APPLET_NO_sort 113
+#define APPLET_NO_split 114
+#define APPLET_NO_ssl_client 115
+#define APPLET_NO_stat 116
+#define APPLET_NO_strings 117
+#define APPLET_NO_stty 118
+#define APPLET_NO_sum 119
+#define APPLET_NO_sync 120
+#define APPLET_NO_tac 121
+#define APPLET_NO_tail 122
+#define APPLET_NO_tee 123
+#define APPLET_NO_telnet 124
+#define APPLET_NO_telnetd 125
+#define APPLET_NO_test 126
+#define APPLET_NO_tftp 127
+#define APPLET_NO_tftpd 128
+#define APPLET_NO_timeout 129
+#define APPLET_NO_touch 130
+#define APPLET_NO_tr 131
+#define APPLET_NO_tree 132
+#define APPLET_NO_true 133
+#define APPLET_NO_truncate 134
+#define APPLET_NO_ts 135
+#define APPLET_NO_tsort 136
+#define APPLET_NO_tty 137
+#define APPLET_NO_ttysize 138
+#define APPLET_NO_uname 139
+#define APPLET_NO_unexpand 140
+#define APPLET_NO_uniq 141
+#define APPLET_NO_unix2dos 142
+#define APPLET_NO_unlink 143
+#define APPLET_NO_usleep 144
+#define APPLET_NO_uudecode 145
+#define APPLET_NO_uuencode 146
+#define APPLET_NO_vi 147
+#define APPLET_NO_volname 148
+#define APPLET_NO_wc 149
+#define APPLET_NO_wget 150
+#define APPLET_NO_which 151
+#define APPLET_NO_whoami 152
+#define APPLET_NO_xargs 153
+#define APPLET_NO_yes 154
 
 #ifndef SKIP_applet_main
 int (*const applet_main[])(int argc, char **argv) = {
@@ -370,6 +372,7 @@ fgconsole_main,
 grep_main,
 find_main,
 fold_main,
+free_main,
 fsync_main,
 ftpd_main,
 grep_main,
@@ -503,8 +506,8 @@ const uint8_t applet_suid[] ALIGN1 = {
 0x00,
 0x00,
 0x00,
-0x40,
 0x00,
+0x01,
 0x00,
 0x00,
 0x00,
@@ -547,58 +550,59 @@ const uint8_t applet_install_loc[] ALIGN1 = {
 0x21,
 0x13,
 0x33,
+0x13,
+0x14,
+0x21,
+0x33,
+0x43,
 0x41,
-0x11,
+0x44,
+0x44,
 0x32,
+0x13,
+0x10,
+0x13,
+0x33,
 0x33,
 0x14,
-0x44,
-0x44,
-0x24,
+0x23,
+0x11,
+0x31,
+0x43,
+0x43,
 0x33,
-0x01,
+0x21,
+0x31,
+0x31,
+0x23,
+0x13,
+0x31,
+0x31,
+0x13,
+0x31,
+0x33,
+0x33,
+0x33,
+0x31,
+0x33,
+0x31,
 0x31,
 0x31,
 0x33,
 0x43,
-0x31,
-0x12,
-0x11,
 0x33,
 0x34,
-0x34,
-0x13,
-0x12,
-0x13,
-0x33,
-0x32,
-0x11,
-0x13,
-0x33,
-0x11,
-0x33,
-0x33,
-0x33,
-0x13,
-0x33,
-0x13,
-0x13,
-0x13,
-0x33,
-0x33,
-0x34,
-0x43,
-0x13,
-0x33,
 0x31,
+0x13,
+0x33,
+0x33,
+0x13,
 0x33,
 0x33,
 0x31,
-0x33,
 0x13,
 0x33,
-0x31,
 0x33,
 0x33,
-0x33,
+0x03,
 };

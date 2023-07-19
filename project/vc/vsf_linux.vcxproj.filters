@@ -835,6 +835,9 @@
     <Filter Include="vsf\hal\driver\common\dac">
       <UniqueIdentifier>{66abc9e1-000d-4c80-b785-b0e95ab44962}</UniqueIdentifier>
     </Filter>
+    <Filter Include="application\3rd-party\busybox\raw\procps">
+      <UniqueIdentifier>{45488336-9b07-49b2-b04b-b946e67396d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -3904,6 +3907,9 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\hal\driver\common\dac\dac_common.c">
       <Filter>vsf\hal\driver\common\dac</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\procps\free.c">
+      <Filter>application\3rd-party\busybox\raw\procps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

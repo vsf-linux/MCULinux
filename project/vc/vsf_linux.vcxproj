@@ -787,6 +787,7 @@
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_rsa.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\tls_sp_c32.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\networking\wget.c" />
+    <ClCompile Include="..\..\application\3rd-party\busybox\raw\procps\free.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\cttyhack.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\hush.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\shell\match.c" />
