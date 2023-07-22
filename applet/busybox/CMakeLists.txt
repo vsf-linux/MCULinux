@@ -73,6 +73,7 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 
 # add user application source code/include directories
 vsf_add_compile_definitions(
+    __linux__
     __OOC_CPP__         # cpp support in PLOOC
     __CPU_ARM__         # needed in vsf_usr_cfg.h
     BB_GLOBAL_CONST=    # avoid busybox optimization, which will cause hardfault on CortexM, refer to BB_GLOBAL_CONST in libbb.h
