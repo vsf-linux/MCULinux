@@ -77,7 +77,7 @@ include($ENV{VSF_PATH}/script/cmake/vsf.cmake)
 # application configurations
 vsf_add_compile_definitions(
     __VSF__
-    __OOC_CPP__
+    __VSF_CPP__
 )
 
 # linker script

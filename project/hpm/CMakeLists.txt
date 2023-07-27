@@ -52,7 +52,7 @@ list(APPEND VSF_TARGET_INCLUDE_DIRECTORIES
 
 vsf_add_compile_definitions(
     __HPM__ __HPM6750__
-    __OOC_CPP__
+    __VSF_CPP__
     __VSF__
 )
 include($ENV{VSF_PATH}/script/cmake/extensions.cmake)
