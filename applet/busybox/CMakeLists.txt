@@ -15,11 +15,11 @@ if(TRUE)
   # **************** Seems not Working ****************
   # refer to arm-none-eabi-gcc BUG: https://answers.launchpad.net/gcc-arm-embedded/+question/675869
   set(CMAKE_C_FLAGS 
-      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
+      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4 -nostartfiles -nodefaultlibs -nolibc -nostdlib"
       CACHE INTERNAL "C compiler common flags"
   )
   set(CMAKE_CXX_FLAGS 
-      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4"
+      "-Os -fms-extensions -nostartfiles -e _start -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative -fPIC -shared -z max-page-size=4 -nostartfiles -nodefaultlibs -nolibc -nostdlib++"
       CACHE INTERNAL "C++ compiler common flags"
   )
   include($ENV{VSF_PATH}/script/cmake/compilers/gnuarmemb.cmake)
@@ -89,10 +89,8 @@ vsf_add_include_directories(
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/stdint
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/assert
     $ENV{VSF_PATH}/source/shell/sys/linux/include/simple_libc/setjmp
-    $ENV{VSF_PATH}/source/shell/sys/linux/include/libusb
 )
 vsf_add_sources(
-    $ENV{VSF_PATH}/source/shell/sys/linux/lib/glibc/vsf_linux_glibc_ctype.c
     $ENV{VSF_PATH}/source/shell/sys/linux/lib/3rd-party/getopt/getopt_long.c
     $ENV{VSF_PATH}/source/shell/sys/linux/lib/3rd-party/regex/regcomp.c
     $ENV{VSF_PATH}/source/shell/sys/linux/lib/3rd-party/regex/regerror.c
