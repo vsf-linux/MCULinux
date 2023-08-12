@@ -838,6 +838,15 @@
     <Filter Include="application\3rd-party\busybox\raw\procps">
       <UniqueIdentifier>{45488336-9b07-49b2-b04b-b946e67396d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\component\tcpip\protocol">
+      <UniqueIdentifier>{dec34fad-5e05-40ec-84e7-72e73b88c95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\tcpip\protocol\http">
+      <UniqueIdentifier>{ad64dfd2-9791-46ff-848e-7e5f95efb122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vsf\component\tcpip\protocol\http\client">
+      <UniqueIdentifier>{c0385d6f-f718-48fa-b94c-6ca2566f51c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2213,6 +2222,9 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\hal\driver\common\dac\dac_template.h">
       <Filter>vsf\hal\driver\common\dac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h">
+      <Filter>vsf\component\tcpip\protocol\http\client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3910,6 +3922,9 @@
     </ClCompile>
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\procps\free.c">
       <Filter>application\3rd-party\busybox\raw\procps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c">
+      <Filter>vsf\component\tcpip\protocol\http\client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
