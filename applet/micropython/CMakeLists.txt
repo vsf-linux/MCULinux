@@ -83,7 +83,7 @@ vsf_add_compile_definitions(
     MICROPY_PY_SSL=1
     MICROPY_SSL_MBEDTLS=1
 )
-set(variant minimal)
+set(variant standard)
 vsf_add_include_directories(
     ..
     ../include
@@ -110,6 +110,7 @@ vsf_add_sources(
     ../../application/3rd-party/micropython/raw/ports/unix/input.c
     ../../application/3rd-party/micropython/raw/ports/unix/main.c
     ../../application/3rd-party/micropython/raw/ports/unix/modmachine.c
+    ../../application/3rd-party/micropython/raw/ports/unix/modsocket.c
     ../../application/3rd-party/micropython/raw/ports/unix/modtermios.c
     ../../application/3rd-party/micropython/raw/ports/unix/mpthreadport.c
     ../../application/3rd-party/micropython/raw/ports/unix/unix_mphal.c
@@ -137,6 +138,11 @@ vsf_add_sources(
     ../../application/3rd-party/micropython/raw/extmod/modrandom.c
     ../../application/3rd-party/micropython/raw/extmod/modre.c
     ../../application/3rd-party/micropython/raw/extmod/modselect.c
+    ../../application/3rd-party/micropython/raw/extmod/modsocket.c
+    ../../application/3rd-party/micropython/raw/extmod/modssl_mbedtls.c
+    ../../application/3rd-party/micropython/raw/extmod/modtime.c
+    ../../application/3rd-party/micropython/raw/extmod/moductypes.c
+    ../../application/3rd-party/micropython/raw/extmod/modwebsocket.c
     ../../application/3rd-party/micropython/raw/extmod/vfs.c
     ../../application/3rd-party/micropython/raw/extmod/vfs_posix.c
     ../../application/3rd-party/micropython/raw/extmod/vfs_posix_file.c
