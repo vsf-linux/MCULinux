@@ -394,8 +394,6 @@
     (uuid e9e3b4f9-315f-424f-9419-ef6c29398bd3)
   )
 
-  (no_connect (at -22.86 107.95) (uuid ebc1afea-5e69-49b3-993d-58534da07dd7))
-
   (wire (pts (xy 172.72 58.42) (xy 173.99 58.42))
     (stroke (width 0) (type default))
     (uuid 00f23914-8f84-4f20-b4cd-a8603c535374)
@@ -773,7 +771,7 @@
     (pin "1" (uuid 46aab1fb-e950-485a-88d3-77cabc0449f5))
     (pin "2" (uuid 8bc20da6-427c-4d7e-8f98-45c8e866137f))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "AE3") (unit 1)
         )
@@ -798,7 +796,7 @@
     )
     (pin "1" (uuid 9c4b8c12-a5c2-40fd-9e82-dfe2e7dd87a1))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR055") (unit 1)
         )
@@ -824,7 +822,7 @@
     (pin "1" (uuid a78e00d2-d0a3-4b57-9cdc-cfdaf7937e38))
     (pin "2" (uuid 20a36747-3e96-46bc-9670-4520fb6bebd1))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "L10") (unit 1)
         )
@@ -850,7 +848,7 @@
     (pin "1" (uuid 2bc5b9a8-52f3-4465-be15-160cf4c17c0f))
     (pin "2" (uuid 177c4fcf-9007-41d1-96bb-7b3fa651e6a9))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C50") (unit 1)
         )
@@ -876,7 +874,7 @@
     (pin "1" (uuid e5feec26-e027-4568-bd8a-462da735a0c5))
     (pin "2" (uuid 25e9ace1-ccfe-4f72-83d9-3b1ce92813a7))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C54") (unit 1)
         )
@@ -901,7 +899,7 @@
     )
     (pin "1" (uuid 81f587e1-049d-49bb-b737-cab0b11388ff))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR051") (unit 1)
         )
@@ -926,7 +924,7 @@
     )
     (pin "1" (uuid 28da4e8f-7b22-4c44-90ef-1e03e6932348))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR056") (unit 1)
         )
@@ -952,7 +950,7 @@
     (pin "1" (uuid 93ebf677-599c-4d06-a629-92dc29685ee1))
     (pin "2" (uuid 6cc56cae-1090-4a28-a868-e5de3b519800))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "L9") (unit 1)
         )
@@ -977,7 +975,7 @@
     )
     (pin "1" (uuid 9ca53355-9643-43bd-a062-ff989a72f677))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR052") (unit 1)
         )
@@ -1002,7 +1000,7 @@
     )
     (pin "1" (uuid 875f430c-5ff2-4015-9477-70965ef2d8ee))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR049") (unit 1)
         )
@@ -1028,7 +1026,7 @@
     (pin "1" (uuid c06ebd5b-8989-445c-b6bc-eabf253936e5))
     (pin "2" (uuid 4b23c0e0-22f6-4b67-bf06-3ff2479cb674))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C52") (unit 1)
         )
@@ -1054,7 +1052,7 @@
     (pin "1" (uuid 509e1b01-1e08-4a46-82a0-bd7444db7c22))
     (pin "2" (uuid beaaaa39-0d24-4862-b15b-6cf7dfa7ea35))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C48") (unit 1)
         )
@@ -1080,7 +1078,7 @@
     (pin "1" (uuid db23c977-4547-4898-bf92-1ade6cad34b6))
     (pin "2" (uuid 918b4906-30d0-408b-addd-41b9c6b39654))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "R34") (unit 1)
         )
@@ -1106,7 +1104,7 @@
     (pin "1" (uuid d4eee54a-e7f1-458a-bc02-9ceef9eb8b3a))
     (pin "2" (uuid 0518ecb4-1553-4625-9109-9b59f2ca47fb))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C46") (unit 1)
         )
@@ -1131,7 +1129,7 @@
     )
     (pin "1" (uuid 5c48dcec-5031-4f9f-9226-98a9d3961843))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR047") (unit 1)
         )
@@ -1157,7 +1155,7 @@
     (pin "1" (uuid cb4693da-bf18-495e-b9c7-8172cc4508c4))
     (pin "2" (uuid 1185a04c-00d3-40f1-8847-c2d947fe92eb))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C47") (unit 1)
         )
@@ -1182,7 +1180,7 @@
     )
     (pin "1" (uuid c2f4e1b5-7f92-4b1c-b7da-892f2c0cefa4))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR048") (unit 1)
         )
@@ -1208,7 +1206,7 @@
     (pin "1" (uuid 4484a876-76b3-4e63-9488-82ff13734941))
     (pin "2" (uuid edcc8b27-a54f-4630-8e89-11c80a766a56))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C51") (unit 1)
         )
@@ -1234,7 +1232,7 @@
     (pin "1" (uuid 177f93dc-9641-4538-9e63-70c7c1494325))
     (pin "2" (uuid cb222045-006b-4aee-824e-6f339262ab31))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C49") (unit 1)
         )
@@ -1259,7 +1257,7 @@
     )
     (pin "1" (uuid 3ad47a78-5ec8-4160-bb80-0dae5ae1f1d1))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR053") (unit 1)
         )
@@ -1284,7 +1282,7 @@
     )
     (pin "1" (uuid f2ac07cf-33f4-4cfe-8bf0-3667b40eb4f1))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR050") (unit 1)
         )
@@ -1310,7 +1308,7 @@
     (pin "1" (uuid cb106fc2-eaf8-470e-8426-13aa4ff2e001))
     (pin "2" (uuid fdcba503-0aa7-477c-8f76-d2be9f7cfaea))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C43") (unit 1)
         )
@@ -1335,7 +1333,7 @@
     )
     (pin "1" (uuid 85463909-1a94-4365-b54c-a5d45b032405))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR042") (unit 1)
         )
@@ -1360,7 +1358,7 @@
     )
     (pin "1" (uuid e4752c22-e044-42af-a0c2-f45e2f40c171))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR044") (unit 1)
         )
@@ -1386,7 +1384,7 @@
     (pin "1" (uuid e9154fdf-6bac-463a-83b1-dc9503d17ec5))
     (pin "2" (uuid b2b51468-5f08-452b-9e5a-56cb3ab5e5c3))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C45") (unit 1)
         )
@@ -1411,7 +1409,7 @@
     )
     (pin "1" (uuid 85c9a3ca-0b7f-4b2b-b3ee-134326a16824))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR046") (unit 1)
         )
@@ -1437,7 +1435,7 @@
     (pin "1" (uuid 7fd23650-3bc3-404e-82dd-e31015f9d64f))
     (pin "2" (uuid 97debad9-5b3b-440f-be43-92fd9250a763))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C41") (unit 1)
         )
@@ -1463,7 +1461,7 @@
     (pin "1" (uuid 6626b740-5a40-484f-bd12-9105d89f79cc))
     (pin "2" (uuid 37fc3446-7511-48fa-bd1f-672d00060847))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "L8") (unit 1)
         )
@@ -1489,7 +1487,7 @@
     (pin "1" (uuid 3b614c38-bd12-484f-b5d3-7885931af3b1))
     (pin "2" (uuid 87370484-67f8-4558-88da-261c5dded406))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C40") (unit 1)
         )
@@ -1514,7 +1512,7 @@
     )
     (pin "1" (uuid 734e4332-e78a-4fa9-ac17-c2cbec67d28d))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR041") (unit 1)
         )
@@ -1540,7 +1538,7 @@
     (pin "1" (uuid e93d0bd3-4b89-4c53-81d8-f4f4fa941df1))
     (pin "2" (uuid c4cfd135-eca3-4fe7-89b9-f04d7aed5313))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C42") (unit 1)
         )
@@ -1565,7 +1563,7 @@
     )
     (pin "1" (uuid 06dc7403-f1ae-45d2-877f-f5739ac5a3af))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR043") (unit 1)
         )
@@ -1590,7 +1588,7 @@
     )
     (pin "1" (uuid 9e0f48c3-1a27-4afb-ae60-a6cf4fc7d2bc))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR045") (unit 1)
         )
@@ -1616,7 +1614,7 @@
     (pin "1" (uuid 287864e3-9790-4886-93cf-80485d9b4019))
     (pin "2" (uuid 22a25552-3f83-42b6-b4f7-16148427d299))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C44") (unit 1)
         )
@@ -1641,7 +1639,7 @@
     )
     (pin "1" (uuid ad1233ec-f343-4e6e-8913-562cd9cf0fc9))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR054") (unit 1)
         )
@@ -1667,7 +1665,7 @@
     (pin "1" (uuid 0d8fd3fe-b0ec-4b79-8b80-2cb7042d1731))
     (pin "2" (uuid caaee436-dd58-4797-b999-80a1933ce8f5))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C53") (unit 1)
         )
@@ -1692,7 +1690,7 @@
     )
     (pin "1" (uuid f415ae3a-fd02-4c99-bd9d-3d396b861126))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "#PWR057") (unit 1)
         )
@@ -1718,7 +1716,7 @@
     (pin "1" (uuid 89116af4-d241-4697-aab3-47b74abdc9e3))
     (pin "2" (uuid b8f0cbb9-166c-41b1-bb92-ead3cf3a14e9))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "C55") (unit 1)
         )
@@ -1744,7 +1742,7 @@
     (pin "1" (uuid 4fa6171f-246f-486f-80ed-19b908d8c586))
     (pin "2" (uuid 5b0d2e5d-6b01-4a96-b3f9-8b5e76c9130c))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "R31") (unit 1)
         )
@@ -1773,7 +1771,7 @@
     (pin "1" (uuid a7ce8822-f2b5-4b48-92e2-1102211c5d27))
     (pin "2" (uuid e0d5e671-cc58-4426-9ccf-51a0ffae759e))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "R33") (unit 1)
         )
@@ -1802,7 +1800,7 @@
     (pin "1" (uuid e00d78c2-6afe-4b17-9623-8c90cbf41a45))
     (pin "2" (uuid e5e6e881-3481-4636-8c7a-d8d93fc325a6))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "R32") (unit 1)
         )
@@ -1846,7 +1844,7 @@
     (pin "8" (uuid 42dd3a41-736f-4af6-8e37-93e6f0f92a0f))
     (pin "9" (uuid 75813644-053c-43cb-bde3-83d17705ea38))
     (instances
-      (project "aic8800m_basic"
+      (project "MCULinux"
         (path "/b0717bb8-5e5d-44de-b48f-ff278896fb50/00000000-0000-0000-0000-000061f4753e"
           (reference "U4") (unit 1)
         )
