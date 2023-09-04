@@ -59,7 +59,11 @@
 #endif
 
 #ifndef MICROPY_PY_SYS_PATH_DEFAULT
+#ifdef __WIN__
+#define MICROPY_PY_SYS_PATH_DEFAULT "/usr/micropython"
+#else
 #define MICROPY_PY_SYS_PATH_DEFAULT "/root/micropython"
+#endif
 #endif
 
 #define MP_STATE_PORT MP_STATE_VM
@@ -83,15 +87,8 @@
 
 // Type definitions for the specific machine based on the word size.
 #ifndef MICROPY_OBJ_REPR
-#ifdef __VSF64__
-typedef long long mp_int_t; // must be pointer size
-typedef unsigned long long mp_uint_t; // must be pointer size
-#else
-// These are definitions for machines where sizeof(int) == sizeof(void*),
-// regardless of actual size.
-typedef int mp_int_t; // must be pointer size
-typedef unsigned int mp_uint_t; // must be pointer size
-#endif
+typedef intptr_t mp_int_t; // must be pointer size
+typedef uintptr_t mp_uint_t; // must be pointer size
 #else
 // Assume that if we already defined the obj repr then we also defined types.
 #endif
