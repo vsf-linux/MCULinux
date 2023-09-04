@@ -60,9 +60,9 @@
 
 #ifndef MICROPY_PY_SYS_PATH_DEFAULT
 #ifdef __WIN__
-#define MICROPY_PY_SYS_PATH_DEFAULT "/usr/micropython"
+#define MICROPY_PY_SYS_PATH_DEFAULT "/usr/micropython/lib"
 #else
-#define MICROPY_PY_SYS_PATH_DEFAULT "/root/micropython"
+#define MICROPY_PY_SYS_PATH_DEFAULT "/root/micropython/lib"
 #endif
 #endif
 
