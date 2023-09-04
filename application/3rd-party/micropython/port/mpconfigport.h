@@ -59,7 +59,7 @@
 #endif
 
 #ifndef MICROPY_PY_SYS_PATH_DEFAULT
-#define MICROPY_PY_SYS_PATH_DEFAULT ".frozen:~/.micropython/lib:/usr/lib/micropython"
+#define MICROPY_PY_SYS_PATH_DEFAULT "/root/micropython"
 #endif
 
 #define MP_STATE_PORT MP_STATE_VM
@@ -83,9 +83,9 @@
 
 // Type definitions for the specific machine based on the word size.
 #ifndef MICROPY_OBJ_REPR
-#ifdef __LP64__
-typedef long mp_int_t; // must be pointer size
-typedef unsigned long mp_uint_t; // must be pointer size
+#ifdef __VSF64__
+typedef long long mp_int_t; // must be pointer size
+typedef unsigned long long mp_uint_t; // must be pointer size
 #else
 // These are definitions for machines where sizeof(int) == sizeof(void*),
 // regardless of actual size.
