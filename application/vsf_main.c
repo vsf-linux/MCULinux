@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "vsf_board.h"
+
 #ifndef VSF_APP_ENTRY
 #   define VSF_APP_ENTRY        VSF_USER_ENTRY
 #endif
@@ -39,6 +41,24 @@ int vsf_linux_create_fhs(void)
 
     // 1. hardware driver
     vsf_linux_fs_bind_pipe("/dev/ptyp0", "/dev/ttyp0", true);
+#if VSF_USE_UI == ENABLED
+    if (vsf_board.display_dev != NULL) {
+        vsf_linux_fs_bind_disp("/dev/fb0", vsf_board.display_dev);
+    }
+#endif
+#if VSF_USE_INPUT == ENABLED && VSF_INPUT_CFG_REGISTRATION_MECHANISM == ENABLED
+    static vk_input_notifier_t notifier = {
+        .mask =     (1 << VSF_INPUT_TYPE_GAMEPAD)
+                |   (1 << VSF_INPUT_TYPE_KEYBOARD)
+                |   (1 << VSF_INPUT_TYPE_TOUCHSCREEN)
+                |   (1 << VSF_INPUT_TYPE_MOUSE),
+    };
+    vsf_linux_fs_bind_input("/dev/input/event0", &notifier);
+#endif
+#if VSF_USE_AUDIO == ENABLED
+    vk_audio_init(vsf_board.audio_dev);
+    vsf_linux_fs_bind_audio("/dev/snd", 0, vsf_board.audio_dev);
+#endif
 
     // 2. fs
     mkdir("/tmp", 0);

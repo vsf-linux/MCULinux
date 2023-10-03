@@ -30,6 +30,11 @@
 /*============================ MACROS ========================================*/
 
 // components
+
+// enable at most one of the python environment below
+#define VSF_USE_MICROPYTHON                             ENABLED
+//#define VSF_USE_PIKAPYTHON                              ENABLED
+
 #define VSF_USE_HASH                                    ENABLED
 #   define VSF_HASH_USE_CRC                             ENABLED
 #define VSF_USE_TRACE                                   ENABLED
@@ -79,6 +84,7 @@
 #   define VSF_LINUX_USE_PROCFS                         ENABLED
 #   define VSF_LINUX_USE_DEVFS                          ENABLED
 #       define VSF_LINUX_DEVFS_USE_RAND                 ENABLED
+#       define VSF_LINUX_DEVFS_USE_ALSA                 ENABLED
 #   define VSF_LINUX_CFG_FD_BITMAP_SIZE                 1024
 #   define VSF_LINUX_USE_LIBUSB                         VSF_USE_USB_HOST
 #   define VSF_LINUX_CFG_PLS_NUM                        16
@@ -87,6 +93,9 @@
 #       define VSF_LINUX_USE_APPLET                     ENABLED
 #   endif
 #   define VSF_LINUX_USE_SCRIPT                         ENABLED
+
+//#define VSF_LINUX_SIMPLE_STDLIB_CFG_HEAP_MONITOR        ENABLED
+//#define VSF_LINUX_SIMPLE_STDLIB_HEAP_MONITOR_TRACE_DEPTH    1024
 
 // APP configuration
 #define APP_USE_LINUX_DEMO                              ENABLED
