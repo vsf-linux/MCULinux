@@ -1,0 +1,15 @@
+ include/local.h | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/include/local.h b/include/local.h
+index 512e4455..42ffddea 100644
+--- a/include/local.h
++++ b/include/local.h
+@@ -281,7 +281,7 @@ extern snd_lib_error_handler_t snd_err_msg;
+  */
+ #define HAVE_GNU_LD
+ #define HAVE_ELF
+-#define HAVE_ASM_PREVIOUS_DIRECTIVE
++//#define HAVE_ASM_PREVIOUS_DIRECTIVE
+ 
+ /* Stolen from libc-symbols.h in GNU glibc */
