@@ -101,7 +101,8 @@
 #define VSF_LINUX_MACHINE                               "x86_64"
 #define VSF_LINUX_SOCKET_CFG_WRAPPER                    ENABLED
 // linux wrapper to avoid confliction on functions like signal/raise
-#define VSF_LINUX_CFG_WRAPPER                           ENABLED
+// to use alsa, VSF_LINUX_CFG_WRAPPER must be disabled to avoid conflicts
+#define VSF_LINUX_CFG_WRAPPER                           DISABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
