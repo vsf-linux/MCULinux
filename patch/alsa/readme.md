@@ -1,1 +1,1 @@
-1. mswin_sdk_conflict.patch  -->>  root\application\3rd-party\alsa\alsa-lib
+1. ms_win.patch  -->>  root\application\3rd-party\alsa\alsa-lib
