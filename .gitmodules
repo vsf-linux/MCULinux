@@ -7,3 +7,9 @@
 [submodule "application/3rd-party/micropython/raw"]
 	path = application/3rd-party/micropython/raw
 	url = ../micropython
+[submodule "application/3rd-party/alsa/alsa-lib"]
+	path = application/3rd-party/alsa/alsa-lib
+	url = ../../alsa-project/alsa-lib
+[submodule "application/3rd-party/alsa/alsa-utils"]
+	path = application/3rd-party/alsa/alsa-utils
+	url = ../../alsa-project/alsa-utils

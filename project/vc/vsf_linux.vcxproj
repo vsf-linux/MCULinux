@@ -428,6 +428,7 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termio.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\termios.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\unistd.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\vsf_linux_devfs.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\vsf_linux_vfs.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vsf_linux_fs.h" />
@@ -480,6 +481,128 @@
     <ClInclude Include="..\..\vsf\source\vsf_cfg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\async.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\conf.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\confeval.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\confmisc.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\cards.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_empty.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_ext.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_plugin.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_remap.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_shm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\ctlparse.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\eld.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\hcontrol.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\namehint.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\setup.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\tlv.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\dlmisc.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\error.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\input.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\bag.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\mixer.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple_abst.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple_none.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\names.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\output.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\interval.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\mask.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_adpcm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_alaw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_asym.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_copy.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_direct.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dmix.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dshare.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dsnoop.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_empty.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_extplug.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_file.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_generic.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_hooks.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_iec958.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_ioplug.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_ladspa.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_lfloat.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_linear.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_meter.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_misc.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mmap.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mmap_emul.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mulaw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_multi.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_null.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_params.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_plug.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_plugin.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_rate.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_rate_linear.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_route.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_share.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_shm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_simple.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_softvol.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_virt.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\ump.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seqmid.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_event.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_midi_event.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_old.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\shmarea.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\socket.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_query.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_query_hw.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_symbols.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\builder.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\channel.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\ctl.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\dapm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\data.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\decoder.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\elem.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\log.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\ops.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\parser.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\pcm.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\save.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\text.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\main.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\parser.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_cond.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_exec.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_include.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_regex.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_subs.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\utils.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\userfile.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\amixer.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=amixer_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=amixer_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\volume_mapping.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\aplay\aplay.c">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=aplay_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=aplay_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="..\..\application\3rd-party\busybox\port\vsf_porting\libbb_dynlib.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\bbunzip.c" />
     <ClCompile Include="..\..\application\3rd-party\busybox\raw\archival\dpkg.c" />
@@ -1012,6 +1135,7 @@
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\led\vsf_linux_core_led.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\usb\vsf_linux_core_usb.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\core\vsf_linux_core.c" />
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\vsf_linux_devfs.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\vsf_linux_vfs.c" />
     <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vsf_linux_fs.c" />
@@ -1164,7 +1288,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X86__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\application\3rd-party\alsa\port;$(ProjectDir)..\..\application\3rd-party\alsa\port\include;$(ProjectDir)..\..\application\3rd-party\alsa\port\alsa-utils;$(ProjectDir)..\..\application\3rd-party\alsa\alsa-utils\include;$(ProjectDir)..\..\application\3rd-party\alsa\alsa-lib\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -1192,7 +1316,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__VSF__;__CPU_X64__;__WIN__;__VSF_CPP__;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;BB_VER="1.37.0.git";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\board\win;$(ProjectDir)..\..\application;$(ProjectDir)..\..\application\3rd-party\busybox\port;$(ProjectDir)..\..\application\3rd-party\busybox\raw\include;$(ProjectDir)..\..\application\3rd-party\alsa\port;$(ProjectDir)..\..\application\3rd-party\alsa\port\include;$(ProjectDir)..\..\application\3rd-party\alsa\port\alsa-utils;$(ProjectDir)..\..\application\3rd-party\alsa\alsa-utils\include;$(ProjectDir)..\..\application\3rd-party\alsa\alsa-lib\include;$(ProjectDir)..\..\vsf\example\template\demo\common;$(ProjectDir)..\..\vsf\source;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\simple_libc\limits;$(ProjectDir)..\..\vsf\source\shell\sys\linux\include\libusb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-fms-extensions -Xclang -includeD:\MCULinux\application\3rd-party\busybox\port\autoconf.h %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>Sync</ExceptionHandling>

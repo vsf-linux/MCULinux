@@ -847,6 +847,54 @@
     <Filter Include="vsf\component\tcpip\protocol\http\client">
       <UniqueIdentifier>{c0385d6f-f718-48fa-b94c-6ca2566f51c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vsf\shell\sys\linux\kernel\fs\vfs\devfs\alsa">
+      <UniqueIdentifier>{7048118f-a4fa-4d92-9e93-23822c4a181c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa">
+      <UniqueIdentifier>{df80c920-afb2-426b-b0cb-259dd8b253a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib">
+      <UniqueIdentifier>{22ad5007-6f4d-473b-b939-3efb7ff9b2e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src">
+      <UniqueIdentifier>{6c17db34-36ba-4998-b263-da4cd376ca00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\control">
+      <UniqueIdentifier>{df90573a-6852-45d0-bde8-11033b178594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\hwdep">
+      <UniqueIdentifier>{df4e0eb8-a89b-47bc-b6e5-29db52836bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\mixer">
+      <UniqueIdentifier>{ea906bc2-d233-48ca-a65b-de9099794cbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\pcm">
+      <UniqueIdentifier>{50213910-fee2-4770-bd3a-e06939148541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\rawmidi">
+      <UniqueIdentifier>{c1722380-8c20-4188-ba9f-7d476a52b612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\seq">
+      <UniqueIdentifier>{5952f445-647f-496a-a5c4-d9beaf81fbdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\timer">
+      <UniqueIdentifier>{faaaf262-6120-4571-b81c-bf7cad22562f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\topology">
+      <UniqueIdentifier>{1748caca-97b0-4b36-85ba-5c78b60f5130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-lib\src\ucm">
+      <UniqueIdentifier>{8fdcb010-67dd-4442-9740-9f092a3f490c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-utils">
+      <UniqueIdentifier>{40d66c16-34a9-4911-a678-9dd21f9dde59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-utils\amixer">
+      <UniqueIdentifier>{5930eec2-f937-4409-aedf-e182175e8163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="application\3rd-party\alsa\alsa-utils\aplay">
+      <UniqueIdentifier>{c328f87c-ed06-4e71-a2e3-5f4d1b31d246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vsf\source\vsf.h">
@@ -2225,6 +2273,9 @@
     </ClInclude>
     <ClInclude Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.h">
       <Filter>vsf\component\tcpip\protocol\http\client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.h">
+      <Filter>vsf\shell\sys\linux\kernel\fs\vfs\devfs\alsa</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3925,6 +3976,357 @@
     </ClCompile>
     <ClCompile Include="..\..\vsf\source\component\tcpip\protocol\http\client\vsf_http_client.c">
       <Filter>vsf\component\tcpip\protocol\http\client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.c">
+      <Filter>vsf\shell\sys\linux\kernel\fs\vfs\devfs\alsa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\cards.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_empty.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_ext.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_plugin.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_remap.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_shm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\control_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\ctlparse.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\eld.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\hcontrol.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\namehint.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\setup.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\control\tlv.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\hwdep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\hwdep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\hwdep\hwdep_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\hwdep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\bag.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\mixer.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple_abst.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\mixer\simple_none.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\interval.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\mask.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_adpcm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_alaw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_asym.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_copy.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_direct.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dmix.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dshare.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_dsnoop.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_empty.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_extplug.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_file.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_generic.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_hooks.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_iec958.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_ioplug.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_ladspa.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_lfloat.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_linear.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_meter.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_misc.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mmap.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mmap_emul.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_mulaw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_multi.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_null.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_params.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_plug.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_plugin.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_rate.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_rate_linear.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_route.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_share.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_shm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_simple.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_softvol.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\pcm\pcm_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\pcm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\rawmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\rawmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\rawmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\rawmidi_virt.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\rawmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\rawmidi\ump.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\rawmidi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_event.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_midi_event.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_old.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seq_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\seq\seqmid.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\seq</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_query.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_query_hw.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\timer\timer_symbols.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\builder.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\channel.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\ctl.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\dapm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\data.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\decoder.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\elem.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\log.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\ops.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\parser.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\pcm.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\save.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\topology\text.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\topology</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\main.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\parser.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_cond.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_exec.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_include.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_regex.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_subs.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\utils.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src\ucm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\async.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\conf.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\confeval.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\confmisc.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\dlmisc.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\error.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\input.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\names.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\output.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\shmarea.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\socket.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\userfile.c">
+      <Filter>application\3rd-party\alsa\alsa-lib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\amixer.c">
+      <Filter>application\3rd-party\alsa\alsa-utils\amixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\volume_mapping.c">
+      <Filter>application\3rd-party\alsa\alsa-utils\amixer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\aplay\aplay.c">
+      <Filter>application\3rd-party\alsa\alsa-utils\aplay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
