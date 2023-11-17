@@ -594,11 +594,11 @@
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\ucm_subs.c" />
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\ucm\utils.c" />
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-lib\src\userfile.c" />
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\alsamixer\volume_mapping.c" />
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\amixer.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=amixer_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=amixer_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\volume_mapping.c" />
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\aplay\aplay.c">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main=aplay_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main=aplay_main;%(PreprocessorDefinitions)</PreprocessorDefinitions>
