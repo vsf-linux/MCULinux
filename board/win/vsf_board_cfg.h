@@ -94,6 +94,11 @@
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
 
+#define VSF_USE_UI                                      ENABLED
+
+#define VSF_USE_AUDIO                                   ENABLED
+#   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
+
 #define VSF_USE_SIMPLE_SPRINTF                          ENABLED
 #   define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT             ENABLED
 #define VSF_USE_SIMPLE_SSCANF                           ENABLED

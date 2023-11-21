@@ -69,10 +69,6 @@
 #   define VSF_USBH_USE_DL1X5                           ENABLED
 #   define VSF_USBH_USE_UAC                             ENABLED
 
-#define VSF_USE_UI                                      ENABLED
-#define VSF_USE_AUDIO                                   ENABLED
-#   define VSF_AUDIO_USE_PLAYBACK                       ENABLED
-
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED

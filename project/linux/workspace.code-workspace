@@ -9,6 +9,10 @@
 			"path": "../../application"
 		},
 		{
+			"name": "board",
+			"path": "../../board/linux"
+		},
+		{
 			"name": "vsf",
 //			it's good to support environment variable here, but vscode doesn't
 //			"path": "${env:VSF_PATH}/source"
@@ -23,7 +27,7 @@
 		"C_Cpp.default.cStandard": "c11",
 		"C_Cpp.default.cppStandard": "c++14",
 		"C_Cpp.default.includePath": [
-			"../../../config",
+			"../../application",
 			"${env:VSF_PATH}/source",
 
 //			include below is corresponding module is enabled
