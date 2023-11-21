@@ -339,6 +339,7 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\ieee80211.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\if_ether.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\input.h" />
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\ioctl.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\jiffies.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\kobject.h" />
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\kref.h" />

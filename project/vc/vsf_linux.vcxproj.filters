@@ -2277,6 +2277,9 @@
     <ClInclude Include="..\..\vsf\source\shell\sys\linux\kernel\fs\vfs\devfs\alsa\vsf_linux_devfs_alsa.h">
       <Filter>vsf\shell\sys\linux\kernel\fs\vfs\devfs\alsa</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\vsf\source\shell\sys\linux\include\linux\ioctl.h">
+      <Filter>vsf\shell\sys\linux\include\linux</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vsf\source\utilities\template\vsf_bitmap.c">
@@ -4322,11 +4325,11 @@
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\amixer.c">
       <Filter>application\3rd-party\alsa\alsa-utils\amixer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\amixer\volume_mapping.c">
-      <Filter>application\3rd-party\alsa\alsa-utils\amixer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\aplay\aplay.c">
       <Filter>application\3rd-party\alsa\alsa-utils\aplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\application\3rd-party\alsa\alsa-utils\alsamixer\volume_mapping.c">
+      <Filter>application\3rd-party\alsa\alsa-utils\amixer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
