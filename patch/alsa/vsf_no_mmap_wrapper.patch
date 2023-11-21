@@ -1,0 +1,22 @@
+ source/shell/sys/linux/include/sys/mman.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/source/shell/sys/linux/include/sys/mman.h b/source/shell/sys/linux/include/sys/mman.h
+index 73085dc6f..aa7d2e9f9 100644
+--- a/source/shell/sys/linux/include/sys/mman.h
++++ b/source/shell/sys/linux/include/sys/mman.h
+@@ -17,10 +17,10 @@ extern "C" {
+ #endif
+ 
+ #if VSF_LINUX_CFG_WRAPPER == ENABLED
+-#define mmap                VSF_LINUX_WRAPPER(mmap)
+-#define mmap64              VSF_LINUX_WRAPPER(mmap64)
+-#define munmap              VSF_LINUX_WRAPPER(munmap)
+-#define mprotect            VSF_LINUX_WRAPPER(mprotect)
++//#define mmap                VSF_LINUX_WRAPPER(mmap)
++//#define mmap64              VSF_LINUX_WRAPPER(mmap64)
++//#define munmap              VSF_LINUX_WRAPPER(munmap)
++//#define mprotect            VSF_LINUX_WRAPPER(mprotect)
+ #endif
+ 
+ #define PROT_NONE       0
