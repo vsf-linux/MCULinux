@@ -34,8 +34,9 @@
  networking/libiproute/rtm_map.c  |   2 +-
  networking/netstat.c             |   4 +-
  networking/tls.c                 |   2 +-
+ procps/free.c                    |   4 +-
  shell/ash.c                      |   2 +-
- 37 files changed, 341 insertions(+), 37 deletions(-)
+ 38 files changed, 343 insertions(+), 39 deletions(-)
 
 diff --git a/coreutils/sort.c b/coreutils/sort.c
 index 01b7c44e5..22452d830 100644
@@ -791,7 +792,7 @@ index a125244ca..616fbc68a 100644
  /*
   * Return name if statbuf->st_ino && statbuf->st_dev are recorded in
 diff --git a/libbb/lineedit.c b/libbb/lineedit.c
-index b942f540a..306b6d825 100644
+index d6b2e76ff..eeca42428 100644
 --- a/libbb/lineedit.c
 +++ b/libbb/lineedit.c
 @@ -189,7 +189,11 @@ struct lineedit_statics {
@@ -1163,11 +1164,27 @@ index 8d074c058..52d56fded 100644
  }
  
  static void tls_aesgcm_decrypt(tls_state_t *tls, uint8_t *buf, int size)
+diff --git a/procps/free.c b/procps/free.c
+index 0b68e1b88..1b44ef6b2 100644
+--- a/procps/free.c
++++ b/procps/free.c
+@@ -52,9 +52,9 @@
+ //NB: if we implement -s or -c, need to stop being NOFORK!
+ 
+ #include "libbb.h"
+-#ifdef __linux__
++//#ifdef __linux__
+ # include <sys/sysinfo.h>
+-#endif
++//#endif
+ 
+ struct globals {
+ 	unsigned mem_unit;
 diff --git a/shell/ash.c b/shell/ash.c
-index 5f8c8ea19..a862872a5 100644
+index 18ccc1329..832924b4e 100644
 --- a/shell/ash.c
 +++ b/shell/ash.c
-@@ -11715,7 +11715,7 @@ getopts(char *optstr, char *optvar, char **optfirst)
+@@ -11714,7 +11714,7 @@ getopts(char *optstr, char *optvar, char **optfirst)
  		setvar0("OPTARG", nullstr);
   out:
  	ind = optnext - optfirst + 1;
