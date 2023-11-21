@@ -91,8 +91,14 @@
 #define VSF_USBH_CFG_ENABLE_ROOT_HUB                    DISABLED
 #define VSF_USBH_USE_HUB                                DISABLED
 
+#define VSF_USE_SIMPLE_SPRINTF                          ENABLED
+#   define VSF_SIMPLE_SPRINTF_SUPPORT_FLOAT             ENABLED
+#define VSF_USE_SIMPLE_SSCANF                           ENABLED
 #define VSF_LINUX_HOSTFS_TYPE                           "linfs"
 #define VSF_LINUX_SOCKET_CFG_WRAPPER                    ENABLED
+// linux wrapper to avoid confliction on functions like signal/raise
+// to use alsa, VSF_LINUX_CFG_WRAPPER must be disabled to avoid conflicts
+#define VSF_LINUX_CFG_WRAPPER                           DISABLED
 
 /*----------------------------------------------------------------------------*
  * Application Configurations                                                 *
