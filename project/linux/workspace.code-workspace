@@ -28,6 +28,7 @@
 		"C_Cpp.default.cppStandard": "c++14",
 		"C_Cpp.default.includePath": [
 			"../../application",
+			"../../board/linux",
 			"${env:VSF_PATH}/source",
 
 //			include below is corresponding module is enabled
