@@ -132,7 +132,7 @@ int vsf_linux_create_fhs(void)
     if (!posix_spawnp(&pid, "mount", NULL, NULL, (char * const *)mount_var_argv, NULL)) {
         waitpid(pid, NULL, 0);
     }
-#else
+#elif VSF_LINUX_USE_BUSYBOX != ENABLED
     const char *inittab_content = ":1:askfirst:/bin/sh\n";
     mkdir("/etc", 0);
     int fd = open("/etc/inittab", O_CREAT);
@@ -142,6 +142,9 @@ int vsf_linux_create_fhs(void)
     }
 #endif
 
+#if VSF_LINUX_USE_BUSYBOX == ENABLED
+    busybox_install();
+#else
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/busybox_export", __busybox_export);
     vsf_linux_fs_bind_executable(VSF_LINUX_CFG_BIN_PATH "/busybox", lbb_main);
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/arch");
@@ -292,6 +295,7 @@ int vsf_linux_create_fhs(void)
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/dpkg");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/gunzip");
     symlink(VSF_LINUX_CFG_BIN_PATH "/busybox", VSF_LINUX_CFG_BIN_PATH "/mkfs.vfat");
+#endif
 
     return 0;
 }

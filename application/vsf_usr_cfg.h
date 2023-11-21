@@ -72,7 +72,12 @@
 #define VSF_USE_LINUX                                   ENABLED
 #   define VSF_USE_POSIX                                ENABLED
 #   define VSF_LINUX_USE_SIMPLE_LIBC                    ENABLED
-#   define VSF_LINUX_USE_BUSYBOX                        DISABLED
+// original busybox is not ready for linux, so use busybox embedded in VSF
+#   ifdef __LINUX__
+#       define VSF_LINUX_USE_BUSYBOX                    ENABLED
+#   else
+#       define VSF_LINUX_USE_BUSYBOX                    DISABLED
+#   endif
 #   define VSF_LINUX_CFG_LINK_FILE                      ENABLED
 #   define VSF_LINUX_USE_SOCKET                         ENABLED
 #       define VSF_LINUX_SOCKET_USE_UNIX                ENABLED
